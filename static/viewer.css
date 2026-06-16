@@ -1,0 +1,65 @@
+:root{--allow:#1b7f4a;--deny:#b91c1c;--none:#c7ccd3;--ink:#111827;--bg:#f5f6f8;--job:#7c2d12;--panel:#ffffff;--muted:#6b7280;--border:#d1d5db}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;color:var(--ink);background:var(--bg)}
+.upload-bar{padding:14px 32px;background:#fff;border-bottom:1px solid #ddd;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.upload-bar h1{margin:0;font-size:20px;flex:1}
+.upload-bar label.upload-button{background:#2563eb;color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:14px}
+.upload-bar label.upload-button input{display:none}
+.upload-bar .status-msg{font-size:13px;color:var(--muted)}
+.upload-bar .status-msg.error{color:var(--deny)}
+.upload-bar .status-msg.success{color:var(--allow)}
+#empty-state{padding:48px 32px;color:var(--muted);text-align:center}
+#empty-state.hidden{display:none}
+#viewer-root.hidden{display:none}
+header.viewer-header{padding:24px 32px;background:#fff;border-bottom:1px solid #ddd}
+main.viewer-main{padding:24px 32px 44px}
+header.viewer-header h1{margin:0 0 8px;font-size:26px}
+h2{margin:30px 0 12px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+.legend span{padding:6px 10px;background:#fff;border:1px solid #ddd;border-radius:999px}
+.green{color:var(--allow)}.red{color:var(--deny)}.gray{color:#6b7280}.jobLegend{color:var(--job)}
+.controls{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px 16px;margin:12px 0 16px;max-width:1500px}
+select{margin-left:8px;padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff}
+#roleButtons{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.roleBtn{border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:8px 12px;cursor:pointer}
+.roleBtn.active{background:#111827;color:#fff;border-color:#111827}
+#selectedSummary{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px 16px;max-width:1500px;margin-bottom:16px}
+svg#diagram{width:100%;max-width:1600px;height:auto;background:#fff;border:1px solid #ddd;border-radius:10px}
+.edge{fill:none;stroke-width:4;opacity:.12;stroke:var(--none)}
+.edge.allow{stroke:var(--allow);opacity:.88;stroke-width:5.5}
+.edge.deny{stroke:var(--deny);opacity:.42;stroke-width:3.2;stroke-dasharray:8 7}
+.edge.none{stroke:var(--none);opacity:.10;stroke-width:2.5}
+.edge.hidden{display:none}
+.jobLabel.hidden{display:none}
+.jobLabel text{font-size:13px;font-weight:700;letter-spacing:.1px;pointer-events:none}
+.jobLabel .halo{fill:none;stroke:#fff7ed;stroke-width:8;stroke-linejoin:round;paint-order:stroke}
+.jobLabel .label{fill:var(--job);stroke:rgba(255,247,237,.85);stroke-width:2.2;paint-order:stroke}
+.node circle{fill:#fff;stroke:#374151;stroke-width:2}
+.node text{font-size:18px;font-weight:700;pointer-events:none}
+.node.activeFrom circle{stroke-width:5}
+.node.activeTo circle{stroke-width:5;stroke:var(--allow)}
+.node.deniedTo circle{stroke-width:4;stroke:var(--deny)}
+.node.selectedState circle{fill:#eef2ff;stroke:#3730a3;stroke-width:6}
+.node.unrelated{opacity:.16}
+.node.hiddenNode{display:none}
+.permConnector{stroke:#cbd5e1;stroke-width:1.2;stroke-dasharray:3 4}
+.permConnector.hidden,.permBox.hidden{display:none}
+.permBox rect{fill:#fff;stroke:#cbd5e1;stroke-width:1.4;rx:10;ry:10;filter:url(#boxShadow)}
+.permBox .title{font-size:13px;font-weight:700;fill:#111827}
+.permBox .rowLabel{font-size:12px;font-weight:700;fill:#374151}
+.permBox .permTxt{font-size:12px;font-weight:700}
+.permBox .allowTxt{fill:var(--allow)}.permBox .denyTxt{fill:var(--deny)}.permBox .missingTxt{fill:#6b7280}
+.permBox .pill{stroke-width:1;rx:8;ry:8}
+.permBox .pillAllow{fill:#dcfce7;stroke:#86efac}
+.permBox .pillDeny{fill:#fee2e2;stroke:#fecaca}
+.permBox .pillMissing{fill:#f3f4f6;stroke:#d1d5db}
+table{border-collapse:collapse;width:100%;background:#fff}
+th,td{border:1px solid #d1d5db;padding:8px;text-align:left;vertical-align:top;font-size:14px}
+th{background:#eef2f7;position:sticky;top:0}
+td.allow{background:#d8f3dc;font-weight:700;color:#14532d}
+td.deny{background:#fee2e2;color:#7f1d1d}
+td.none{background:#f3f4f6;color:#6b7280}
+.jobCell{color:var(--job);font-weight:700}
+.tableWrap{overflow:auto;max-height:620px;border:1px solid #ddd}
+.permCell{font-weight:700}
+.note{font-size:13px;color:var(--muted);margin:8px 0 12px}

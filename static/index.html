@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NTI Workflow – LifeCycle transition flow</title>
+  <link rel="stylesheet" href="/static/viewer.css">
+</head>
+<body>
+  <div class="upload-bar">
+    <h1>NTI Workflow</h1>
+    <label class="upload-button">
+      Vælg Excel-fil
+      <input id="file-input" type="file" accept=".xlsx,.xlsm">
+    </label>
+    <span id="status-message" class="status-msg">Upload Vault-eksport (.xlsx) for at vise diagram.</span>
+  </div>
+
+  <div id="empty-state">
+    <p>Upload en Excel-fil med arket <strong>LifeCycleDefinitionTransitions</strong>.</p>
+    <p>Visningen matcher output fra VBA add-in'et (NTI → Workflow).</p>
+  </div>
+
+  <div id="viewer-root" class="hidden">
+    <header class="viewer-header">
+      <h1>LifeCycle transition flow</h1>
+      <p>State permissions: Read, Write, Delete og Download kan vises pr. state enten for valgt rolle eller som summering.</p>
+      <div class="legend">
+        <span class="green"><b>Grøn</b> = Allow</span>
+        <span class="red"><b>Rød stiplet</b> = Deny</span>
+        <span class="gray"><b>Grå</b> = mangler info / ikke specificeret</span>
+        <span class="jobLegend"><b>Orange tekst</b> = Custom JobTypes</span>
+      </div>
+    </header>
+
+    <main class="viewer-main">
+      <section class="controls">
+        <label><b>LifeCycleDefinition</b><select id="lifeSelect"></select></label>
+        <label><b>Fokus-state</b><select id="stateSelect"></select></label>
+        <label><b>Visning</b>
+          <select id="directionSelect">
+            <option value="all">Alle transitions</option>
+            <option value="from">Fra valgt state</option>
+            <option value="to">Til valgt state</option>
+            <option value="connected">Til/fra valgt state</option>
+          </select>
+        </label>
+        <div><b>Rolle</b><div id="roleButtons"></div></div>
+        <label><input type="checkbox" id="showDeny" checked> Vis Deny</label>
+        <label><input type="checkbox" id="showNone"> Vis ikke specificeret</label>
+        <label><input type="checkbox" id="showJobs" checked> Vis Custom JobTypes</label>
+        <label><input type="checkbox" id="showPerms" checked> Vis state permissions</label>
+        <label><b>Permission-visning</b>
+          <select id="permModeSelect">
+            <option value="role">For valgt rolle</option>
+            <option value="summary">Summering</option>
+          </select>
+        </label>
+        <label><input type="checkbox" id="hideUnrelated" checked> Skjul irrelevante states</label>
+      </section>
+
+      <section id="selectedSummary"></section>
+      <svg id="diagram" viewBox="0 0 1600 1220" role="img" aria-label="LifeCycle transition diagram"></svg>
+
+      <h2>Overgange for valgt rolle</h2>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Id</th><th>Fra state</th><th>Til state</th><th>Resultat</th>
+              <th>Custom JobTypes</th><th>Security</th>
+            </tr>
+          </thead>
+          <tbody id="transitionTable"></tbody>
+        </table>
+      </div>
+
+      <h2>State permissions – alle detaljer</h2>
+      <p class="note">Denne sektion viser alle roller og alle fire permission-typer for den valgte LifeCycleDefinition. <b>?</b> betyder mangler info.</p>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>State</th><th>Rolle</th><th>Read</th><th>Write</th><th>Delete</th><th>Download</th>
+            </tr>
+          </thead>
+          <tbody id="permissionTable"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="/static/viewer.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
