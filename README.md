@@ -4,7 +4,8 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 
 ## Funktioner
 
-- Upload af Excel-fil (`.xlsx`, `.xlsm`)
+- Forside med flere værktøjer (første: **Workflow Viewer**)
+- Upload af Excel-fil (`.xlsx`, `.xlsm`) med validering af Vault-format
 - Læser arket `LifeCycleDefinitionTransitions`
 - Læser valgfrit arket `LifeCycleDefinitionStates` (state permissions)
 - Parser transitions til nodes/edges JSON
@@ -26,7 +27,18 @@ python scripts\create_sample_excel.py
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Åbn: http://127.0.0.1:8000
+Åbn: http://127.0.0.1:8000 — forsiden vises først. Klik **Åbn Workflow Viewer** for at uploade Excel.
+
+### Upload-validering
+
+Backend og frontend validerer upload:
+
+- Kun `.xlsx` og `.xlsm`
+- Filen må ikke være tom (maks. 25 MB)
+- Skal være en gyldig Excel-fil med arket `LifeCycleDefinitionTransitions`
+- Påkrævede kolonner: `LifeCycleDefinition`, `From State`, `To State`, `Security`
+
+Fejlbeskeder vises på dansk ved forkert filtype, tom fil, for stor fil eller forkert Vault-format.
 
 ## Deploy
 
@@ -162,6 +174,8 @@ pytest
 ```
 
 Testfil: `samples/sample-lifecycle.xlsx`
+
+Tredjepartslicenser: se [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Projektstruktur
 

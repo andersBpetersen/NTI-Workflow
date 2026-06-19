@@ -175,7 +175,9 @@ def parse_transitions_excel(file_bytes: bytes) -> ParseResult:
     try:
         workbook = load_workbook(filename=io.BytesIO(file_bytes), read_only=True, data_only=True)
     except Exception as exc:
-        raise TransitionParseError(f"Kunne ikke læse Excel-filen: {exc}") from exc
+        raise TransitionParseError(
+            "Filen kunne ikke læses som en Excel-fil. Vælg en gyldig Vault Excel-eksport."
+        ) from exc
 
     try:
         sheet = _require_sheet(workbook, TRANSITIONS_SHEET)
@@ -233,7 +235,14 @@ def parse_transitions_excel(file_bytes: bytes) -> ParseResult:
         multiple_lifecycles = len(lifecycle_definitions) > 1
 
         states_sheet = _find_sheet(workbook, STATES_SHEET)
-        state_definitions = _parse_states_sheet(states_sheet, roles) if states_sheet else []
+        state_definitions: list[dict[str, Any]] = []
+        if states_sheet:
+            state_definitions = _parse_states_sheet(states_sheet, roles)
+            if not state_definitions:
+                warnings.append(
+                    f"Arket '{STATES_SHEET}' blev fundet men kunne ikke parses "
+                    "(manglende kolonner eller ingen gyldige rækker)."
+                )
 
         if "Everyone" not in roles:
             roles.add("Everyone")

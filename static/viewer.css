@@ -1,5 +1,6 @@
-:root{--allow:#1b7f4a;--deny:#b91c1c;--none:#c7ccd3;--ink:#111827;--bg:#f5f6f8;--job:#7c2d12;--panel:#ffffff;--muted:#6b7280;--border:#d1d5db}
+:root{--allow:#1b7f4a;--deny:#b91c1c;--none:#6b7280;--ink:#111827;--bg:#f5f6f8;--job:#7c2d12;--panel:#ffffff;--muted:#6b7280;--border:#d1d5db}
 *{box-sizing:border-box}
+.hidden{display:none}
 body{margin:0;font-family:Arial,sans-serif;color:var(--ink);background:var(--bg)}
 .upload-bar{padding:14px 32px;background:#fff;border-bottom:1px solid #ddd;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .upload-bar h1{margin:0;font-size:20px;flex:1}
@@ -17,7 +18,7 @@ header.viewer-header h1{margin:0 0 8px;font-size:26px}
 h2{margin:30px 0 12px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
 .legend span{padding:6px 10px;background:#fff;border:1px solid #ddd;border-radius:999px}
-.green{color:var(--allow)}.red{color:var(--deny)}.gray{color:#6b7280}.jobLegend{color:var(--job)}
+.green{color:var(--allow)}.red{color:var(--deny)}.gray{color:var(--none);font-weight:600}.jobLegend{color:var(--job)}
 .controls{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px 16px;margin:12px 0 16px;max-width:1500px}
 select{margin-left:8px;padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff}
 #roleButtons{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
@@ -28,7 +29,7 @@ svg#diagram{width:100%;max-width:1600px;height:auto;background:#fff;border:1px s
 .edge{fill:none;stroke-width:4;opacity:.12;stroke:var(--none)}
 .edge.allow{stroke:var(--allow);opacity:.88;stroke-width:5.5}
 .edge.deny{stroke:var(--deny);opacity:.42;stroke-width:3.2;stroke-dasharray:8 7}
-.edge.none{stroke:var(--none);opacity:.10;stroke-width:2.5}
+.edge.none{stroke:var(--none);opacity:.55;stroke-width:3.5}
 .edge.hidden{display:none}
 .jobLabel.hidden{display:none}
 .jobLabel text{font-size:13px;font-weight:700;letter-spacing:.1px;pointer-events:none}
@@ -63,3 +64,18 @@ td.none{background:#f3f4f6;color:#6b7280}
 .tableWrap{overflow:auto;max-height:620px;border:1px solid #ddd}
 .permCell{font-weight:700}
 .note{font-size:13px;color:var(--muted);margin:8px 0 12px}
+#home-root{padding:32px;max-width:1100px;margin:0 auto}
+#home-root h1{margin:0 0 8px;font-size:28px}
+#home-root .home-intro{margin:0 0 24px;color:var(--muted);font-size:15px}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.tool-card{background:#fff;border:1px solid #ddd;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.tool-card h2{margin:0;font-size:18px}
+.tool-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.45;flex:1}
+.tool-card button,.tool-card .tool-disabled-btn{border:none;border-radius:8px;padding:10px 14px;font-size:14px;cursor:pointer}
+.tool-card button.primary{background:#2563eb;color:#fff}
+.tool-card button.primary:hover{background:#1d4ed8}
+.tool-card .tool-disabled-btn{background:#f3f4f6;color:#9ca3af;cursor:not-allowed}
+.back-button{background:#fff;color:var(--ink);border:1px solid #cbd5e1;border-radius:8px;padding:8px 14px;font-size:14px;cursor:pointer}
+.back-button:hover{background:#f9fafb}
+#workflow-shell.hidden{display:none}
+.upload-bar .status-msg.loading{color:#2563eb}

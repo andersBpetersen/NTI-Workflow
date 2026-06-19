@@ -328,9 +328,46 @@ function addPermissionBox(state, p, hidden) {
   svg.appendChild(g);
 }
 
+const NODE_RADIUS = 78;
+const EDGE_INSET = 10;
+
+function pointAlong(from, toward, distance) {
+  const dx = toward.x - from.x;
+  const dy = toward.y - from.y;
+  const len = Math.hypot(dx, dy) || 1;
+  return {
+    x: from.x + (dx / len) * distance,
+    y: from.y + (dy / len) * distance,
+  };
+}
+
+function shortenQuadEndpoints(p1, control, p2) {
+  const inset = NODE_RADIUS + EDGE_INSET;
+  return {
+    start: pointAlong(p1, control, inset),
+    control,
+    end: pointAlong(p2, control, inset),
+  };
+}
+
+function diagramDefs() {
+  return (
+    '<defs>' +
+    '<filter id="boxShadow" x="-20%" y="-20%" width="140%" height="140%">' +
+    '<feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/>' +
+    "</filter>" +
+    '<marker id="arrow-allow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">' +
+    '<path d="M0,0 L0,8 L11,4 z" fill="#1b7f4a"></path></marker>' +
+    '<marker id="arrow-deny" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">' +
+    '<path d="M0,0 L0,8 L11,4 z" fill="#b91c1c"></path></marker>' +
+    '<marker id="arrow-none" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">' +
+    '<path d="M0,0 L0,8 L11,4 z" fill="#6b7280"></path></marker>' +
+    "</defs>"
+  );
+}
+
 function renderDiagram(items) {
-  svg.innerHTML =
-    '<defs><filter id="boxShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/></filter><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto"><path d="M0,0 L0,8 L11,4 z" fill="context-stroke"></path></marker></defs>';
+  svg.innerHTML = diagramDefs();
   const states = statesForLife(selectedLife);
   const pos = {};
   states.forEach((s, i) => {
@@ -355,6 +392,7 @@ function renderDiagram(items) {
     const off = rev ? (t.from < t.to ? 70 : -70) : 0;
     const qx = mx - (dy / len) * off;
     const qy = my + (dx / len) * off;
+    const control = { x: qx, y: qy };
     const v = effective(t.security, selectedRole);
     const c = cls(v);
     const hide =
@@ -368,6 +406,8 @@ function renderDiagram(items) {
       allowTo.add(t.to);
     }
     if (c === "deny") denyTo.add(t.to);
+
+    const pts = shortenQuadEndpoints(p1, control, p2);
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     const pathId =
       "edge-" + selectedLife.replace(/[^a-z0-9]+/gi, "-") + "-" + t.id;
@@ -375,9 +415,20 @@ function renderDiagram(items) {
     path.setAttribute("class", "edge " + c + (hide ? " hidden" : ""));
     path.setAttribute(
       "d",
-      "M " + p1.x + "," + p1.y + " Q " + qx + "," + qy + " " + p2.x + "," + p2.y,
+      "M " +
+        pts.start.x +
+        "," +
+        pts.start.y +
+        " Q " +
+        pts.control.x +
+        "," +
+        pts.control.y +
+        " " +
+        pts.end.x +
+        "," +
+        pts.end.y,
     );
-    path.setAttribute("marker-end", "url(#arrow)");
+    path.setAttribute("marker-end", "url(#arrow-" + c + ")");
     path.innerHTML =
       "<title>" +
       esc(t.id) +

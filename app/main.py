@@ -13,6 +13,8 @@ from app.parser import TransitionParseError, parse_result_to_dict, parse_transit
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_DIR = BASE_DIR / "static"
 
+MAX_UPLOAD_BYTES = 25 * 1024 * 1024
+
 app = FastAPI(
     title="NTI Workflow",
     description="Visualiser Vault lifecycle transitions fra Excel-eksport.",
@@ -46,6 +48,12 @@ async def upload_excel(file: UploadFile = File(...)) -> dict:
     content = await file.read()
     if not content:
         raise HTTPException(status_code=400, detail="Filen er tom.")
+
+    if len(content) > MAX_UPLOAD_BYTES:
+        raise HTTPException(
+            status_code=400,
+            detail="Filen er for stor. Maksimal filstørrelse er 25 MB.",
+        )
 
     try:
         result = parse_transitions_excel(content)

@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
+from app.main import MAX_UPLOAD_BYTES, app
 
 SAMPLE_FILE = Path(__file__).resolve().parent.parent / "samples" / "sample-lifecycle.xlsx"
 
@@ -60,3 +60,44 @@ def test_upload_missing_sheet_returns_422(client: TestClient) -> None:
 
     assert response.status_code == 422
     assert "LifeCycleDefinitionTransitions" in response.json()["detail"]
+
+
+def test_upload_wrong_extension_returns_400(client: TestClient) -> None:
+    response = client.post(
+        "/api/upload",
+        files={"file": ("notes.txt", b"hello", "text/plain")},
+    )
+
+    assert response.status_code == 400
+    assert ".xlsx" in response.json()["detail"]
+
+
+def test_upload_empty_file_returns_400(client: TestClient) -> None:
+    response = client.post(
+        "/api/upload",
+        files={"file": ("empty.xlsx", b"", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")},
+    )
+
+    assert response.status_code == 400
+    assert "tom" in response.json()["detail"].lower()
+
+
+def test_upload_invalid_xlsx_returns_422(client: TestClient) -> None:
+    response = client.post(
+        "/api/upload",
+        files={"file": ("fake.xlsx", b"not excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")},
+    )
+
+    assert response.status_code == 422
+    assert "Excel-fil" in response.json()["detail"]
+
+
+def test_upload_too_large_returns_400(client: TestClient) -> None:
+    oversized = b"x" * (MAX_UPLOAD_BYTES + 1)
+    response = client.post(
+        "/api/upload",
+        files={"file": ("big.xlsx", oversized, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")},
+    )
+
+    assert response.status_code == 400
+    assert "for stor" in response.json()["detail"].lower()

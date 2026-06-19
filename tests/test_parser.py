@@ -39,6 +39,11 @@ def test_parse_sample_excel() -> None:
     assert first_edge["fromState"] == "Work In Progress"
 
 
+def test_invalid_xlsx_content_raises() -> None:
+    with pytest.raises(TransitionParseError, match="Filen kunne ikke læses som en Excel-fil"):
+        parse_transitions_excel(b"not a real excel file")
+
+
 def test_missing_sheet_raises() -> None:
     workbook = Workbook()
     workbook.active.title = "WrongSheet"
@@ -76,3 +81,40 @@ def test_transitions_without_states_sheet() -> None:
     payload = parse_result_to_dict(parse_transitions_excel(buffer.getvalue()))
     assert payload["meta"]["stateDefinitionCount"] == 0
     assert payload["meta"]["transitionCount"] == 1
+
+
+def test_states_sheet_with_invalid_columns_does_not_fail() -> None:
+    workbook = Workbook()
+    transitions = workbook.active
+    transitions.title = "LifeCycleDefinitionTransitions"
+    transitions.append(
+        ["Id", "LifeCycleDefinition", "From State", "To State", "Security"]
+    )
+    transitions.append(["1", "LC1", "Draft", "Released", "Everyone:Allow"])
+
+    states = workbook.create_sheet("LifeCycleDefinitionStates")
+    states.append(["WrongColumn", "AnotherColumn"])
+    states.append(["x", "y"])
+
+    buffer = io.BytesIO()
+    workbook.save(buffer)
+
+    payload = parse_result_to_dict(parse_transitions_excel(buffer.getvalue()))
+    assert payload["meta"]["transitionCount"] == 1
+    assert payload["meta"]["stateDefinitionCount"] == 0
+    assert any("LifeCycleDefinitionStates" in w for w in payload["meta"]["warnings"])
+
+
+def test_no_valid_transitions_raises() -> None:
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "LifeCycleDefinitionTransitions"
+    sheet.append(
+        ["Id", "LifeCycleDefinition", "From State", "To State", "Security"]
+    )
+    sheet.append(["1", "", "A", "B", "Everyone:Allow"])
+    buffer = io.BytesIO()
+    workbook.save(buffer)
+
+    with pytest.raises(TransitionParseError, match="Ingen gyldige transitions"):
+        parse_transitions_excel(buffer.getvalue())
