@@ -852,7 +852,7 @@ function bindControls() {
   if (zoomResetBtn) zoomResetBtn.onclick = () => window.resetDiagramZoom();
 }
 
-function setupViewer() {
+function setupViewer(initialContext) {
   permissionRoles = buildPermissionRoles();
   lifecycles = uniq(
     transitions.map((t) => t.life).concat(stateDefs.map((s) => s.life)),
@@ -863,7 +863,10 @@ function setupViewer() {
   lifeSelect.innerHTML = lifecycles
     .map((x) => `<option value="${esc(x)}">${esc(x)}</option>`)
     .join("");
-  selectedLife = lifecycles[0] || "";
+  if (!selectedLife || !lifecycles.includes(selectedLife)) {
+    selectedLife = lifecycles[0] || "";
+  }
+  lifeSelect.value = selectedLife;
   refreshStateSelect();
 
   roleButtons.innerHTML = "";
@@ -881,6 +884,32 @@ function setupViewer() {
 
   if (!selectedRole || !roles.includes(selectedRole)) {
     selectedRole = roles[0] || "Everyone";
+  }
+
+  if (initialContext) {
+    if (initialContext.selectedDirection && directionSelect) {
+      selectedDirection = initialContext.selectedDirection;
+      directionSelect.value = selectedDirection;
+    }
+    if (initialContext.permissionMode && permModeSelect) {
+      permissionMode = initialContext.permissionMode;
+      permModeSelect.value = permissionMode;
+    }
+    if (showDeny && initialContext.showDeny != null) {
+      showDeny.checked = initialContext.showDeny;
+    }
+    if (showNone && initialContext.showNone != null) {
+      showNone.checked = initialContext.showNone;
+    }
+    if (showJobs && initialContext.showJobs != null) {
+      showJobs.checked = initialContext.showJobs;
+    }
+    if (showPerms && initialContext.showPerms != null) {
+      showPerms.checked = initialContext.showPerms;
+    }
+    if (hideUnrelated && initialContext.hideUnrelated != null) {
+      hideUnrelated.checked = initialContext.hideUnrelated;
+    }
   }
 
   bindControls();
@@ -909,7 +938,7 @@ function apiToViewerData(payload) {
   };
 }
 
-window.initWorkflowViewer = function initWorkflowViewer(apiPayload) {
+window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialContext) {
   svg = document.getElementById("diagram");
   lifeSelect = document.getElementById("lifeSelect");
   stateSelect = document.getElementById("stateSelect");
@@ -940,5 +969,38 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload) {
   selectedDirection = "all";
   permissionMode = "role";
 
-  setupViewer();
+  if (initialContext) {
+    if (initialContext.selectedLifeCycle) {
+      selectedLife = initialContext.selectedLifeCycle;
+    }
+    if (initialContext.selectedRole) {
+      selectedRole = initialContext.selectedRole;
+    }
+    if (initialContext.selectedState) {
+      selectedState = initialContext.selectedState;
+    }
+    if (initialContext.selectedDirection) {
+      selectedDirection = initialContext.selectedDirection;
+    }
+    if (initialContext.permissionMode) {
+      permissionMode = initialContext.permissionMode;
+    }
+  }
+
+  setupViewer(initialContext);
+};
+
+window.getWorkflowViewerContext = function getWorkflowViewerContext() {
+  return {
+    selectedLifeCycle: selectedLife,
+    selectedRole,
+    selectedState,
+    selectedDirection,
+    showDeny: showDeny ? showDeny.checked : true,
+    showNone: showNone ? showNone.checked : false,
+    showJobs: showJobs ? showJobs.checked : true,
+    showPerms: showPerms ? showPerms.checked : true,
+    permissionMode: permModeSelect ? permModeSelect.value : "role",
+    hideUnrelated: hideUnrelated ? hideUnrelated.checked : true,
+  };
 };

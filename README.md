@@ -13,6 +13,7 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 - Klikbare states og transitions med detaljepanel
 - Tydelig visning af import-advarsler efter upload
 - Enkel zoom på diagrammet (ind/ud/nulstil)
+- Eksportér Workflow Viewer som standalone HTML (offline til undervisning/review)
 
 ## Krav
 
@@ -47,24 +48,40 @@ Fejlbeskeder vises på dansk ved forkert filtype, tom fil, for stor fil eller fo
 
 Se **[DEPLOY.md](DEPLOY.md)** for komplet guide til IT/drift (Docker, firewall, reverse proxy, fejlfinding).
 
+Se **[PUBLISH.md](PUBLISH.md)** for build, tag og push til Docker registry ([tickjf/nti-workflow](https://hub.docker.com/r/tickjf/nti-workflow/)).
+
 Installér [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) og sørg for at Docker kører.
 
-### Hurtig start (docker compose – anbefalet)
+### Lokal udvikling (build fra kildekode)
 
 ```powershell
 cd "C:\GitHub\NTI Workflow"
 docker compose up --build -d
 ```
 
+### Drift fra Docker registry (production)
+
+```powershell
+copy .env.example .env
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d
+```
+
 Åbn: http://localhost:8000
 
-Stop igen:
+Stop lokal:
 
 ```powershell
 docker compose down
 ```
 
-Se logs:
+Stop production:
+
+```powershell
+docker compose -f docker-compose.prod.yml down
+```
+
+Se logs (lokal):
 
 ```powershell
 docker compose logs -f
@@ -146,6 +163,12 @@ Returnerer JSON med:
 - `stateDefinitions` – state permissions (hvis arket findes)
 - `meta` – antal, advarsler m.m.
 
+### `POST /api/export/html`
+
+JSON-body med `payload` (samme struktur som upload-svaret), valgfrit `sourceFileName`, `selectedLifeCycle`, `title` og `viewerContext`.
+
+Returnerer en selvstændig `.html`-fil som download. Filen kan åbnes offline i browseren uden server.
+
 ## Excel-format (matcher VBA add-in)
 
 ### Ark: `LifeCycleDefinitionTransitions`
@@ -186,6 +209,7 @@ Tredjepartslicenser: se [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 app/
   main.py          # FastAPI endpoints
   parser.py        # Excel parsing (openpyxl)
+  export_html.py   # Standalone HTML export
 static/
   index.html       # Upload UI
   viewer.js        # VBA-kompatibel SVG-viewer

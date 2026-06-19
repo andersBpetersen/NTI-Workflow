@@ -13,9 +13,14 @@ Brugere uploader en Vault Excel-eksport og får samme type lifecycle-visualiseri
 | App | FastAPI + Uvicorn |
 | Frontend | Statisk HTML/JS (VBA-kompatibel viewer) |
 | Database | Ingen |
-| Login | Ingen (første version) |
+| Login | Ingen |
 | Standard port | **8000** |
 | Health endpoint | `GET /health` → `{"status":"ok"}` |
+
+| Compose-fil | Formål |
+|-------------|--------|
+| `docker-compose.yml` | Lokal udvikling / lokal build (`build: .`) |
+| `docker-compose.prod.yml` | Drift fra Docker registry (kun `image`) |
 
 ---
 
@@ -30,7 +35,9 @@ Ingen SQL Server, ingen eksterne API-nøgler, ingen persistent storage.
 
 ---
 
-## Hurtig deploy (anbefalet)
+## Lokal deploy / build (udvikling)
+
+Brug `docker-compose.yml` når image skal bygges fra kildekoden på din maskine.
 
 ```powershell
 cd "C:\sti\til\NTI Workflow"
@@ -43,32 +50,84 @@ Verificér:
 curl http://localhost:8000/health
 ```
 
-Forventet svar:
+Stop:
 
-```json
-{"status":"ok"}
+```powershell
+docker compose down
 ```
 
-Åbn i browser:
+Åbn i browser: `http://localhost:8000`
 
-```
-http://localhost:8000
+### Opdater efter lokale kodeændringer
+
+```powershell
+docker compose down
+docker compose up --build -d
 ```
 
-Eller fra andre PC'er på netværket:
+### Logs og status (lokal)
 
-```
-http://<server-ip>:8000
+```powershell
+docker compose logs -f
+docker compose ps
+docker compose restart
 ```
 
 ---
 
-## Deploy uden docker compose
+## Kør fra Docker registry (drift / production)
+
+Officielt image på Docker Hub: [tickjf/nti-workflow](https://hub.docker.com/r/tickjf/nti-workflow/)
+
+Brug `docker-compose.prod.yml` på servere, hvor image skal hentes fra registry — **uden** lokal build.
 
 ```powershell
 cd "C:\sti\til\NTI Workflow"
-docker build -t nti-workflow .
-docker run -d --restart unless-stopped -p 8000:8000 --name nti-workflow nti-workflow
+copy .env.example .env
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d
+```
+
+Verificér:
+
+```powershell
+curl http://localhost:8000/health
+```
+
+### Logs, status og genstart (production)
+
+```powershell
+docker compose -f docker-compose.prod.yml logs -f
+docker compose -f docker-compose.prod.yml ps
+docker compose -f docker-compose.prod.yml restart
+```
+
+### Opdater drift (ny version fra registry)
+
+Opdater `NTI_WORKFLOW_IMAGE` i `.env` til ny version, derefter:
+
+```powershell
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d
+```
+
+Se **[PUBLISH.md](PUBLISH.md)** for build og push af nye versioner.
+
+### Manuel metode (uden compose)
+
+```powershell
+docker pull tickjf/nti-workflow:0.4.1
+docker run -d --restart unless-stopped -p 8000:8000 --name nti-workflow tickjf/nti-workflow:0.4.1
+```
+
+---
+
+## Deploy uden docker compose (lokal build)
+
+```powershell
+cd "C:\sti\til\NTI Workflow"
+docker build -t nti-workflow:local .
+docker run -d --restart unless-stopped -p 8000:8000 --name nti-workflow nti-workflow:local
 ```
 
 Stop og fjern:
@@ -76,41 +135,6 @@ Stop og fjern:
 ```powershell
 docker stop nti-workflow
 docker rm nti-workflow
-```
-
----
-
-## Drift
-
-### Se logs
-
-```powershell
-docker compose logs -f
-```
-
-Eller uden compose:
-
-```powershell
-docker logs -f nti-workflow
-```
-
-### Genstart
-
-```powershell
-docker compose restart
-```
-
-### Opdater efter ny kode
-
-```powershell
-docker compose down
-docker compose up --build -d
-```
-
-### Status
-
-```powershell
-docker compose ps
 ```
 
 ---
@@ -125,7 +149,7 @@ Appen kører selv på HTTP port 8000. HTTPS sættes typisk op foran containeren:
 https://workflow.intern.firma.dk  →  http://127.0.0.1:8000
 ```
 
-Appen kræver ingen særlig konfiguration for dette i v0.1.
+Appen kræver ingen særlig konfiguration for dette.
 
 ---
 
@@ -142,7 +166,7 @@ New-NetFirewallRule -DisplayName "NTI Workflow" -Direction Inbound -Protocol TCP
 ## Brug efter deploy
 
 1. Bruger åbner websiden
-2. Klikker **Vælg Excel-fil**
+2. Klikker **Åbn Workflow Viewer**
 3. Uploader Vault-eksport (`.xlsx` / `.xlsm`)
 4. Diagram og tabeller vises
 
@@ -170,13 +194,9 @@ New-NetFirewallRule -DisplayName "NTI Workflow" -Direction Inbound -Protocol TCP
 
 ### Test efter deploy
 
-Upload testfilen:
+Upload testfilen `samples/sample-lifecycle.xlsx` (ved lokal build) eller en Vault-eksport.
 
-```
-samples/sample-lifecycle.xlsx
-```
-
-Forventet: diagram med 4 states og 5 transitions.
+Forventet: diagram med states og transitions.
 
 ---
 
@@ -196,31 +216,20 @@ Content-Type: multipart/form-data
 Field: file
 ```
 
-Eksempel:
-
-```powershell
-curl.exe -X POST "http://localhost:8000/api/upload" -F "file=@samples\sample-lifecycle.xlsx"
-```
-
 ---
 
 ## Projektstruktur (deploy-relevant)
 
 ```
 NTI Workflow/
-├── Dockerfile              # Container build
-├── docker-compose.yml      # Start/stop + healthcheck
-├── requirements.txt        # Python dependencies
+├── Dockerfile
+├── docker-compose.yml          # Lokal build/dev
+├── docker-compose.prod.yml     # Drift fra registry
+├── .env.example
+├── requirements.txt
 ├── app/
-│   ├── main.py             # FastAPI endpoints
-│   └── parser.py           # Excel parsing (openpyxl)
 ├── static/
-│   ├── index.html          # Upload UI
-│   ├── app.js              # Upload logik
-│   ├── viewer.js           # VBA-kompatibel SVG viewer
-│   └── viewer.css
 └── samples/
-    └── sample-lifecycle.xlsx
 ```
 
 **Medtag ikke ved zip/deploy:** `.venv/`, `__pycache__/`, `.pytest_cache/`
@@ -232,10 +241,11 @@ NTI Workflow/
 | Problem | Løsning |
 |---------|---------|
 | `docker: command not found` | Installér Docker Desktop / Docker Engine |
-| Port 8000 optaget | Skift port i `docker-compose.yml`, f.eks. `"8080:8000"` |
-| Siden loades ikke eksternt | Tjek firewall og at container kører (`docker compose ps`) |
-| Upload fejler med 422 | Excel mangler ark eller kolonner — se Excel-format ovenfor |
-| Container stopper med det samme | Kør `docker compose logs` og tjek fejlbesked |
+| Port 8000 optaget | Skift `NTI_WORKFLOW_PORT` i `.env`, f.eks. `8080` |
+| Siden loades ikke eksternt | Tjek firewall og at container kører |
+| Upload fejler med 422 | Excel mangler ark eller kolonner |
+| Container stopper med det samme | Kør `docker compose ... logs` og tjek fejlbesked |
+| Pull fejler på server | Tjek netværk og image-tag i `.env` |
 
 ---
 
@@ -251,6 +261,9 @@ NTI Workflow/
 
 ## Versionsinfo
 
+- **v0.4** – Standalone HTML-export og Docker registry publish-flow
+- **v0.3** – Klikbart detaljepanel, import warnings og zoom
+- **v0.2** – Upload-validering, forside, pile og forbedret diagramvisning
 - **v0.1** – Første version uden database og login
-- Erstatter VBA workflow-knap i Excel
-- Deployment via Docker anbefales
+
+Erstatter VBA workflow-knap i Excel. Deployment via Docker anbefales.

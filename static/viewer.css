@@ -1,6 +1,9 @@
 :root{--allow:#1b7f4a;--deny:#b91c1c;--none:#6b7280;--ink:#111827;--bg:#f5f6f8;--job:#7c2d12;--panel:#ffffff;--muted:#6b7280;--border:#d1d5db}
 *{box-sizing:border-box}
-.hidden{display:none}
+.hidden{display:none!important}
+#workflow-shell.hidden{display:none!important}
+#viewer-root.hidden{display:none!important}
+#empty-state.hidden{display:none!important}
 body{margin:0;font-family:Arial,sans-serif;color:var(--ink);background:var(--bg)}
 .upload-bar{padding:14px 32px;background:#fff;border-bottom:1px solid #ddd;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .upload-bar h1{margin:0;font-size:20px;flex:1}
@@ -10,8 +13,6 @@ body{margin:0;font-family:Arial,sans-serif;color:var(--ink);background:var(--bg)
 .upload-bar .status-msg.error{color:var(--deny)}
 .upload-bar .status-msg.success{color:var(--allow)}
 #empty-state{padding:48px 32px;color:var(--muted);text-align:center}
-#empty-state.hidden{display:none}
-#viewer-root.hidden{display:none}
 header.viewer-header{padding:24px 32px;background:#fff;border-bottom:1px solid #ddd}
 main.viewer-main{padding:24px 32px 44px}
 header.viewer-header h1{margin:0 0 8px;font-size:26px}
@@ -34,6 +35,7 @@ select{margin-left:8px;padding:7px 10px;border:1px solid #cbd5e1;border-radius:8
 .diagram-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .zoom-btn{background:#fff;color:var(--ink);border:1px solid #cbd5e1;border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
 .zoom-btn:hover{background:#f9fafb}
+.zoom-btn:disabled{opacity:.5;cursor:not-allowed}
 .details-panel{flex:0 1 340px;min-width:280px;background:#fff;border:1px solid #ddd;border-radius:10px;padding:16px;max-height:900px;overflow:auto}
 .details-panel h3{margin:0 0 12px;font-size:17px}
 .details-panel dl{margin:0 0 14px}
@@ -101,5 +103,4 @@ td.none{background:#f3f4f6;color:#6b7280}
 .tool-card .tool-disabled-btn{background:#f3f4f6;color:#9ca3af;cursor:not-allowed}
 .back-button{background:#fff;color:var(--ink);border:1px solid #cbd5e1;border-radius:8px;padding:8px 14px;font-size:14px;cursor:pointer}
 .back-button:hover{background:#f9fafb}
-#workflow-shell.hidden{display:none}
 .upload-bar .status-msg.loading{color:#2563eb}
