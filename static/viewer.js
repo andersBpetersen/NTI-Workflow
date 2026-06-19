@@ -33,6 +33,16 @@ let showPerms;
 let permModeSelect;
 let hideUnrelated;
 
+let selectedElement = null;
+let detailsPanel;
+let zoomInBtn;
+let zoomOutBtn;
+let zoomResetBtn;
+
+const DEFAULT_VIEWBOX = { x: 0, y: 0, w: W, h: H };
+let viewBoxState = { ...DEFAULT_VIEWBOX };
+const ZOOM_FACTOR = 0.85;
+
 function esc(s) {
   s = String(s == null ? "" : s);
   return s
@@ -181,6 +191,207 @@ function filteredItems() {
   return items.sort(
     (a, b) => a.from.localeCompare(b.from) || a.to.localeCompare(b.to),
   );
+}
+
+function applyViewBox() {
+  if (!svg) return;
+  svg.setAttribute(
+    "viewBox",
+    viewBoxState.x + " " + viewBoxState.y + " " + viewBoxState.w + " " + viewBoxState.h,
+  );
+}
+
+function zoomDiagram(direction) {
+  const factor = direction === "in" ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
+  const newW = Math.max(400, Math.min(W * 3, viewBoxState.w * factor));
+  const newH = Math.max(300, Math.min(H * 3, viewBoxState.h * factor));
+  const centerX = viewBoxState.x + viewBoxState.w / 2;
+  const centerY = viewBoxState.y + viewBoxState.h / 2;
+  viewBoxState = {
+    x: centerX - newW / 2,
+    y: centerY - newH / 2,
+    w: newW,
+    h: newH,
+  };
+  applyViewBox();
+}
+
+window.resetDiagramZoom = function resetDiagramZoom() {
+  viewBoxState = { ...DEFAULT_VIEWBOX };
+  applyViewBox();
+};
+
+function getSelectionContext(items) {
+  const ctx = {
+    selectedState: null,
+    selectedTransitionId: null,
+    relatedStates: new Set(),
+    highlightedEdges: new Set(),
+    selectedEdge: null,
+  };
+  if (!selectedElement) return ctx;
+
+  if (selectedElement.type === "state") {
+    ctx.selectedState = selectedElement.state;
+    items.forEach((t) => {
+      if (t.from === selectedElement.state || t.to === selectedElement.state) {
+        ctx.highlightedEdges.add(String(t.id));
+        ctx.relatedStates.add(t.from);
+        ctx.relatedStates.add(t.to);
+      }
+    });
+  } else if (selectedElement.type === "transition") {
+    ctx.selectedTransitionId = String(selectedElement.id);
+    const match = items.find((t) => String(t.id) === ctx.selectedTransitionId);
+    if (match) {
+      ctx.selectedEdge = ctx.selectedTransitionId;
+      ctx.relatedStates.add(match.from);
+      ctx.relatedStates.add(match.to);
+    }
+  }
+  return ctx;
+}
+
+function selectState(stateName) {
+  selectedElement = { type: "state", state: stateName };
+  update();
+}
+
+function selectTransition(transitionId) {
+  selectedElement = { type: "transition", id: String(transitionId) };
+  update();
+}
+
+function clearSelection() {
+  selectedElement = null;
+  update();
+}
+
+function renderTransitionListItem(t) {
+  const result = effective(t.security, selectedRole);
+  const job = normalizeJobText(t.customJob || "");
+  return (
+    "<li><b>" +
+    esc(t.id) +
+    "</b>: " +
+    esc(t.from) +
+    " \u2192 " +
+    esc(t.to) +
+    ' \u2014 <span class="' +
+    cls(result) +
+    '">' +
+    esc(result) +
+    "</span>" +
+    (job ? ' \u2014 <span class="jobCell">' + esc(job) + "</span>" : "") +
+    "</li>"
+  );
+}
+
+function renderStateDetails(stateName) {
+  const info = stateInfo(selectedLife, stateName);
+  const items = transitions.filter((t) => t.life === selectedLife);
+  const incoming = items.filter((t) => t.to === stateName);
+  const outgoing = items.filter((t) => t.from === stateName);
+  const perms = ["Read", "Write", "Delete", "Download"];
+
+  let html =
+    "<h3>State</h3><dl>" +
+    "<dt>Type</dt><dd>State</dd>" +
+    "<dt>State</dt><dd>" +
+    esc(stateName) +
+    "</dd>" +
+    "<dt>LifecycleDefinition</dt><dd>" +
+    esc(selectedLife) +
+    "</dd>" +
+    "<dt>Valgt rolle</dt><dd>" +
+    esc(selectedRole) +
+    "</dd></dl>" +
+    "<h3>State permissions</h3><dl>";
+
+  perms.forEach((perm) => {
+    const v = statePermValue(info, selectedRole, perm);
+    html +=
+      "<dt>" +
+      esc(perm) +
+      '</dt><dd><span class="' +
+      permCls(v) +
+      '">' +
+      esc(permText(v)) +
+      "</span></dd>";
+  });
+
+  html +=
+    "</dl><h3>Indgående transitions</h3>" +
+    (incoming.length
+      ? "<ul>" + incoming.map(renderTransitionListItem).join("") + "</ul>"
+      : "<p class=\"details-placeholder\">Ingen</p>") +
+    "<h3>Udgående transitions</h3>" +
+    (outgoing.length
+      ? "<ul>" + outgoing.map(renderTransitionListItem).join("") + "</ul>"
+      : "<p class=\"details-placeholder\">Ingen</p>");
+
+  return html;
+}
+
+function renderTransitionDetails(transitionId) {
+  const t = transitions.find(
+    (item) => item.life === selectedLife && String(item.id) === String(transitionId),
+  );
+  if (!t) {
+    return "<p class=\"details-placeholder\">Transition ikke fundet.</p>";
+  }
+
+  const result = effective(t.security, selectedRole);
+  const job = normalizeJobText(t.customJob || "");
+  const rowIndex = t.rowIndex != null && t.rowIndex !== "" ? String(t.rowIndex) : "-";
+
+  return (
+    "<h3>Transition</h3><dl>" +
+    "<dt>Type</dt><dd>Transition</dd>" +
+    "<dt>Id</dt><dd>" +
+    esc(t.id) +
+    "</dd>" +
+    "<dt>LifecycleDefinition</dt><dd>" +
+    esc(t.life) +
+    "</dd>" +
+    "<dt>Fra state</dt><dd>" +
+    esc(t.from) +
+    "</dd>" +
+    "<dt>Til state</dt><dd>" +
+    esc(t.to) +
+    "</dd>" +
+    "<dt>Valgt rolle</dt><dd>" +
+    esc(selectedRole) +
+    "</dd>" +
+    "<dt>Resultat</dt><dd><span class=\"" +
+    cls(result) +
+    '">' +
+    esc(result) +
+    "</span></dd>" +
+    "<dt>Custom JobTypes</dt><dd>" +
+    (job ? '<span class="jobCell">' + esc(job) + "</span>" : "-") +
+    "</dd>" +
+    "<dt>Security</dt><dd>" +
+    esc(t.security || "-") +
+    "</dd>" +
+    "<dt>Excel-række</dt><dd>" +
+    esc(rowIndex) +
+    "</dd></dl>"
+  );
+}
+
+function renderDetailsPanel() {
+  if (!detailsPanel) return;
+  if (!selectedElement) {
+    detailsPanel.innerHTML =
+      '<p class="details-placeholder">Klik på en state eller transition for at se detaljer.</p>';
+    return;
+  }
+  if (selectedElement.type === "state") {
+    detailsPanel.innerHTML = renderStateDetails(selectedElement.state);
+  } else {
+    detailsPanel.innerHTML = renderTransitionDetails(selectedElement.id);
+  }
 }
 
 function addJobLabel(pathId, text, hidden) {
@@ -368,6 +579,8 @@ function diagramDefs() {
 
 function renderDiagram(items) {
   svg.innerHTML = diagramDefs();
+  applyViewBox();
+  const sel = getSelectionContext(items);
   const states = statesForLife(selectedLife);
   const pos = {};
   states.forEach((s, i) => {
@@ -411,8 +624,13 @@ function renderDiagram(items) {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     const pathId =
       "edge-" + selectedLife.replace(/[^a-z0-9]+/gi, "-") + "-" + t.id;
+    let edgeClass = "edge " + c + (hide ? " hidden" : "");
+    const tid = String(t.id);
+    if (sel.selectedEdge === tid) edgeClass += " selectedEdge";
+    else if (sel.highlightedEdges.has(tid)) edgeClass += " highlightedEdge";
+    else if (selectedElement && !hide) edgeClass += " dimmedEdge";
     path.setAttribute("id", pathId);
-    path.setAttribute("class", "edge " + c + (hide ? " hidden" : ""));
+    path.setAttribute("class", edgeClass);
     path.setAttribute(
       "d",
       "M " +
@@ -443,6 +661,10 @@ function renderDiagram(items) {
       " | Job: " +
       esc(normalizeJobText(t.customJob || "")) +
       "</title>";
+    path.addEventListener("click", (event) => {
+      event.stopPropagation();
+      selectTransition(t.id);
+    });
     svg.appendChild(path);
     addJobLabel(pathId, t.customJob, hide);
   });
@@ -458,6 +680,9 @@ function renderDiagram(items) {
     if (allowFrom.has(s)) nc += " activeFrom";
     if (allowTo.has(s)) nc += " activeTo";
     else if (denyTo.has(s)) nc += " deniedTo";
+    if (sel.selectedState === s) nc += " selectedNode";
+    else if (sel.relatedStates.has(s)) nc += " relatedNode";
+    else if (selectedElement) nc += " dimmedNode";
     g.setAttribute("class", nc);
     g.innerHTML =
       '<circle cx="' +
@@ -471,9 +696,17 @@ function renderDiagram(items) {
       '" text-anchor="middle">' +
       esc(s) +
       "</text>";
+    g.addEventListener("click", (event) => {
+      event.stopPropagation();
+      selectState(s);
+    });
     svg.appendChild(g);
     addPermissionBox(s, p, unrelated && hideUnrelated.checked);
   });
+
+  svg.onclick = () => {
+    if (selectedElement) clearSelection();
+  };
 }
 
 function directionText() {
@@ -586,11 +819,13 @@ function update() {
     })
     .join("");
   renderPermissionTable();
+  renderDetailsPanel();
 }
 
 function bindControls() {
   lifeSelect.onchange = () => {
     selectedLife = lifeSelect.value;
+    selectedElement = null;
     refreshStateSelect();
     update();
   };
@@ -600,6 +835,7 @@ function bindControls() {
   };
   directionSelect.onchange = () => {
     selectedDirection = directionSelect.value;
+    selectedElement = null;
     update();
   };
   showDeny.onchange = update;
@@ -611,6 +847,9 @@ function bindControls() {
     update();
   };
   hideUnrelated.onchange = update;
+  if (zoomInBtn) zoomInBtn.onclick = () => zoomDiagram("in");
+  if (zoomOutBtn) zoomOutBtn.onclick = () => zoomDiagram("out");
+  if (zoomResetBtn) zoomResetBtn.onclick = () => window.resetDiagramZoom();
 }
 
 function setupViewer() {
@@ -657,6 +896,7 @@ function apiToViewerData(payload) {
       to: e.toState,
       security: e.security || "",
       customJob: e.customJob || "",
+      rowIndex: e.rowIndex != null ? e.rowIndex : null,
     })),
     stateDefs: (payload.stateDefinitions || []).map((s) => ({
       id: String(s.id),
@@ -684,6 +924,13 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload) {
   showPerms = document.getElementById("showPerms");
   permModeSelect = document.getElementById("permModeSelect");
   hideUnrelated = document.getElementById("hideUnrelated");
+  detailsPanel = document.getElementById("details-panel");
+  zoomInBtn = document.getElementById("zoom-in-btn");
+  zoomOutBtn = document.getElementById("zoom-out-btn");
+  zoomResetBtn = document.getElementById("zoom-reset-btn");
+
+  selectedElement = null;
+  window.resetDiagramZoom();
 
   const data = apiToViewerData(apiPayload);
   transitions = data.transitions;

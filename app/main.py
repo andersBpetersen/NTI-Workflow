@@ -47,7 +47,10 @@ async def upload_excel(file: UploadFile = File(...)) -> dict:
 
     content = await file.read()
     if not content:
-        raise HTTPException(status_code=400, detail="Filen er tom.")
+        raise HTTPException(
+            status_code=400,
+            detail="Filen er tom. Vælg en gyldig Vault Excel-eksport.",
+        )
 
     if len(content) > MAX_UPLOAD_BYTES:
         raise HTTPException(

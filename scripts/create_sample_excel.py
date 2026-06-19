@@ -70,30 +70,30 @@ STATE_ROWS = [
         "10",
         "Basic Release Process",
         "Work In Progress",
-        "Engineer:Read:Allow;Write:Allow;Delete:Deny;Download:Allow;"
-        "Manager:Read:Allow;Write:Allow;Delete:Allow;Download:Allow",
+        "Engineer: Read: Allow, Write: Allow, Delete: Deny, Download: Allow; "
+        "Manager: Read: Allow, Write: Allow, Delete: Allow, Download: Allow",
     ],
     [
         "11",
         "Basic Release Process",
         "For Review",
-        "Engineer:Read:Allow;Write:Deny;Delete:Deny;Download:Allow;"
-        "Manager:Read:Allow;Write:Allow;Delete:Allow;Download:Allow",
+        "Engineer: Read: Allow, Write: Deny, Delete: Deny, Download: Allow; "
+        "Manager: Read: Allow, Write: Allow, Delete: Allow, Download: Allow",
     ],
     [
         "12",
         "Basic Release Process",
         "Released",
-        "Engineer:Read:Allow;Write:Deny;Delete:Deny;Download:Allow;"
-        "Manager:Read:Allow;Write:Allow;Delete:Allow;Download:Allow;"
-        "Everyone:Read:Allow;Write:Deny;Delete:Deny;Download:Deny",
+        "Engineer: Read: Allow, Write: Deny, Delete: Deny, Download: Allow; "
+        "Manager: Read: Allow, Write: Allow, Delete: Allow, Download: Allow; "
+        "Everyone: Read: Allow, Write: Deny, Delete: Deny, Download: Deny",
     ],
     [
         "13",
         "Basic Release Process",
         "Obsolete",
-        "Manager:Read:Allow;Write:Allow;Delete:Allow;Download:Allow;"
-        "Everyone:Read:Allow;Write:Deny;Delete:Deny;Download:Deny",
+        "Manager: Read: Allow, Write: Allow, Delete: Allow, Download: Allow; "
+        "Everyone: Read: Allow, Write: Deny, Delete: Deny, Download: Deny",
     ],
 ]
 

@@ -66,9 +66,8 @@ def _find_sheet(workbook, sheet_name: str) -> Worksheet | None:
 def _require_sheet(workbook, sheet_name: str) -> Worksheet:
     sheet = _find_sheet(workbook, sheet_name)
     if sheet is None:
-        available = ", ".join(workbook.sheetnames)
         raise TransitionParseError(
-            f"Arket '{sheet_name}' blev ikke fundet. Tilgængelige ark: {available}"
+            "Excel-filen mangler arket LifeCycleDefinitionTransitions."
         )
     return sheet
 

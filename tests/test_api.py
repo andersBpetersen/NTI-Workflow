@@ -59,7 +59,7 @@ def test_upload_missing_sheet_returns_422(client: TestClient) -> None:
     )
 
     assert response.status_code == 422
-    assert "LifeCycleDefinitionTransitions" in response.json()["detail"]
+    assert response.json()["detail"] == "Excel-filen mangler arket LifeCycleDefinitionTransitions."
 
 
 def test_upload_wrong_extension_returns_400(client: TestClient) -> None:
@@ -79,7 +79,7 @@ def test_upload_empty_file_returns_400(client: TestClient) -> None:
     )
 
     assert response.status_code == 400
-    assert "tom" in response.json()["detail"].lower()
+    assert response.json()["detail"] == "Filen er tom. Vælg en gyldig Vault Excel-eksport."
 
 
 def test_upload_invalid_xlsx_returns_422(client: TestClient) -> None:

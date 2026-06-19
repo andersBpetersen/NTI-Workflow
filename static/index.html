@@ -84,7 +84,21 @@
         </section>
 
         <section id="selectedSummary"></section>
-        <svg id="diagram" viewBox="0 0 1600 1220" role="img" aria-label="LifeCycle transition diagram"></svg>
+        <section id="importWarnings" class="warning-box hidden"></section>
+
+        <div class="diagram-layout">
+          <div class="diagram-column">
+            <div class="diagram-toolbar">
+              <button type="button" class="zoom-btn" id="zoom-in-btn">Zoom ind</button>
+              <button type="button" class="zoom-btn" id="zoom-out-btn">Zoom ud</button>
+              <button type="button" class="zoom-btn" id="zoom-reset-btn">Nulstil visning</button>
+            </div>
+            <svg id="diagram" viewBox="0 0 1600 1220" role="img" aria-label="LifeCycle transition diagram"></svg>
+          </div>
+          <aside id="details-panel" class="details-panel">
+            <p class="details-placeholder">Klik på en state eller transition for at se detaljer.</p>
+          </aside>
+        </div>
 
         <h2>Overgange for valgt rolle</h2>
         <div class="tableWrap">

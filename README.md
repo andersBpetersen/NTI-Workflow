@@ -10,6 +10,9 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 - Læser valgfrit arket `LifeCycleDefinitionStates` (state permissions)
 - Parser transitions til nodes/edges JSON
 - Interaktivt diagram i browser (samme visning som VBA add-in)
+- Klikbare states og transitions med detaljepanel
+- Tydelig visning af import-advarsler efter upload
+- Enkel zoom på diagrammet (ind/ud/nulstil)
 
 ## Krav
 

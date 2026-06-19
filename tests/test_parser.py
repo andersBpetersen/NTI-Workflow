@@ -50,7 +50,7 @@ def test_missing_sheet_raises() -> None:
     buffer = io.BytesIO()
     workbook.save(buffer)
 
-    with pytest.raises(TransitionParseError, match="LifeCycleDefinitionTransitions"):
+    with pytest.raises(TransitionParseError, match="Excel-filen mangler arket LifeCycleDefinitionTransitions"):
         parse_transitions_excel(buffer.getvalue())
 
 
@@ -118,3 +118,16 @@ def test_no_valid_transitions_raises() -> None:
 
     with pytest.raises(TransitionParseError, match="Ingen gyldige transitions"):
         parse_transitions_excel(buffer.getvalue())
+
+
+def test_sample_state_security_realistic_format() -> None:
+    data = parse_transitions_excel(SAMPLE_FILE.read_bytes())
+    payload = parse_result_to_dict(data)
+
+    wip = next(
+        s for s in payload["stateDefinitions"] if s["state"] == "Work In Progress"
+    )
+    assert "Read: Allow" in wip["security"]
+    assert "Write: Allow" in wip["security"]
+    assert "Engineer:" in wip["security"]
+    assert "Manager:" in wip["security"]
