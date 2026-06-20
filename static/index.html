@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- NTI Workflow static version: 0.4.1 -->
+<!-- NTI Workflow static version: 0.5.0 -->
 <html lang="da">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NTI Workflow</title>
-  <link rel="stylesheet" href="/static/viewer.css?v=0.4.1">
+  <link rel="stylesheet" href="/static/viewer.css?v=0.5.0">
 </head>
 <body>
   <section id="home-root">
@@ -81,6 +81,14 @@
               <option value="summary">Summering</option>
             </select>
           </label>
+          <label><b>Layout</b>
+            <select id="layoutModeSelect">
+              <option value="auto">Auto</option>
+              <option value="normal">Normal</option>
+              <option value="dense">Kompakt</option>
+              <option value="large">Stor</option>
+            </select>
+          </label>
           <label><input type="checkbox" id="hideUnrelated" checked> Skjul irrelevante states</label>
         </section>
 
@@ -93,6 +101,7 @@
               <button type="button" class="zoom-btn" id="zoom-in-btn">Zoom ind</button>
               <button type="button" class="zoom-btn" id="zoom-out-btn">Zoom ud</button>
               <button type="button" class="zoom-btn" id="zoom-reset-btn">Nulstil visning</button>
+              <button type="button" class="zoom-btn" id="focus-selected-btn">Vis kun valgt state</button>
               <button type="button" class="zoom-btn hidden" id="export-html-btn" disabled>Eksportér HTML</button>
             </div>
             <svg id="diagram" viewBox="0 0 1600 1220" role="img" aria-label="LifeCycle transition diagram"></svg>
@@ -131,7 +140,7 @@
     </div>
   </div>
 
-  <script src="/static/viewer.js?v=0.4.1"></script>
-  <script src="/static/app.js?v=0.4.1"></script>
+  <script src="/static/viewer.js?v=0.5.0"></script>
+  <script src="/static/app.js?v=0.5.0"></script>
 </body>
 </html>

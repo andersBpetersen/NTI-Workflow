@@ -104,3 +104,23 @@ td.none{background:#f3f4f6;color:#6b7280}
 .back-button{background:#fff;color:var(--ink);border:1px solid #cbd5e1;border-radius:8px;padding:8px 14px;font-size:14px;cursor:pointer}
 .back-button:hover{background:#f9fafb}
 .upload-bar .status-msg.loading{color:#2563eb}
+.layout-hint{color:var(--muted);font-size:13px}
+svg.density-dense .edge.allow{stroke-width:3.5}
+svg.density-dense .edge.deny{stroke-width:2.2}
+svg.density-dense .edge.none{stroke-width:2;opacity:.22}
+svg.density-dense .edge.selectedEdge{stroke-width:5!important}
+svg.density-dense .edge.highlightedEdge{stroke-width:4.5!important}
+svg.density-very-dense .edge.allow{stroke-width:2.5}
+svg.density-very-dense .edge.deny{stroke-width:1.8;opacity:.28}
+svg.density-very-dense .edge.none{stroke-width:1.4;opacity:.12}
+svg.density-very-dense .edge.selectedEdge{stroke-width:4!important}
+svg.density-very-dense .edge.highlightedEdge{stroke-width:3.5!important}
+svg.density-dense .node text{font-size:14px}
+svg.density-very-dense .node text{font-size:12px}
+svg.density-dense .node circle{stroke-width:1.7}
+svg.density-very-dense .node circle{stroke-width:1.4}
+svg.density-dense .node.selectedNode circle,
+svg.density-very-dense .node.selectedNode circle{stroke-width:4}
+svg.density-dense .permBox,
+svg.density-very-dense .permBox{opacity:.92}
+svg.density-very-dense .jobLabel text{font-size:10px}

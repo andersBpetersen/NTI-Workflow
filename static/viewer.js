@@ -6,11 +6,16 @@ let lifecycles = [];
 let roles = [];
 let permissionRoles = [];
 
-const W = 1600;
-const H = 1220;
-const cx = W / 2;
-const cy = H / 2;
-const R = 350;
+let layoutMode = "auto";
+let currentLayout = null;
+let largeWorkflowHint = false;
+
+let viewBoxState = { x: 0, y: 0, w: 1600, h: 1220 };
+const ZOOM_FACTOR = 0.85;
+const EDGE_INSET = 10;
+
+let layoutModeSelect;
+let focusSelectedBtn;
 
 let selectedLife = "";
 let selectedRole = "Everyone";
@@ -39,9 +44,178 @@ let zoomInBtn;
 let zoomOutBtn;
 let zoomResetBtn;
 
-const DEFAULT_VIEWBOX = { x: 0, y: 0, w: W, h: H };
-let viewBoxState = { ...DEFAULT_VIEWBOX };
-const ZOOM_FACTOR = 0.85;
+function getAutoLayoutConfig(stateCount, edgeCount) {
+  const dense = edgeCount > 40 || stateCount > 8;
+  const veryDense = edgeCount > 80 || stateCount > 12;
+
+  if (veryDense) {
+    return {
+      width: 2200,
+      height: 1700,
+      centerX: 1100,
+      centerY: 850,
+      radius: 650,
+      nodeRadius: 58,
+      fontSize: 13,
+      edgeWidthScale: 0.55,
+      arrowScale: 0.65,
+      arrowSize: 7,
+      densityClass: "density-very-dense",
+      permissionBoxMode: "hideByDefault",
+    };
+  }
+
+  if (dense) {
+    return {
+      width: 1900,
+      height: 1450,
+      centerX: 950,
+      centerY: 725,
+      radius: 520,
+      nodeRadius: 64,
+      fontSize: 14,
+      edgeWidthScale: 0.7,
+      arrowScale: 0.75,
+      arrowSize: 9,
+      densityClass: "density-dense",
+      permissionBoxMode: "compact",
+    };
+  }
+
+  return {
+    width: 1600,
+    height: 1220,
+    centerX: 800,
+    centerY: 610,
+    radius: 350,
+    nodeRadius: 78,
+    fontSize: 18,
+    edgeWidthScale: 1,
+    arrowScale: 1,
+    arrowSize: 12,
+    densityClass: "density-normal",
+    permissionBoxMode: "normal",
+  };
+}
+
+function getManualLayoutConfig(mode) {
+  if (mode === "dense") {
+    return {
+      width: 1800,
+      height: 1400,
+      centerX: 900,
+      centerY: 700,
+      radius: 480,
+      nodeRadius: 52,
+      fontSize: 12,
+      edgeWidthScale: 0.55,
+      arrowScale: 0.6,
+      arrowSize: 7,
+      densityClass: "density-very-dense",
+      permissionBoxMode: "hideByDefault",
+    };
+  }
+  if (mode === "large") {
+    return {
+      width: 2600,
+      height: 2000,
+      centerX: 1300,
+      centerY: 1000,
+      radius: 800,
+      nodeRadius: 72,
+      fontSize: 16,
+      edgeWidthScale: 0.85,
+      arrowScale: 0.9,
+      arrowSize: 11,
+      densityClass: "density-normal",
+      permissionBoxMode: "normal",
+    };
+  }
+  return getAutoLayoutConfig(4, 4);
+}
+
+function resolveLayout(stateCount, edgeCount) {
+  if (layoutMode === "auto") return getAutoLayoutConfig(stateCount, edgeCount);
+  return getManualLayoutConfig(layoutMode);
+}
+
+function syncDefaultViewBox(layout) {
+  viewBoxState = { x: 0, y: 0, w: layout.width, h: layout.height };
+}
+
+function lifeTransitionCount(life) {
+  return transitions.filter((t) => t.life === life).length;
+}
+
+function applyLargeWorkflowDefaults(hasExportDirection) {
+  if (hasExportDirection) {
+    largeWorkflowHint = false;
+    return;
+  }
+  const count = lifeTransitionCount(selectedLife);
+  if (count > 40) {
+    selectedDirection = "connected";
+    if (directionSelect) directionSelect.value = "connected";
+    largeWorkflowHint = true;
+  } else {
+    largeWorkflowHint = false;
+  }
+}
+
+function applyDensePermissionDefaults(initialContext) {
+  if (initialContext && initialContext.showPerms != null) return;
+  const states = statesForLife(selectedLife);
+  const layout = resolveLayout(states.length, lifeTransitionCount(selectedLife));
+  if (
+    layout.permissionBoxMode === "hideByDefault" ||
+    layout.permissionBoxMode === "compact"
+  ) {
+    if (showPerms) showPerms.checked = false;
+  }
+}
+
+function buildDirectedPairMap(items) {
+  const directed = new Map();
+  items.forEach((t) => {
+    const key = t.from + "||" + t.to;
+    if (!directed.has(key)) directed.set(key, []);
+    directed.get(key).push(t);
+  });
+  return directed;
+}
+
+function edgeCurveOffset(t, pairIndex, pairCount, layout, reverseExists) {
+  const base =
+    layout.densityClass === "density-very-dense"
+      ? 150
+      : layout.densityClass === "density-dense"
+        ? 110
+        : 70;
+
+  if (pairCount === 1 && !reverseExists) return 0;
+
+  if (reverseExists && pairCount === 1) {
+    return t.from < t.to ? base : -base;
+  }
+
+  const spread = base * 0.55;
+  const center = (pairCount - 1) / 2;
+  let offset = (pairIndex - center) * spread;
+
+  if (reverseExists) {
+    offset += t.from < t.to ? base * 0.45 : -base * 0.45;
+  }
+
+  return offset;
+}
+
+function focusSelectedStateView() {
+  selectedDirection = "connected";
+  if (directionSelect) directionSelect.value = "connected";
+  selectedElement = null;
+  window.resetDiagramZoom();
+  update();
+}
 
 function esc(s) {
   s = String(s == null ? "" : s);
@@ -202,9 +376,11 @@ function applyViewBox() {
 }
 
 function zoomDiagram(direction) {
+  const maxW = currentLayout ? currentLayout.width * 3 : 4800;
+  const maxH = currentLayout ? currentLayout.height * 3 : 3660;
   const factor = direction === "in" ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
-  const newW = Math.max(400, Math.min(W * 3, viewBoxState.w * factor));
-  const newH = Math.max(300, Math.min(H * 3, viewBoxState.h * factor));
+  const newW = Math.max(400, Math.min(maxW, viewBoxState.w * factor));
+  const newH = Math.max(300, Math.min(maxH, viewBoxState.h * factor));
   const centerX = viewBoxState.x + viewBoxState.w / 2;
   const centerY = viewBoxState.y + viewBoxState.h / 2;
   viewBoxState = {
@@ -217,7 +393,13 @@ function zoomDiagram(direction) {
 }
 
 window.resetDiagramZoom = function resetDiagramZoom() {
-  viewBoxState = { ...DEFAULT_VIEWBOX };
+  if (selectedLife) {
+    const states = statesForLife(selectedLife);
+    currentLayout = resolveLayout(states.length, lifeTransitionCount(selectedLife));
+    syncDefaultViewBox(currentLayout);
+  } else {
+    viewBoxState = { x: 0, y: 0, w: 1600, h: 1220 };
+  }
   applyViewBox();
 };
 
@@ -447,14 +629,18 @@ function addPill(g, x, y, w, text, pillClass, textClass) {
   addSvgText(g, text, x + w / 2, y, "permTxt " + textClass, "middle");
 }
 
-function addPermissionBox(state, p, hidden) {
+function addPermissionBox(state, p, hidden, layout) {
   if (!showPerms.checked) return;
   const info = stateInfo(selectedLife, state);
+  const cx = layout.centerX;
+  const cy = layout.centerY;
+  const W = layout.width;
+  const H = layout.height;
+  const nodeR = layout.nodeRadius;
   let ux = (p.x - cx) / (Math.hypot(p.x - cx, p.y - cy) || 1);
   let uy = (p.y - cy) / (Math.hypot(p.x - cx, p.y - cy) || 1);
   const boxW = 236;
   const boxH = permissionMode === "summary" ? 120 : 126;
-  const nodeR = 78;
   const gap = 34;
   const projection = Math.abs(ux) * (boxW / 2) + Math.abs(uy) * (boxH / 2);
   let boxCx = p.x + ux * (nodeR + gap + projection);
@@ -539,9 +725,6 @@ function addPermissionBox(state, p, hidden) {
   svg.appendChild(g);
 }
 
-const NODE_RADIUS = 78;
-const EDGE_INSET = 10;
-
 function pointAlong(from, toward, distance) {
   const dx = toward.x - from.x;
   const dy = toward.y - from.y;
@@ -552,8 +735,8 @@ function pointAlong(from, toward, distance) {
   };
 }
 
-function shortenQuadEndpoints(p1, control, p2) {
-  const inset = NODE_RADIUS + EDGE_INSET;
+function shortenQuadEndpoints(p1, control, p2, nodeRadius) {
+  const inset = nodeRadius + EDGE_INSET;
   return {
     start: pointAlong(p1, control, inset),
     control,
@@ -561,33 +744,96 @@ function shortenQuadEndpoints(p1, control, p2) {
   };
 }
 
-function diagramDefs() {
+function diagramDefs(layout) {
+  const sz = layout.arrowSize || 12;
+  const refX = Math.round(sz * 0.83);
+  const refY = Math.round(sz * 0.33);
+  const pathH = Math.round(sz * 0.67);
+  const pathW = Math.round(sz * 0.92);
   return (
     '<defs>' +
     '<filter id="boxShadow" x="-20%" y="-20%" width="140%" height="140%">' +
     '<feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/>' +
     "</filter>" +
-    '<marker id="arrow-allow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">' +
-    '<path d="M0,0 L0,8 L11,4 z" fill="#1b7f4a"></path></marker>' +
-    '<marker id="arrow-deny" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">' +
-    '<path d="M0,0 L0,8 L11,4 z" fill="#b91c1c"></path></marker>' +
-    '<marker id="arrow-none" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">' +
-    '<path d="M0,0 L0,8 L11,4 z" fill="#6b7280"></path></marker>' +
+    '<marker id="arrow-allow" markerWidth="' +
+    sz +
+    '" markerHeight="' +
+    sz +
+    '" refX="' +
+    refX +
+    '" refY="' +
+    refY +
+    '" orient="auto">' +
+    '<path d="M0,0 L0,' +
+    pathH +
+    " L" +
+    pathW +
+    "," +
+    refY +
+    ' z" fill="#1b7f4a"></path></marker>' +
+    '<marker id="arrow-deny" markerWidth="' +
+    sz +
+    '" markerHeight="' +
+    sz +
+    '" refX="' +
+    refX +
+    '" refY="' +
+    refY +
+    '" orient="auto">' +
+    '<path d="M0,0 L0,' +
+    pathH +
+    " L" +
+    pathW +
+    "," +
+    refY +
+    ' z" fill="#b91c1c"></path></marker>' +
+    '<marker id="arrow-none" markerWidth="' +
+    sz +
+    '" markerHeight="' +
+    sz +
+    '" refX="' +
+    refX +
+    '" refY="' +
+    refY +
+    '" orient="auto">' +
+    '<path d="M0,0 L0,' +
+    pathH +
+    " L" +
+    pathW +
+    "," +
+    refY +
+    ' z" fill="#6b7280"></path></marker>' +
     "</defs>"
   );
 }
 
 function renderDiagram(items) {
-  svg.innerHTML = diagramDefs();
-  applyViewBox();
-  const sel = getSelectionContext(items);
   const states = statesForLife(selectedLife);
+  const edgeCount = lifeTransitionCount(selectedLife);
+  const layout = resolveLayout(states.length, edgeCount);
+  currentLayout = layout;
+
+  svg.classList.remove("density-normal", "density-dense", "density-very-dense");
+  svg.classList.add(layout.densityClass);
+
+  svg.innerHTML = diagramDefs(layout);
+  applyViewBox();
+
+  const cx = layout.centerX;
+  const cy = layout.centerY;
+  const R = layout.radius;
+  const nodeRadius = layout.nodeRadius;
+  const fontSize = layout.fontSize;
+
+  const sel = getSelectionContext(items);
   const pos = {};
   states.forEach((s, i) => {
     const a = -Math.PI / 2 + (2 * Math.PI * i) / states.length;
     pos[s] = { x: cx + R * Math.cos(a), y: cy + R * Math.sin(a) };
   });
-  const pair = new Set(items.map((t) => t.from + "||" + t.to));
+
+  const directedPairs = buildDirectedPairMap(items);
+  const undirectedPair = new Set(items.map((t) => t.from + "||" + t.to));
   const allowFrom = new Set();
   const allowTo = new Set();
   const denyTo = new Set();
@@ -596,13 +842,18 @@ function renderDiagram(items) {
   items.forEach((t) => {
     const p1 = pos[t.from];
     const p2 = pos[t.to];
+    if (!p1 || !p2) return;
     const dx = p2.x - p1.x;
     const dy = p2.y - p1.y;
     const len = Math.hypot(dx, dy) || 1;
     const mx = (p1.x + p2.x) / 2;
     const my = (p1.y + p2.y) / 2;
-    const rev = pair.has(t.to + "||" + t.from);
-    const off = rev ? (t.from < t.to ? 70 : -70) : 0;
+    const dirKey = t.from + "||" + t.to;
+    const group = directedPairs.get(dirKey) || [t];
+    const pairIndex = group.findIndex((x) => x.id === t.id);
+    const pairCount = group.length;
+    const reverseExists = undirectedPair.has(t.to + "||" + t.from);
+    const off = edgeCurveOffset(t, pairIndex, pairCount, layout, reverseExists);
     const qx = mx - (dy / len) * off;
     const qy = my + (dx / len) * off;
     const control = { x: qx, y: qy };
@@ -620,7 +871,7 @@ function renderDiagram(items) {
     }
     if (c === "deny") denyTo.add(t.to);
 
-    const pts = shortenQuadEndpoints(p1, control, p2);
+    const pts = shortenQuadEndpoints(p1, control, p2, nodeRadius);
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     const pathId =
       "edge-" + selectedLife.replace(/[^a-z0-9]+/gi, "-") + "-" + t.id;
@@ -689,11 +940,15 @@ function renderDiagram(items) {
       p.x +
       '" cy="' +
       p.y +
-      '" r="78"></circle><text x="' +
+      '" r="' +
+      nodeRadius +
+      '"></circle><text x="' +
       p.x +
       '" y="' +
-      (p.y + 6) +
-      '" text-anchor="middle">' +
+      (p.y + Math.round(fontSize * 0.35)) +
+      '" text-anchor="middle" style="font-size:' +
+      fontSize +
+      'px">' +
       esc(s) +
       "</text>";
     g.addEventListener("click", (event) => {
@@ -701,7 +956,7 @@ function renderDiagram(items) {
       selectState(s);
     });
     svg.appendChild(g);
-    addPermissionBox(s, p, unrelated && hideUnrelated.checked);
+    addPermissionBox(s, p, unrelated && hideUnrelated.checked, layout);
   });
 
   svg.onclick = () => {
@@ -784,7 +1039,10 @@ function update() {
         ? "for valgt rolle"
         : "summering"
       : "skjult") +
-    ".";
+    "." +
+    (largeWorkflowHint && selectedDirection === "connected"
+      ? ' <span class="layout-hint">Stor lifecycle: Starter med "Til/fra valgt state" for bedre overblik. Vælg "Alle transitions" for komplet graf.</span>'
+      : "");
   renderDiagram(items);
   const order = { allow: 0, deny: 1, none: 2 };
   tableBody.innerHTML = items
@@ -827,6 +1085,9 @@ function bindControls() {
     selectedLife = lifeSelect.value;
     selectedElement = null;
     refreshStateSelect();
+    applyLargeWorkflowDefaults(false);
+    applyDensePermissionDefaults(null);
+    window.resetDiagramZoom();
     update();
   };
   stateSelect.onchange = () => {
@@ -847,6 +1108,17 @@ function bindControls() {
     update();
   };
   hideUnrelated.onchange = update;
+  if (layoutModeSelect) {
+    layoutModeSelect.onchange = () => {
+      layoutMode = layoutModeSelect.value;
+      const states = statesForLife(selectedLife);
+      currentLayout = resolveLayout(states.length, lifeTransitionCount(selectedLife));
+      syncDefaultViewBox(currentLayout);
+      applyViewBox();
+      update();
+    };
+  }
+  if (focusSelectedBtn) focusSelectedBtn.onclick = focusSelectedStateView;
   if (zoomInBtn) zoomInBtn.onclick = () => zoomDiagram("in");
   if (zoomOutBtn) zoomOutBtn.onclick = () => zoomDiagram("out");
   if (zoomResetBtn) zoomResetBtn.onclick = () => window.resetDiagramZoom();
@@ -891,6 +1163,10 @@ function setupViewer(initialContext) {
       selectedDirection = initialContext.selectedDirection;
       directionSelect.value = selectedDirection;
     }
+    if (initialContext.layoutMode && layoutModeSelect) {
+      layoutMode = initialContext.layoutMode;
+      layoutModeSelect.value = layoutMode;
+    }
     if (initialContext.permissionMode && permModeSelect) {
       permissionMode = initialContext.permissionMode;
       permModeSelect.value = permissionMode;
@@ -912,7 +1188,14 @@ function setupViewer(initialContext) {
     }
   }
 
+  applyLargeWorkflowDefaults(initialContext && initialContext.selectedDirection);
+  applyDensePermissionDefaults(initialContext);
+
   bindControls();
+  const initStates = statesForLife(selectedLife);
+  currentLayout = resolveLayout(initStates.length, lifeTransitionCount(selectedLife));
+  syncDefaultViewBox(currentLayout);
+  applyViewBox();
   update();
 }
 
@@ -953,13 +1236,14 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialConte
   showPerms = document.getElementById("showPerms");
   permModeSelect = document.getElementById("permModeSelect");
   hideUnrelated = document.getElementById("hideUnrelated");
+  layoutModeSelect = document.getElementById("layoutModeSelect");
+  focusSelectedBtn = document.getElementById("focus-selected-btn");
   detailsPanel = document.getElementById("details-panel");
   zoomInBtn = document.getElementById("zoom-in-btn");
   zoomOutBtn = document.getElementById("zoom-out-btn");
   zoomResetBtn = document.getElementById("zoom-reset-btn");
 
   selectedElement = null;
-  window.resetDiagramZoom();
 
   const data = apiToViewerData(apiPayload);
   transitions = data.transitions;
@@ -968,6 +1252,8 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialConte
   roles = data.roles;
   selectedDirection = "all";
   permissionMode = "role";
+  layoutMode = "auto";
+  largeWorkflowHint = false;
 
   if (initialContext) {
     if (initialContext.selectedLifeCycle) {
@@ -984,6 +1270,9 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialConte
     }
     if (initialContext.permissionMode) {
       permissionMode = initialContext.permissionMode;
+    }
+    if (initialContext.layoutMode) {
+      layoutMode = initialContext.layoutMode;
     }
   }
 
@@ -1002,5 +1291,6 @@ window.getWorkflowViewerContext = function getWorkflowViewerContext() {
     showPerms: showPerms ? showPerms.checked : true,
     permissionMode: permModeSelect ? permModeSelect.value : "role",
     hideUnrelated: hideUnrelated ? hideUnrelated.checked : true,
+    layoutMode: layoutModeSelect ? layoutModeSelect.value : layoutMode,
   };
 };

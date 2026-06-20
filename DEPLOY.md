@@ -261,6 +261,7 @@ NTI Workflow/
 
 ## Versionsinfo
 
+- **v0.5** – Forbedret layout og læsbarhed for store workflows
 - **v0.4** – Standalone HTML-export og Docker registry publish-flow
 - **v0.3** – Klikbart detaljepanel, import warnings og zoom
 - **v0.2** – Upload-validering, forside, pile og forbedret diagramvisning

@@ -14,6 +14,8 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 - Tydelig visning af import-advarsler efter upload
 - Enkel zoom på diagrammet (ind/ud/nulstil)
 - Eksportér Workflow Viewer som standalone HTML (offline til undervisning/review)
+- Dynamisk layout for store workflows (Auto, Normal, Kompakt, Stor)
+- Bedre læsbarhed ved mange transitions og states
 
 ## Krav
 

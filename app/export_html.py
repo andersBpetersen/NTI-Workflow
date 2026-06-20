@@ -49,6 +49,14 @@ _VIEWER_BODY = """\
       </select>
     </label>
     <label><input type="checkbox" id="hideUnrelated" checked> Skjul irrelevante states</label>
+    <label><b>Layout</b>
+      <select id="layoutModeSelect">
+        <option value="auto">Auto</option>
+        <option value="normal">Normal</option>
+        <option value="dense">Kompakt</option>
+        <option value="large">Stor</option>
+      </select>
+    </label>
   </section>
 
   <section id="selectedSummary"></section>
@@ -60,6 +68,7 @@ _VIEWER_BODY = """\
         <button type="button" class="zoom-btn" id="zoom-in-btn">Zoom ind</button>
         <button type="button" class="zoom-btn" id="zoom-out-btn">Zoom ud</button>
         <button type="button" class="zoom-btn" id="zoom-reset-btn">Nulstil visning</button>
+        <button type="button" class="zoom-btn" id="focus-selected-btn">Vis kun valgt state</button>
       </div>
       <svg id="diagram" viewBox="0 0 1600 1220" role="img" aria-label="LifeCycle transition diagram"></svg>
     </div>
