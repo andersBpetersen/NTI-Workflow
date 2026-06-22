@@ -2,6 +2,7 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 
 let currentWorkflowPayload = null;
 let currentUploadedFileName = "";
+let uploadInProgress = false;
 
 const homeRoot = document.getElementById("home-root");
 const workflowShell = document.getElementById("workflow-shell");
@@ -13,6 +14,7 @@ const emptyState = document.getElementById("empty-state");
 const viewerRoot = document.getElementById("viewer-root");
 const importWarnings = document.getElementById("importWarnings");
 const exportHtmlBtn = document.getElementById("export-html-btn");
+const excelDropZone = document.getElementById("excel-drop-zone");
 
 function escapeHtml(text) {
   return String(text)
@@ -75,7 +77,7 @@ function resetInitialUiState() {
   clearImportWarnings();
   clearWorkflowData();
   if (statusMessage) {
-    setStatus("Vælg Excel-outputfilen fra NTI Vault Dump Config.");
+    setStatus("Vælg eller træk Excel-outputfilen fra NTI Vault Dump Config.");
   }
 }
 
@@ -109,6 +111,29 @@ function formatApiError(payload) {
       .join(" ");
   }
   return "Upload fejlede. Kontrollér at filen er en gyldig Vault Excel-eksport.";
+}
+
+function setDropZoneActive(active) {
+  if (!excelDropZone) return;
+  excelDropZone.classList.toggle("drag-over", active);
+}
+
+function handleSelectedFiles(files) {
+  if (!files || files.length === 0) {
+    setStatus("Ingen gyldig fil blev modtaget.", "error");
+    clearImportWarnings();
+    clearWorkflowData();
+    return;
+  }
+
+  if (files.length !== 1) {
+    setStatus("Vælg eller træk én Excel-fil ind ad gangen.", "error");
+    clearImportWarnings();
+    clearWorkflowData();
+    return;
+  }
+
+  uploadFile(files[0]);
 }
 
 function parseDownloadFilename(contentDisposition) {
@@ -165,17 +190,22 @@ async function exportWorkflowHtml() {
 }
 
 async function uploadFile(file) {
+  if (uploadInProgress) return;
+
   const validationError = validateFileBeforeUpload(file);
   if (validationError) {
     setStatus(validationError, "error");
     clearImportWarnings();
     clearWorkflowData();
     fileInput.value = "";
+    excelDropZone?.classList.remove("uploading");
     return;
   }
 
+  uploadInProgress = true;
   clearImportWarnings();
   clearWorkflowData();
+  excelDropZone?.classList.add("uploading");
   setStatus(`Uploader ${file.name}...`, "loading");
 
   const formData = new FormData();
@@ -214,6 +244,9 @@ async function uploadFile(file) {
     viewerRoot.classList.add("hidden");
   } finally {
     fileInput.value = "";
+    excelDropZone?.classList.remove("uploading");
+    setDropZoneActive(false);
+    uploadInProgress = false;
   }
 }
 
@@ -225,9 +258,47 @@ backHomeBtn.addEventListener("click", () => {
   showHome();
 });
 
+["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+  document.addEventListener(eventName, (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  });
+});
+
+if (excelDropZone) {
+  excelDropZone.addEventListener("dragenter", () => {
+    setDropZoneActive(true);
+  });
+
+  excelDropZone.addEventListener("dragover", () => {
+    setDropZoneActive(true);
+  });
+
+  excelDropZone.addEventListener("dragleave", (event) => {
+    if (!excelDropZone.contains(event.relatedTarget)) {
+      setDropZoneActive(false);
+    }
+  });
+
+  excelDropZone.addEventListener("drop", (event) => {
+    setDropZoneActive(false);
+    handleSelectedFiles(event.dataTransfer?.files);
+  });
+
+  excelDropZone.addEventListener("click", () => {
+    fileInput.click();
+  });
+
+  excelDropZone.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      fileInput.click();
+    }
+  });
+}
+
 fileInput.addEventListener("change", (event) => {
-  const file = event.target.files?.[0];
-  if (file) uploadFile(file);
+  handleSelectedFiles(event.target.files);
 });
 
 if (exportHtmlBtn) {

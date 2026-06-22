@@ -104,6 +104,15 @@ td.none{background:#f3f4f6;color:#6b7280}
 .back-button{background:#fff;color:var(--ink);border:1px solid #cbd5e1;border-radius:8px;padding:8px 14px;font-size:14px;cursor:pointer}
 .back-button:hover{background:#f9fafb}
 .upload-bar .status-msg.loading{color:#2563eb}
+.excel-drop-zone{width:min(760px,calc(100% - 40px));margin:46px auto;padding:48px 32px;background:#fff;border:2px dashed #94a3b8;border-radius:14px;text-align:center;cursor:pointer;transition:border-color .15s ease,background-color .15s ease,box-shadow .15s ease,transform .15s ease}
+.excel-drop-zone:hover,.excel-drop-zone:focus-visible{border-color:#2563eb;background:#eff6ff;box-shadow:0 0 0 4px rgba(37,99,235,.12);outline:none}
+.excel-drop-zone.drag-over{border-color:#2563eb;background:#dbeafe;box-shadow:0 0 0 5px rgba(37,99,235,.16);transform:scale(1.01)}
+.excel-drop-zone.uploading{cursor:progress;opacity:.8}
+.drop-zone-icon{font-size:44px;line-height:1;color:#2563eb;margin-bottom:12px}
+.excel-drop-zone h2{margin:0 0 12px;font-size:24px}
+.excel-drop-zone p{margin:8px 0;line-height:1.5}
+.drop-zone-file-info{color:#475569}
+.drop-zone-requirements{max-width:620px;margin-left:auto!important;margin-right:auto!important;color:#64748b;font-size:14px}
 .layout-hint{color:var(--muted);font-size:13px}
 svg.density-dense .edge.allow{stroke-width:3.5}
 svg.density-dense .edge.deny{stroke-width:2.2}

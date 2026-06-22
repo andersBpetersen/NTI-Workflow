@@ -37,7 +37,6 @@ let showDeny;
 let showNone;
 let showJobs;
 let showPerms;
-let permModeSelect;
 let hideUnrelated;
 
 let selectedElement = null;
@@ -338,19 +337,6 @@ function normalizeJobText(text) {
 function statePermValue(info, role, perm) {
   const p = info._permissions || (info._permissions = parseStateSecurity(info.stateSecurity || ""));
   return ((p || {})[role] || {})[perm] || "Missing";
-}
-
-function permSummary(info, perm) {
-  let a = 0;
-  let d = 0;
-  let m = 0;
-  permissionRoles.forEach((r) => {
-    const v = statePermValue(info, r, perm);
-    if (v === "Allow") a++;
-    else if (v === "Deny") d++;
-    else m++;
-  });
-  return { allow: a, deny: d, missing: m };
 }
 
 function buildPermissionRoles() {
@@ -662,7 +648,7 @@ function addPermissionBox(state, p, hidden, layout) {
   let ux = (p.x - cx) / (Math.hypot(p.x - cx, p.y - cy) || 1);
   let uy = (p.y - cy) / (Math.hypot(p.x - cx, p.y - cy) || 1);
   const boxW = 236;
-  const boxH = permissionMode === "summary" ? 120 : 126;
+  const boxH = 126;
   const gap = 34;
   const projection = Math.abs(ux) * (boxW / 2) + Math.abs(uy) * (boxH / 2);
   let boxCx = p.x + ux * (nodeR + gap + projection);
@@ -712,38 +698,27 @@ function addPermissionBox(state, p, hidden, layout) {
     "title",
   );
   const perms = ["Read", "Write", "Delete", "Download"];
-  if (permissionMode === "role") {
-    addSvgText(
+  addSvgText(
+    g,
+    selectedRole.length > 25 ? selectedRole.slice(0, 22) + "..." : selectedRole,
+    bx + 12,
+    by + 38,
+    "missingTxt",
+  );
+  perms.forEach((perm, i) => {
+    const y = by + 58 + i * 16;
+    const v = statePermValue(info, selectedRole, perm);
+    addSvgText(g, perm, bx + 12, y, "rowLabel");
+    addPill(
       g,
-      selectedRole.length > 25 ? selectedRole.slice(0, 22) + "..." : selectedRole,
-      bx + 12,
-      by + 38,
-      "missingTxt",
+      bx + 103,
+      y,
+      86,
+      permText(v),
+      v === "Allow" ? "pillAllow" : v === "Deny" ? "pillDeny" : "pillMissing",
+      v === "Allow" ? "allowTxt" : v === "Deny" ? "denyTxt" : "missingTxt",
     );
-    perms.forEach((perm, i) => {
-      const y = by + 58 + i * 16;
-      const v = statePermValue(info, selectedRole, perm);
-      addSvgText(g, perm, bx + 12, y, "rowLabel");
-      addPill(
-        g,
-        bx + 103,
-        y,
-        86,
-        permText(v),
-        v === "Allow" ? "pillAllow" : v === "Deny" ? "pillDeny" : "pillMissing",
-        v === "Allow" ? "allowTxt" : v === "Deny" ? "denyTxt" : "missingTxt",
-      );
-    });
-  } else {
-    perms.forEach((perm, i) => {
-      const y = by + 43 + i * 18;
-      const s = permSummary(info, perm);
-      addSvgText(g, perm === "Download" ? "DL" : perm[0], bx + 12, y, "rowLabel");
-      addSvgText(g, s.allow + "\u2713", bx + 52, y, "permTxt allowTxt");
-      addSvgText(g, s.deny + "\u2715", bx + 102, y, "permTxt denyTxt");
-      addSvgText(g, s.missing + "?", bx + 152, y, "permTxt missingTxt");
-    });
-  }
+  });
   svg.appendChild(g);
 }
 
@@ -1027,7 +1002,7 @@ function update() {
   document.querySelectorAll(".roleBtn").forEach((b) => {
     b.classList.toggle("active", b.textContent === selectedRole);
   });
-  permissionMode = permModeSelect.value;
+  permissionMode = "role";
   const items = filteredItems();
   let ac = 0;
   let dc = 0;
@@ -1056,11 +1031,7 @@ function update() {
     " ikke specificeret, " +
     jc +
     " Custom Job. State permissions: " +
-    (showPerms.checked
-      ? permissionMode === "role"
-        ? "for valgt rolle"
-        : "summering"
-      : "skjult") +
+    (showPerms.checked ? "for valgt rolle" : "skjult") +
     "." +
     (largeWorkflowHint && selectedDirection === "connected"
       ? ' <span class="layout-hint">Stor lifecycle: Starter med "Til/fra valgt state" for bedre overblik. Vælg "Alle transitions" for komplet graf.</span>'
@@ -1103,41 +1074,43 @@ function update() {
 }
 
 function bindControls() {
-  lifeSelect.onchange = () => {
-    selectedLife = lifeSelect.value;
-    selectedElement = null;
-    refreshStateSelect();
-    applyLargeWorkflowDefaults(false);
-    applyDensePermissionDefaults(null);
-    directionBeforeFocus = selectedDirection || "all";
-    focusSelectedActive = false;
-    syncFocusSelectedButton();
-    window.resetDiagramZoom();
-    update();
-  };
-  stateSelect.onchange = () => {
-    selectedState = stateSelect.value;
-    update();
-  };
-  directionSelect.onchange = () => {
-    selectedDirection = directionSelect.value;
-    directionBeforeFocus = selectedDirection;
-    focusSelectedActive = false;
-    selectedElement = null;
+  if (lifeSelect) {
+    lifeSelect.onchange = () => {
+      selectedLife = lifeSelect.value;
+      selectedElement = null;
+      refreshStateSelect();
+      applyLargeWorkflowDefaults(false);
+      applyDensePermissionDefaults(null);
+      directionBeforeFocus = selectedDirection || "all";
+      focusSelectedActive = false;
+      syncFocusSelectedButton();
+      window.resetDiagramZoom();
+      update();
+    };
+  }
+  if (stateSelect) {
+    stateSelect.onchange = () => {
+      selectedState = stateSelect.value;
+      update();
+    };
+  }
+  if (directionSelect) {
+    directionSelect.onchange = () => {
+      selectedDirection = directionSelect.value;
+      directionBeforeFocus = selectedDirection;
+      focusSelectedActive = false;
+      selectedElement = null;
 
-    window.resetDiagramZoom();
-    syncFocusSelectedButton();
-    update();
-  };
-  showDeny.onchange = update;
-  showNone.onchange = update;
-  showJobs.onchange = update;
-  showPerms.onchange = update;
-  permModeSelect.onchange = () => {
-    permissionMode = permModeSelect.value;
-    update();
-  };
-  hideUnrelated.onchange = update;
+      window.resetDiagramZoom();
+      syncFocusSelectedButton();
+      update();
+    };
+  }
+  if (showDeny) showDeny.onchange = update;
+  if (showNone) showNone.onchange = update;
+  if (showJobs) showJobs.onchange = update;
+  if (showPerms) showPerms.onchange = update;
+  if (hideUnrelated) hideUnrelated.onchange = update;
   if (layoutModeSelect) {
     layoutModeSelect.onchange = () => {
       layoutMode = layoutModeSelect.value;
@@ -1197,10 +1170,7 @@ function setupViewer(initialContext) {
       layoutMode = initialContext.layoutMode;
       layoutModeSelect.value = layoutMode;
     }
-    if (initialContext.permissionMode && permModeSelect) {
-      permissionMode = initialContext.permissionMode;
-      permModeSelect.value = permissionMode;
-    }
+    permissionMode = "role";
     if (showDeny && initialContext.showDeny != null) {
       showDeny.checked = initialContext.showDeny;
     }
@@ -1267,7 +1237,6 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialConte
   showNone = document.getElementById("showNone");
   showJobs = document.getElementById("showJobs");
   showPerms = document.getElementById("showPerms");
-  permModeSelect = document.getElementById("permModeSelect");
   hideUnrelated = document.getElementById("hideUnrelated");
   layoutModeSelect = document.getElementById("layoutModeSelect");
   focusSelectedBtn = document.getElementById("focus-selected-btn");
@@ -1301,9 +1270,7 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialConte
     if (initialContext.selectedDirection) {
       selectedDirection = initialContext.selectedDirection;
     }
-    if (initialContext.permissionMode) {
-      permissionMode = initialContext.permissionMode;
-    }
+    permissionMode = "role";
     if (initialContext.layoutMode) {
       layoutMode = initialContext.layoutMode;
     }
@@ -1322,7 +1289,7 @@ window.getWorkflowViewerContext = function getWorkflowViewerContext() {
     showNone: showNone ? showNone.checked : false,
     showJobs: showJobs ? showJobs.checked : true,
     showPerms: showPerms ? showPerms.checked : true,
-    permissionMode: permModeSelect ? permModeSelect.value : "role",
+    permissionMode: "role",
     hideUnrelated: hideUnrelated ? hideUnrelated.checked : true,
     layoutMode: layoutModeSelect ? layoutModeSelect.value : layoutMode,
   };

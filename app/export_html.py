@@ -16,7 +16,7 @@ _VIEWER_BODY = """\
 <header class="viewer-header">
   <h1>{page_title}</h1>
   <p class="export-meta"><b>Kilde:</b> {source_file} &nbsp;|&nbsp; <b>Eksporteret:</b> {export_date}</p>
-  <p>State permissions: Read, Write, Delete og Download kan vises pr. state enten for valgt rolle eller som summering.</p>
+  <p>State permissions kan vises for den valgte rolle.</p>
   <div class="legend">
     <span class="green"><b>Grøn</b> = Allow</span>
     <span class="red"><b>Rød stiplet</b> = Deny</span>
@@ -42,12 +42,6 @@ _VIEWER_BODY = """\
     <label><input type="checkbox" id="showNone"> Vis ikke specificeret</label>
     <label><input type="checkbox" id="showJobs" checked> Vis Custom JobTypes</label>
     <label><input type="checkbox" id="showPerms" checked> Vis state permissions</label>
-    <label><b>Permission-visning</b>
-      <select id="permModeSelect">
-        <option value="role">For valgt rolle</option>
-        <option value="summary">Summering</option>
-      </select>
-    </label>
     <label><input type="checkbox" id="hideUnrelated" checked> Skjul irrelevante states</label>
     <label><b>Layout</b>
       <select id="layoutModeSelect">

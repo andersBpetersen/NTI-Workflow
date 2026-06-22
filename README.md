@@ -6,6 +6,7 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 
 - Forside med flere værktøjer (første: **Workflow Viewer**)
 - Upload af Excel-fil (`.xlsx`, `.xlsm`) med validering af Vault-format
+- Drag-and-drop upload af Excel-outputfiler fra NTI Vault Dump Config
 - Læser arket `LifeCycleDefinitionTransitions`
 - Læser valgfrit arket `LifeCycleDefinitionStates` (state permissions)
 - Parser transitions til nodes/edges JSON
@@ -16,6 +17,8 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 - Eksportér Workflow Viewer som standalone HTML (offline til undervisning/review)
 - Dynamisk layout for store workflows (Auto, Normal, Kompakt, Stor)
 - Bedre læsbarhed ved mange transitions og states
+
+**v0.6.0** – Excel-filer fra NTI Vault Dump Config kan nu uploades med træk og slip.
 
 ## Krav
 

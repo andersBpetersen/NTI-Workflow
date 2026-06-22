@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- NTI Workflow static version: 0.5.0 -->
+<!-- NTI Workflow static version: 0.6.1 -->
 <html lang="da">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NTI Workflow</title>
-  <link rel="stylesheet" href="/static/viewer.css?v=0.5.0">
+  <link rel="stylesheet" href="/static/viewer.css?v=0.6.1">
 </head>
 <body>
   <section id="home-root">
@@ -38,24 +38,44 @@
         Vælg Excel-fil
         <input id="file-input" type="file" accept=".xlsx,.xlsm">
       </label>
-      <span id="status-message" class="status-msg">Vælg Excel-outputfilen fra NTI Vault Dump Config.</span>
+      <span id="status-message" class="status-msg">Vælg eller træk Excel-outputfilen fra NTI Vault Dump Config.</span>
     </div>
 
-  <div id="empty-state">
-    <p>
-      Upload Excel-outputfilen fra værktøjet
-      <strong>NTI Vault Dump Config</strong>.
-    </p>
-    <p>
-      Filen skal indeholde arket
-      <strong>LifeCycleDefinitionTransitions</strong>.
-    </p>
-  </div>
+    <div id="empty-state">
+      <div
+        id="excel-drop-zone"
+        class="excel-drop-zone"
+        role="button"
+        tabindex="0"
+        aria-label="Upload Excel-outputfil fra NTI Vault Dump Config"
+      >
+        <div class="drop-zone-icon" aria-hidden="true">⇩</div>
+
+        <h2>Træk Excel-filen hertil</h2>
+
+        <p>
+          eller klik for at vælge Excel-outputfilen fra
+          <strong>NTI Vault Dump Config</strong>.
+        </p>
+
+        <p class="drop-zone-file-info">
+          Understøttede filtyper: <strong>.xlsx</strong> og
+          <strong>.xlsm</strong>
+        </p>
+
+        <p class="drop-zone-requirements">
+          Filen skal indeholde arket
+          <strong>LifeCycleDefinitionTransitions</strong>.
+          Hvis arket <strong>LifeCycleDefinitionStates</strong> findes,
+          kan state permissions også vises.
+        </p>
+      </div>
+    </div>
 
     <div id="viewer-root" class="hidden">
       <header class="viewer-header">
         <h1>LifeCycle transition flow</h1>
-        <p>State permissions: Read, Write, Delete og Download kan vises pr. state enten for valgt rolle eller som summering.</p>
+        <p>State permissions kan vises for den valgte rolle.</p>
         <div class="legend">
           <span class="green"><b>Grøn</b> = Allow</span>
           <span class="red"><b>Rød stiplet</b> = Deny</span>
@@ -81,12 +101,6 @@
           <label><input type="checkbox" id="showNone"> Vis ikke specificeret</label>
           <label><input type="checkbox" id="showJobs" checked> Vis Custom JobTypes</label>
           <label><input type="checkbox" id="showPerms" checked> Vis state permissions</label>
-          <label><b>Permission-visning</b>
-            <select id="permModeSelect">
-              <option value="role">For valgt rolle</option>
-              <option value="summary">Summering</option>
-            </select>
-          </label>
           <label><b>Layout</b>
             <select id="layoutModeSelect">
               <option value="auto">Auto</option>
@@ -146,7 +160,7 @@
     </div>
   </div>
 
-  <script src="/static/viewer.js?v=0.5.0"></script>
-  <script src="/static/app.js?v=0.5.0"></script>
+  <script src="/static/viewer.js?v=0.6.1"></script>
+  <script src="/static/app.js?v=0.6.1"></script>
 </body>
 </html>
