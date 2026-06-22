@@ -837,12 +837,21 @@ function pointAlong(from, toward, distance) {
   };
 }
 
-function shortenQuadEndpoints(p1, control, p2, nodeRadius) {
-  const inset = nodeRadius + EDGE_INSET;
+function shortenQuadEndpoints(p1, control, p2, nodeRadius, arrowSize) {
+  const arrowHeadInset = arrowSize ? arrowSize * 0.25 : 0;
+  const inset = nodeRadius + EDGE_INSET + arrowHeadInset;
   return {
     start: pointAlong(p1, control, inset),
     control,
     end: pointAlong(p2, control, inset),
+  };
+}
+
+function resolveArrowMarkerSize(layout) {
+  const baseArrowSize = layout.arrowSize || 12;
+  return {
+    baseArrowSize,
+    arrowSize: baseArrowSize * 2,
   };
 }
 
@@ -871,19 +880,19 @@ function buildArrowMarker(id, fill, sz, refX, refY, pathH, pathW) {
 }
 
 function diagramDefs(layout) {
-  const sz = layout.arrowSize || 12;
-  const refX = Math.round(sz * 0.83);
-  const refY = Math.round(sz * 0.33);
-  const pathH = Math.round(sz * 0.67);
-  const pathW = Math.round(sz * 0.92);
+  const { arrowSize } = resolveArrowMarkerSize(layout);
+  const refX = Math.round(arrowSize * 0.83);
+  const refY = Math.round(arrowSize * 0.33);
+  const pathH = Math.round(arrowSize * 0.67);
+  const pathW = Math.round(arrowSize * 0.92);
   return (
     '<defs>' +
     '<filter id="boxShadow" x="-20%" y="-20%" width="140%" height="140%">' +
     '<feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/>' +
     "</filter>" +
-    buildArrowMarker("arrow-allow", "#1b7f4a", sz, refX, refY, pathH, pathW) +
-    buildArrowMarker("arrow-deny", "#b91c1c", sz, refX, refY, pathH, pathW) +
-    buildArrowMarker("arrow-none", "#6b7280", sz, refX, refY, pathH, pathW) +
+    buildArrowMarker("arrow-allow", "#1b7f4a", arrowSize, refX, refY, pathH, pathW) +
+    buildArrowMarker("arrow-deny", "#b91c1c", arrowSize, refX, refY, pathH, pathW) +
+    buildArrowMarker("arrow-none", "#6b7280", arrowSize, refX, refY, pathH, pathW) +
     "</defs>"
   );
 }
@@ -905,6 +914,7 @@ function renderDiagram(items) {
   const R = layout.radius;
   const nodeRadius = layout.nodeRadius;
   const fontSize = layout.fontSize;
+  const { arrowSize } = resolveArrowMarkerSize(layout);
 
   const sel = getSelectionContext(items);
   const pos = {};
@@ -951,7 +961,7 @@ function renderDiagram(items) {
     }
     if (c === "deny") denyTo.add(t.to);
 
-    const pts = shortenQuadEndpoints(p1, control, p2, nodeRadius);
+    const pts = shortenQuadEndpoints(p1, control, p2, nodeRadius, arrowSize);
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     const pathId =
       "edge-" + selectedLife.replace(/[^a-z0-9]+/gi, "-") + "-" + t.id;

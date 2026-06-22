@@ -22,6 +22,8 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 
 **v0.6.4** – Samlet UI-opdatering med drag-and-drop, forenklede state permissions, forbedret kontrollayout og ombrudte state-navne.
 
+**v0.6.6** – Allow-, Deny- og ikke-specificerede pilespidser er gjort dobbelt så store.
+
 **v0.6.5** – Ens pilespidser, Vis Allow-filter og Custom JobTypes som klikbare markeringer på transitions.
 
 **v0.6.0** – Excel-filer fra NTI Vault Dump Config kan uploades med træk og slip.

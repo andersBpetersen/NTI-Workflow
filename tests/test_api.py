@@ -32,7 +32,7 @@ def test_health(client: TestClient) -> None:
 def test_app_version(client: TestClient) -> None:
     response = client.get("/openapi.json")
     assert response.status_code == 200
-    assert response.json()["info"]["version"] == "0.6.5"
+    assert response.json()["info"]["version"] == "0.6.6"
 
 
 def test_upload_sample_excel(client: TestClient) -> None:
