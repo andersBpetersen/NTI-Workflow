@@ -1,6 +1,6 @@
 services:
   nti-workflow:
-    image: ${NTI_WORKFLOW_IMAGE:-tickjf/nti-workflow:0.6.4}
+    image: ${NTI_WORKFLOW_IMAGE:-tickjf/nti-workflow:0.6.5}
     container_name: nti-workflow
     ports:
       - "${NTI_WORKFLOW_PORT:-8000}:8000"

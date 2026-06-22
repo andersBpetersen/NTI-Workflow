@@ -83,10 +83,13 @@ svg#diagram{width:100%;max-width:1600px;height:auto;background:#fff;border:1px s
 .node .nodeLabel{font-weight:700;pointer-events:none;dominant-baseline:auto}
 .node.relatedNode circle{stroke-width:5;stroke:#2563eb}
 .node.dimmedNode circle{opacity:.45}
-.jobLabel.hidden{display:none}
-.jobLabel text{font-size:13px;font-weight:700;letter-spacing:.1px;pointer-events:none}
-.jobLabel .halo{fill:none;stroke:#fff7ed;stroke-width:8;stroke-linejoin:round;paint-order:stroke}
-.jobLabel .label{fill:var(--job);stroke:rgba(255,247,237,.85);stroke-width:2.2;paint-order:stroke}
+.jobMarker{cursor:pointer}
+.jobMarker.hidden{display:none}
+.jobMarkerShape{fill:#fff7ed;stroke:#c2410c;stroke-width:2}
+.jobMarkerText{fill:#9a3412;font-size:11px;font-weight:700;pointer-events:none}
+.jobMarker:hover .jobMarkerShape{fill:#ffedd5;stroke-width:3}
+.job-detail-list{margin:8px 0 0;padding-left:20px}
+.job-detail-list li{margin:4px 0;font-size:14px}
 .node.activeFrom circle{stroke-width:5}
 .node.activeTo circle{stroke-width:5;stroke:var(--allow)}
 .node.deniedTo circle{stroke-width:4;stroke:var(--deny)}
@@ -155,4 +158,3 @@ svg.density-dense .node.selectedNode circle,
 svg.density-very-dense .node.selectedNode circle{stroke-width:4}
 svg.density-dense .permBox,
 svg.density-very-dense .permBox{opacity:.92}
-svg.density-very-dense .jobLabel text{font-size:10px}

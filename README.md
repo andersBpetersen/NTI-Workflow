@@ -11,6 +11,8 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 - Læser valgfrit arket `LifeCycleDefinitionStates` (state permissions)
 - Klikbare states og transitions med detaljepanel
 - State permissions for valgt rolle
+- Allow-, Deny- og ikke specificerede transitions kan vises og skjules separat
+- Custom JobTypes vises som klikbare jobmarkeringer på transitions
 - Toggle på `Vis kun valgt state` (gendan tidligere visning)
 - Dynamisk layout: Auto, Normal, Kompakt og Stor
 - Automatisk tekstombrydning af state-navne i cirkeldiagrammet
@@ -19,6 +21,8 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 - Eksport til standalone HTML (offline til undervisning/review)
 
 **v0.6.4** – Samlet UI-opdatering med drag-and-drop, forenklede state permissions, forbedret kontrollayout og ombrudte state-navne.
+
+**v0.6.5** – Ens pilespidser, Vis Allow-filter og Custom JobTypes som klikbare markeringer på transitions.
 
 **v0.6.0** – Excel-filer fra NTI Vault Dump Config kan uploades med træk og slip.
 

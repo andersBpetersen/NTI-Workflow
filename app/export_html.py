@@ -68,6 +68,11 @@ _VIEWER_BODY = """\
 
     <div class="control-row control-row-options">
       <label>
+        <input type="checkbox" id="showAllow" checked>
+        Vis Allow
+      </label>
+
+      <label>
         <input type="checkbox" id="showDeny" checked>
         Vis Deny
       </label>
@@ -108,7 +113,7 @@ _VIEWER_BODY = """\
       <svg id="diagram" viewBox="0 0 1600 1220" role="img" aria-label="LifeCycle transition diagram"></svg>
     </div>
     <aside id="details-panel" class="details-panel">
-      <p class="details-placeholder">Klik på en state eller transition for at se detaljer.</p>
+      <p class="details-placeholder">Klik på en state, transition eller jobmarkering for at se detaljer.</p>
     </aside>
   </div>
 

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- NTI Workflow static version: 0.6.4 -->
+<!-- NTI Workflow static version: 0.6.5 -->
 <html lang="da">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NTI Workflow</title>
-  <link rel="stylesheet" href="/static/viewer.css?v=0.6.4">
+  <link rel="stylesheet" href="/static/viewer.css?v=0.6.5">
 </head>
 <body>
   <section id="home-root">
@@ -127,6 +127,11 @@
 
           <div class="control-row control-row-options">
             <label>
+              <input type="checkbox" id="showAllow" checked>
+              Vis Allow
+            </label>
+
+            <label>
               <input type="checkbox" id="showDeny" checked>
               Vis Deny
             </label>
@@ -168,7 +173,7 @@
             <svg id="diagram" viewBox="0 0 1600 1220" role="img" aria-label="LifeCycle transition diagram"></svg>
           </div>
           <aside id="details-panel" class="details-panel">
-            <p class="details-placeholder">Klik på en state eller transition for at se detaljer.</p>
+            <p class="details-placeholder">Klik på en state, transition eller jobmarkering for at se detaljer.</p>
           </aside>
         </div>
 
@@ -201,7 +206,7 @@
     </div>
   </div>
 
-  <script src="/static/viewer.js?v=0.6.4"></script>
-  <script src="/static/app.js?v=0.6.4"></script>
+  <script src="/static/viewer.js?v=0.6.5"></script>
+  <script src="/static/app.js?v=0.6.5"></script>
 </body>
 </html>

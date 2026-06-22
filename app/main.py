@@ -22,7 +22,7 @@ MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 app = FastAPI(
     title="NTI Workflow",
     description="Visualiser Vault lifecycle transitions fra Excel-eksport.",
-    version="0.6.4",
+    version="0.6.5",
 )
 
 @app.get("/")
@@ -38,6 +38,7 @@ class ViewerContext(BaseModel):
     selectedRole: str | None = None
     selectedState: str | None = None
     selectedDirection: str | None = None
+    showAllow: bool | None = None
     showDeny: bool | None = None
     showNone: bool | None = None
     showJobs: bool | None = None

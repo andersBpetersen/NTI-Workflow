@@ -83,6 +83,9 @@ def test_build_standalone_html_contains_viewer_and_payload(sample_payload: dict)
     assert "control-row-options" in html
     assert "permModeSelect" not in html
     assert "Summering" not in html
+    assert 'id="showAllow"' in html
+    assert "addJobMarker" in html
+    assert "markerUnits=\"userSpaceOnUse\"" in html
     assert 'id="excel-drop-zone"' not in html
     assert "splitCircleStateLabel" in html
 

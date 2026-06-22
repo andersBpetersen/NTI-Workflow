@@ -33,6 +33,7 @@ let roleButtons;
 let tableBody;
 let permTableBody;
 let summary;
+let showAllow;
 let showDeny;
 let showNone;
 let showJobs;
@@ -334,6 +335,22 @@ function normalizeJobText(text) {
     .replace(/^'+|'+$/g, "");
 }
 
+function parseCustomJobNames(value) {
+  return String(value || "")
+    .split(/[;\n,]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function isTransitionHiddenByCheckbox(t) {
+  const classification = cls(effective(t.security, selectedRole));
+  return (
+    (classification === "allow" && showAllow && !showAllow.checked) ||
+    (classification === "deny" && showDeny && !showDeny.checked) ||
+    (classification === "none" && showNone && !showNone.checked)
+  );
+}
+
 function statePermValue(info, role, perm) {
   const p = info._permissions || (info._permissions = parseStateSecurity(info.stateSecurity || ""));
   return ((p || {})[role] || {})[perm] || "Missing";
@@ -532,8 +549,18 @@ function renderTransitionDetails(transitionId) {
   }
 
   const result = effective(t.security, selectedRole);
-  const job = normalizeJobText(t.customJob || "");
+  const jobNames = parseCustomJobNames(t.customJob || "");
+  const displayJobNames = jobNames.length
+    ? jobNames
+    : normalizeJobText(t.customJob || "")
+      ? [normalizeJobText(t.customJob || "")]
+      : [];
   const rowIndex = t.rowIndex != null && t.rowIndex !== "" ? String(t.rowIndex) : "-";
+  const jobHtml = displayJobNames.length
+    ? "<h3>Custom JobTypes</h3><ul class=\"job-detail-list\">" +
+      displayJobNames.map((name) => "<li>" + esc(name) + "</li>").join("") +
+      "</ul>"
+    : "<h3>Custom JobTypes</h3><p class=\"details-placeholder\">Ingen Custom JobTypes.</p>";
 
   return (
     "<h3>Transition</h3><dl>" +
@@ -558,15 +585,13 @@ function renderTransitionDetails(transitionId) {
     '">' +
     esc(result) +
     "</span></dd>" +
-    "<dt>Custom JobTypes</dt><dd>" +
-    (job ? '<span class="jobCell">' + esc(job) + "</span>" : "-") +
-    "</dd>" +
     "<dt>Security</dt><dd>" +
     esc(t.security || "-") +
     "</dd>" +
     "<dt>Excel-række</dt><dd>" +
     esc(rowIndex) +
-    "</dd></dl>"
+    "</dd></dl>" +
+    jobHtml
   );
 }
 
@@ -574,7 +599,7 @@ function renderDetailsPanel() {
   if (!detailsPanel) return;
   if (!selectedElement) {
     detailsPanel.innerHTML =
-      '<p class="details-placeholder">Klik på en state eller transition for at se detaljer.</p>';
+      '<p class="details-placeholder">Klik på en state, transition eller jobmarkering for at se detaljer.</p>';
     return;
   }
   if (selectedElement.type === "state") {
@@ -584,35 +609,52 @@ function renderDetailsPanel() {
   }
 }
 
-function addJobLabel(pathId, text, hidden) {
-  if (!text || !showJobs.checked) return;
-  const label = normalizeJobText(text);
-  if (!label) return;
-  const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-  g.setAttribute("class", "jobLabel" + (hidden ? " hidden" : ""));
-  const titleText = label.length > 52 ? label.slice(0, 49) + "..." : label;
-  const halo = document.createElementNS("http://www.w3.org/2000/svg", "text");
-  halo.setAttribute("class", "halo");
-  halo.setAttribute("text-anchor", "middle");
-  const haloPath = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
-  haloPath.setAttribute("href", "#" + pathId);
-  haloPath.setAttribute("startOffset", "68%");
-  haloPath.textContent = titleText;
-  halo.appendChild(haloPath);
-  const textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
-  textEl.setAttribute("class", "label");
-  textEl.setAttribute("text-anchor", "middle");
-  const textPath = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
-  textPath.setAttribute("href", "#" + pathId);
-  textPath.setAttribute("startOffset", "68%");
-  textPath.textContent = titleText;
-  textEl.appendChild(textPath);
-  g.appendChild(halo);
-  g.appendChild(textEl);
+function addJobMarker(path, transition, hidden) {
+  if (!showJobs?.checked) return;
+
+  const jobText = normalizeJobText(transition.customJob || "");
+  if (!jobText) return;
+
+  const markerGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  markerGroup.setAttribute("class", "jobMarker" + (hidden ? " hidden" : ""));
+  markerGroup.setAttribute("data-transition-id", String(transition.id));
+
+  let point;
+  try {
+    const totalLength = path.getTotalLength();
+    point = path.getPointAtLength(totalLength * 0.5);
+  } catch (_error) {
+    return;
+  }
+
+  markerGroup.setAttribute("transform", "translate(" + point.x + ", " + point.y + ")");
+
+  const shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  shape.setAttribute("cx", "0");
+  shape.setAttribute("cy", "0");
+  shape.setAttribute("r", "11");
+  shape.setAttribute("class", "jobMarkerShape");
+
+  const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  text.setAttribute("x", "0");
+  text.setAttribute("y", "4");
+  text.setAttribute("text-anchor", "middle");
+  text.setAttribute("class", "jobMarkerText");
+  text.textContent = "J";
+
   const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-  title.textContent = label;
-  g.appendChild(title);
-  svg.appendChild(g);
+  title.textContent = jobText;
+
+  markerGroup.appendChild(shape);
+  markerGroup.appendChild(text);
+  markerGroup.appendChild(title);
+
+  markerGroup.addEventListener("click", (event) => {
+    event.stopPropagation();
+    selectTransition(transition.id);
+  });
+
+  svg.appendChild(markerGroup);
 }
 
 function addSvgText(g, txt, x, y, clsName, anchor = "start") {
@@ -804,6 +846,30 @@ function shortenQuadEndpoints(p1, control, p2, nodeRadius) {
   };
 }
 
+function buildArrowMarker(id, fill, sz, refX, refY, pathH, pathW) {
+  return (
+    '<marker id="' +
+    id +
+    '" markerUnits="userSpaceOnUse" markerWidth="' +
+    sz +
+    '" markerHeight="' +
+    sz +
+    '" refX="' +
+    refX +
+    '" refY="' +
+    refY +
+    '" orient="auto"><path d="M0,0 L0,' +
+    pathH +
+    " L" +
+    pathW +
+    "," +
+    refY +
+    ' z" fill="' +
+    fill +
+    '"></path></marker>'
+  );
+}
+
 function diagramDefs(layout) {
   const sz = layout.arrowSize || 12;
   const refX = Math.round(sz * 0.83);
@@ -815,54 +881,9 @@ function diagramDefs(layout) {
     '<filter id="boxShadow" x="-20%" y="-20%" width="140%" height="140%">' +
     '<feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/>' +
     "</filter>" +
-    '<marker id="arrow-allow" markerWidth="' +
-    sz +
-    '" markerHeight="' +
-    sz +
-    '" refX="' +
-    refX +
-    '" refY="' +
-    refY +
-    '" orient="auto">' +
-    '<path d="M0,0 L0,' +
-    pathH +
-    " L" +
-    pathW +
-    "," +
-    refY +
-    ' z" fill="#1b7f4a"></path></marker>' +
-    '<marker id="arrow-deny" markerWidth="' +
-    sz +
-    '" markerHeight="' +
-    sz +
-    '" refX="' +
-    refX +
-    '" refY="' +
-    refY +
-    '" orient="auto">' +
-    '<path d="M0,0 L0,' +
-    pathH +
-    " L" +
-    pathW +
-    "," +
-    refY +
-    ' z" fill="#b91c1c"></path></marker>' +
-    '<marker id="arrow-none" markerWidth="' +
-    sz +
-    '" markerHeight="' +
-    sz +
-    '" refX="' +
-    refX +
-    '" refY="' +
-    refY +
-    '" orient="auto">' +
-    '<path d="M0,0 L0,' +
-    pathH +
-    " L" +
-    pathW +
-    "," +
-    refY +
-    ' z" fill="#6b7280"></path></marker>' +
+    buildArrowMarker("arrow-allow", "#1b7f4a", sz, refX, refY, pathH, pathW) +
+    buildArrowMarker("arrow-deny", "#b91c1c", sz, refX, refY, pathH, pathW) +
+    buildArrowMarker("arrow-none", "#6b7280", sz, refX, refY, pathH, pathW) +
     "</defs>"
   );
 }
@@ -919,8 +940,7 @@ function renderDiagram(items) {
     const control = { x: qx, y: qy };
     const v = effective(t.security, selectedRole);
     const c = cls(v);
-    const hide =
-      (c === "deny" && !showDeny.checked) || (c === "none" && !showNone.checked);
+    const hide = isTransitionHiddenByCheckbox(t);
     if (!hide) {
       visibleStates.add(t.from);
       visibleStates.add(t.to);
@@ -977,7 +997,7 @@ function renderDiagram(items) {
       selectTransition(t.id);
     });
     svg.appendChild(path);
-    addJobLabel(pathId, t.customJob, hide);
+    addJobMarker(path, t, hide);
   });
 
   states.forEach((s) => {
@@ -1057,35 +1077,60 @@ function update() {
   });
   permissionMode = "role";
   const items = filteredItems();
-  let ac = 0;
-  let dc = 0;
-  let nc = 0;
+  let visibleAllow = 0;
+  let visibleDeny = 0;
+  let visibleNone = 0;
+  let hiddenAllow = 0;
+  let hiddenDeny = 0;
+  let hiddenNone = 0;
   let jc = 0;
   items.forEach((t) => {
-    const c = cls(effective(t.security, selectedRole));
-    if (c === "allow") ac++;
-    else if (c === "deny") dc++;
-    else nc++;
-    if (t.customJob) jc++;
+    const classification = cls(effective(t.security, selectedRole));
+    const hidden = isTransitionHiddenByCheckbox(t);
+    if (hidden) {
+      if (classification === "allow") hiddenAllow++;
+      else if (classification === "deny") hiddenDeny++;
+      else hiddenNone++;
+    } else {
+      if (classification === "allow") visibleAllow++;
+      else if (classification === "deny") visibleDeny++;
+      else visibleNone++;
+      if (t.customJob) jc++;
+    }
   });
-  summary.innerHTML =
+
+  let summaryText =
     "<b>" +
     esc(selectedLife) +
     "</b> / <b>" +
     esc(selectedRole) +
     "</b> / <b>" +
     esc(directionText()) +
-    "</b>: " +
-    ac +
+    "</b>: Viser: " +
+    visibleAllow +
     " Allow, " +
-    dc +
+    visibleDeny +
     " Deny, " +
-    nc +
-    " ikke specificeret, " +
+    visibleNone +
+    " ikke specificeret.";
+
+  const hiddenParts = [];
+  if (hiddenAllow) hiddenParts.push(hiddenAllow + " Allow");
+  if (hiddenDeny) hiddenParts.push(hiddenDeny + " Deny");
+  if (hiddenNone) hiddenParts.push(hiddenNone + " ikke specificeret");
+  if (hiddenParts.length) {
+    summaryText += " Skjult: " + hiddenParts.join(", ") + ".";
+  }
+
+  summaryText +=
+    " " +
     jc +
     " Custom Job. State permissions: " +
     (showPerms.checked ? "for valgt rolle" : "skjult") +
-    "." +
+    ".";
+
+  summary.innerHTML =
+    summaryText +
     (largeWorkflowHint && selectedDirection === "connected"
       ? ' <span class="layout-hint">Stor lifecycle: Starter med "Til/fra valgt state" for bedre overblik. Vælg "Alle transitions" for komplet graf.</span>'
       : "");
@@ -1159,6 +1204,7 @@ function bindControls() {
       update();
     };
   }
+  if (showAllow) showAllow.onchange = update;
   if (showDeny) showDeny.onchange = update;
   if (showNone) showNone.onchange = update;
   if (showJobs) showJobs.onchange = update;
@@ -1224,6 +1270,9 @@ function setupViewer(initialContext) {
       layoutModeSelect.value = layoutMode;
     }
     permissionMode = "role";
+    if (showAllow && initialContext.showAllow != null) {
+      showAllow.checked = initialContext.showAllow;
+    }
     if (showDeny && initialContext.showDeny != null) {
       showDeny.checked = initialContext.showDeny;
     }
@@ -1286,6 +1335,7 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialConte
   tableBody = document.getElementById("transitionTable");
   permTableBody = document.getElementById("permissionTable");
   summary = document.getElementById("selectedSummary");
+  showAllow = document.getElementById("showAllow");
   showDeny = document.getElementById("showDeny");
   showNone = document.getElementById("showNone");
   showJobs = document.getElementById("showJobs");
@@ -1338,6 +1388,7 @@ window.getWorkflowViewerContext = function getWorkflowViewerContext() {
     selectedRole,
     selectedState,
     selectedDirection,
+    showAllow: showAllow ? showAllow.checked : true,
     showDeny: showDeny ? showDeny.checked : true,
     showNone: showNone ? showNone.checked : false,
     showJobs: showJobs ? showJobs.checked : true,
