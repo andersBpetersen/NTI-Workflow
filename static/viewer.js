@@ -21,6 +21,8 @@ let selectedLife = "";
 let selectedRole = "Everyone";
 let selectedState = "";
 let selectedDirection = "all";
+let focusSelectedActive = false;
+let directionBeforeFocus = "all";
 let permissionMode = "role";
 
 let svg;
@@ -209,11 +211,31 @@ function edgeCurveOffset(t, pairIndex, pairCount, layout, reverseExists) {
   return offset;
 }
 
+function syncFocusSelectedButton() {
+  if (!focusSelectedBtn) return;
+
+  focusSelectedBtn.textContent = focusSelectedActive
+    ? "Vis tidligere visning"
+    : "Vis kun valgt state";
+}
+
 function focusSelectedStateView() {
-  selectedDirection = "connected";
-  if (directionSelect) directionSelect.value = "connected";
+  if (!focusSelectedActive) {
+    directionBeforeFocus = selectedDirection || "all";
+    selectedDirection = "connected";
+    focusSelectedActive = true;
+  } else {
+    selectedDirection = directionBeforeFocus || "all";
+    focusSelectedActive = false;
+  }
+
+  if (directionSelect) {
+    directionSelect.value = selectedDirection;
+  }
+
   selectedElement = null;
   window.resetDiagramZoom();
+  syncFocusSelectedButton();
   update();
 }
 
@@ -1087,6 +1109,9 @@ function bindControls() {
     refreshStateSelect();
     applyLargeWorkflowDefaults(false);
     applyDensePermissionDefaults(null);
+    directionBeforeFocus = selectedDirection || "all";
+    focusSelectedActive = false;
+    syncFocusSelectedButton();
     window.resetDiagramZoom();
     update();
   };
@@ -1096,7 +1121,12 @@ function bindControls() {
   };
   directionSelect.onchange = () => {
     selectedDirection = directionSelect.value;
+    directionBeforeFocus = selectedDirection;
+    focusSelectedActive = false;
     selectedElement = null;
+
+    window.resetDiagramZoom();
+    syncFocusSelectedButton();
     update();
   };
   showDeny.onchange = update;
@@ -1196,6 +1226,9 @@ function setupViewer(initialContext) {
   currentLayout = resolveLayout(initStates.length, lifeTransitionCount(selectedLife));
   syncDefaultViewBox(currentLayout);
   applyViewBox();
+  directionBeforeFocus = selectedDirection || "all";
+  focusSelectedActive = false;
+  syncFocusSelectedButton();
   update();
 }
 

@@ -75,7 +75,7 @@ function resetInitialUiState() {
   clearImportWarnings();
   clearWorkflowData();
   if (statusMessage) {
-    setStatus("Upload Vault-eksport (.xlsx) for at vise diagram.");
+    setStatus("Vælg Excel-outputfilen fra NTI Vault Dump Config.");
   }
 }
 

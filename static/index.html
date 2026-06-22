@@ -38,13 +38,19 @@
         Vælg Excel-fil
         <input id="file-input" type="file" accept=".xlsx,.xlsm">
       </label>
-      <span id="status-message" class="status-msg">Upload Vault-eksport (.xlsx) for at vise diagram.</span>
+      <span id="status-message" class="status-msg">Vælg Excel-outputfilen fra NTI Vault Dump Config.</span>
     </div>
 
-    <div id="empty-state">
-      <p>Upload en Excel-fil med arket <strong>LifeCycleDefinitionTransitions</strong>.</p>
-      <p>Visningen matcher output fra VBA add-in'et (NTI → Workflow).</p>
-    </div>
+  <div id="empty-state">
+    <p>
+      Upload Excel-outputfilen fra værktøjet
+      <strong>NTI Vault Dump Config</strong>.
+    </p>
+    <p>
+      Filen skal indeholde arket
+      <strong>LifeCycleDefinitionTransitions</strong>.
+    </p>
+  </div>
 
     <div id="viewer-root" class="hidden">
       <header class="viewer-header">
