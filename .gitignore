@@ -21,3 +21,7 @@ _xlam_extract/
 _xlam_extract2/
 _xlam.zip
 _xlam_extract.zip
+
+# Vault Job Config Simulator (Vite)
+tools/vault-job-config-simulator/node_modules/
+tools/vault-job-config-simulator/dist/

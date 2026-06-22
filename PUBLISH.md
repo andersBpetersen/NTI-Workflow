@@ -2,6 +2,8 @@
 
 Guide til build, tag og push af Docker image.
 
+Docker build inkluderer **Vault Job Config Simulator** (Vite/React) via multi-stage build. Production-image kræver ikke Node runtime.
+
 ## Officielt image (Docker Hub)
 
 Repository: [tickjf/nti-workflow](https://hub.docker.com/r/tickjf/nti-workflow/)

@@ -16,6 +16,18 @@ const EDGE_INSET = 10;
 
 let layoutModeSelect;
 let focusSelectedBtn;
+let diagramType = "circle";
+let diagramTypeSelect;
+let workflowViewMode = "all";
+let workflowViewModeSelect;
+let workflowLayoutOverrides = {};
+let workflowTransitionOverrides = {};
+let workflowLayoutPanel;
+let workflowStateLayoutTable;
+let workflowTransitionOverrideTable;
+let generateWorkflowLayoutBtn;
+let copyWorkflowLayoutJsonBtn;
+let pasteWorkflowLayoutJsonBtn;
 
 let selectedLife = "";
 let selectedRole = "Everyone";
@@ -143,6 +155,44 @@ function syncDefaultViewBox(layout) {
   viewBoxState = { x: 0, y: 0, w: layout.width, h: layout.height };
 }
 
+function syncViewerControlState() {
+  if (layoutModeSelect) layoutMode = layoutModeSelect.value;
+  if (diagramTypeSelect) diagramType = diagramTypeSelect.value;
+  if (workflowViewModeSelect) workflowViewMode = workflowViewModeSelect.value;
+  syncWorkflowViewModeControlAvailability();
+  syncWorkflowLayoutPanelVisibility();
+}
+
+function syncWorkflowViewModeControlAvailability() {
+  if (!workflowViewModeSelect) return;
+  const isWorkflow = getActiveDiagramType() === "workflow";
+  workflowViewModeSelect.disabled = !isWorkflow;
+  workflowViewModeSelect.closest("label")?.classList.toggle("disabled-control", !isWorkflow);
+}
+
+function getActiveDiagramType() {
+  return diagramTypeSelect ? diagramTypeSelect.value : diagramType;
+}
+
+function resolveCurrentDiagramLayout() {
+  if (!selectedLife) return null;
+  const states = statesForLife(selectedLife);
+  const edgeCount = lifeTransitionCount(selectedLife);
+  if (getActiveDiagramType() === "workflow") {
+    const items = transitions.filter((t) => t.life === selectedLife);
+    const baseLayout = getWorkflowLayoutConfig(states.length, edgeCount);
+    const wf = buildWorkflowPositions(states, items, baseLayout);
+    return {
+      layout: { ...baseLayout, width: wf.width, height: wf.height },
+      workflow: wf,
+    };
+  }
+  return {
+    layout: resolveLayout(states.length, edgeCount),
+    workflow: null,
+  };
+}
+
 function lifeTransitionCount(life) {
   return transitions.filter((t) => t.life === life).length;
 }
@@ -215,6 +265,395 @@ function focusSelectedStateView() {
   selectedElement = null;
   window.resetDiagramZoom();
   update();
+}
+
+function getWorkflowLayoutConfig(stateCount, edgeCount) {
+  const autoDense = edgeCount > 40 || stateCount > 8;
+  const autoVeryDense = edgeCount > 80 || stateCount > 12;
+
+  if (layoutMode === "large") {
+    return {
+      width: 2600,
+      height: 1500,
+      nodeWidth: 210,
+      nodeHeight: 74,
+      fontSize: 15,
+      columnGap: 320,
+      rowGap: 170,
+      marginX: 120,
+      marginY: 160,
+      densityClass: "density-normal",
+      arrowSize: 11,
+    };
+  }
+  if (layoutMode === "dense" || autoVeryDense) {
+    return {
+      width: 2200,
+      height: 1300,
+      nodeWidth: 165,
+      nodeHeight: 62,
+      fontSize: 12,
+      columnGap: 240,
+      rowGap: 130,
+      marginX: 90,
+      marginY: 130,
+      densityClass: "density-very-dense",
+      arrowSize: 7,
+    };
+  }
+  if (layoutMode === "normal") {
+    return {
+      width: 1700,
+      height: 950,
+      nodeWidth: 200,
+      nodeHeight: 72,
+      fontSize: 14,
+      columnGap: 260,
+      rowGap: 140,
+      marginX: 100,
+      marginY: 120,
+      densityClass: "density-normal",
+      arrowSize: 10,
+    };
+  }
+  if (autoDense) {
+    return {
+      width: 2200,
+      height: 1350,
+      nodeWidth: 185,
+      nodeHeight: 68,
+      fontSize: 13,
+      columnGap: 270,
+      rowGap: 145,
+      marginX: 100,
+      marginY: 140,
+      densityClass: "density-dense",
+      arrowSize: 9,
+    };
+  }
+  return {
+    width: 1700,
+    height: 950,
+    nodeWidth: 200,
+    nodeHeight: 72,
+    fontSize: 14,
+    columnGap: 260,
+    rowGap: 140,
+    marginX: 100,
+    marginY: 120,
+    densityClass: "density-normal",
+    arrowSize: 10,
+  };
+}
+
+function classifyWorkflowState(stateName) {
+  const n = String(stateName || "").toLowerCase();
+  if (/\bready for obsolete\b/.test(n)) {
+    return { columnHint: 4, lane: "bottom", priority: 50 };
+  }
+  if (/\bobsolete\b/.test(n)) {
+    return { columnHint: 5, lane: "bottom", priority: 51 };
+  }
+  if (/\breject/.test(n)) {
+    return { columnHint: 3, lane: "bottom", priority: 40 };
+  }
+  if (/\bcancel/.test(n)) {
+    return { columnHint: 2, lane: "bottom", priority: 41 };
+  }
+  if (/\bclosed?\b/.test(n)) {
+    return { columnHint: 6, lane: "main", priority: 90 };
+  }
+  if (/\breleased?\b|\bapproved\b|\brd re/.test(n)) {
+    return { columnHint: 5, lane: "main", priority: 80 };
+  }
+  if (
+    /\bfor review\b|\bin review\b|\breview\b|\bcheck/.test(n) ||
+    /\bapproval\b|\bapprove\b|\bschedule\b|\bready\b|\bpre[- ]release/.test(n)
+  ) {
+    return { columnHint: 3, lane: "main", priority: 60 };
+  }
+  if (
+    /\bcreate\b|\bcreated\b|\bopen\b|\bimported\b|\bnew\b|\bwork in progress\b|\bwip\b/.test(
+      n,
+    )
+  ) {
+    return { columnHint: 1, lane: "main", priority: 10 };
+  }
+  return null;
+}
+
+function syncWorkflowLayoutPanelVisibility() {
+  if (!workflowLayoutPanel) return;
+  const isWorkflow = getActiveDiagramType() === "workflow";
+  workflowLayoutPanel.classList.toggle("hidden", !isWorkflow);
+}
+
+function buildAutomaticStateWorkflowMeta(states, items) {
+  const meta = {};
+  states.forEach((s) => {
+    meta[s] = classifyWorkflowState(s);
+  });
+  for (let pass = 0; pass < 12; pass++) {
+    let changed = false;
+    states.forEach((s) => {
+      if (meta[s]) return;
+      const incoming = items.filter((t) => t.to === s);
+      const outgoing = items.filter((t) => t.from === s);
+      let col = 2;
+      if (incoming.length) {
+        const cols = incoming
+          .map((t) => meta[t.from]?.columnHint)
+          .filter((v) => v != null);
+        if (cols.length < incoming.length) return;
+        col = Math.max(...cols) + 1;
+      } else if (outgoing.length) {
+        const cols = outgoing
+          .map((t) => meta[t.to]?.columnHint)
+          .filter((v) => v != null);
+        if (cols.length < outgoing.length) return;
+        col = Math.min(...cols) - 1;
+      }
+      col = Math.max(0, Math.min(6, col));
+      meta[s] = { columnHint: col, lane: "main", priority: 500 };
+      changed = true;
+    });
+    if (!changed) break;
+  }
+  states.forEach((s) => {
+    if (!meta[s]) {
+      meta[s] = { columnHint: 2, lane: "main", priority: 900 };
+    }
+  });
+  return meta;
+}
+
+function buildStateWorkflowMeta(states, items) {
+  const meta = buildAutomaticStateWorkflowMeta(states, items);
+  states.forEach((s) => {
+    const override = workflowLayoutOverrides[selectedLife]?.states?.[s];
+    if (override) {
+      meta[s] = {
+        columnHint: Number(override.column),
+        lane: override.lane || "main",
+        priority: Number(override.order ?? 100),
+      };
+    }
+  });
+  return meta;
+}
+
+function buildWorkflowPositions(states, items, layout) {
+  const meta = buildStateWorkflowMeta(states, items);
+  const columns = uniq(states.map((s) => meta[s].columnHint)).sort((a, b) => a - b);
+  const columnIndex = {};
+  columns.forEach((c, i) => {
+    columnIndex[c] = i;
+  });
+
+  const groups = {};
+  states.forEach((s) => {
+    const m = meta[s];
+    const key = m.lane + "|" + m.columnHint;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(s);
+  });
+  Object.keys(groups).forEach((key) => {
+    groups[key].sort(
+      (a, b) =>
+        meta[a].priority - meta[b].priority || a.localeCompare(b, "da"),
+    );
+  });
+
+  let maxTopRows = 1;
+  let maxMainRows = 1;
+  let maxBottomRows = 1;
+  columns.forEach((col) => {
+    const topKey = "top|" + col;
+    const mainKey = "main|" + col;
+    const bottomKey = "bottom|" + col;
+    if (groups[topKey]) maxTopRows = Math.max(maxTopRows, groups[topKey].length);
+    if (groups[mainKey]) maxMainRows = Math.max(maxMainRows, groups[mainKey].length);
+    if (groups[bottomKey]) {
+      maxBottomRows = Math.max(maxBottomRows, groups[bottomKey].length);
+    }
+  });
+
+  const topLaneHeight =
+    maxTopRows * layout.nodeHeight + Math.max(0, maxTopRows - 1) * layout.rowGap;
+  const hasTopLane = columns.some((col) => (groups["top|" + col] || []).length > 0);
+  const mainBaseY =
+    layout.marginY + (hasTopLane ? topLaneHeight + layout.rowGap : 0);
+  const mainLaneHeight =
+    maxMainRows * layout.nodeHeight + Math.max(0, maxMainRows - 1) * layout.rowGap;
+  const bottomBaseY = mainBaseY + mainLaneHeight + layout.rowGap * 2;
+
+  const positions = {};
+  let maxX = layout.marginX;
+  let maxY = layout.marginY;
+
+  columns.forEach((col) => {
+    const x = layout.marginX + columnIndex[col] * (layout.nodeWidth + layout.columnGap);
+    ["top", "main", "bottom"].forEach((lane) => {
+      const key = lane + "|" + col;
+      const list = groups[key] || [];
+      let baseY = layout.marginY;
+      if (lane === "main") baseY = mainBaseY;
+      else if (lane === "bottom") baseY = bottomBaseY;
+      list.forEach((state, row) => {
+        const y = baseY + row * (layout.nodeHeight + layout.rowGap);
+        positions[state] = {
+          x,
+          y,
+          width: layout.nodeWidth,
+          height: layout.nodeHeight,
+          lane,
+          column: col,
+        };
+        maxX = Math.max(maxX, x + layout.nodeWidth);
+        maxY = Math.max(maxY, y + layout.nodeHeight);
+      });
+    });
+  });
+
+  return {
+    positions,
+    columns,
+    lanes: hasTopLane ? ["top", "main", "bottom"] : ["main", "bottom"],
+    width: Math.max(layout.width, maxX + layout.marginX),
+    height: Math.max(layout.height, maxY + layout.marginY),
+  };
+}
+
+function splitStateLabel(label, maxCharsPerLine) {
+  const words = String(label || "").trim().split(/\s+/);
+  if (!words.length) return [""];
+  const lines = [];
+  let current = words[0];
+  for (let i = 1; i < words.length; i++) {
+    const next = current + " " + words[i];
+    if (next.length <= maxCharsPerLine) current = next;
+    else {
+      lines.push(current);
+      current = words[i];
+    }
+  }
+  lines.push(current);
+  return lines.slice(0, 3);
+}
+
+function addWorkflowNode(stateName, position, className, layout) {
+  const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  g.setAttribute("class", className);
+  const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+  rect.setAttribute("x", position.x);
+  rect.setAttribute("y", position.y);
+  rect.setAttribute("width", position.width);
+  rect.setAttribute("height", position.height);
+  rect.setAttribute("rx", "6");
+  rect.setAttribute("ry", "6");
+  g.appendChild(rect);
+
+  const lines = splitStateLabel(stateName, layout.nodeWidth > 180 ? 16 : 14);
+  const lineHeight = Math.max(12, layout.fontSize + 2);
+  const startY =
+    position.y +
+    position.height / 2 -
+    ((lines.length - 1) * lineHeight) / 2 +
+    layout.fontSize * 0.35;
+  const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  text.setAttribute("x", position.x + position.width / 2);
+  text.setAttribute("y", startY);
+  text.setAttribute("text-anchor", "middle");
+  text.setAttribute("style", "font-size:" + layout.fontSize + "px");
+  lines.forEach((line, i) => {
+    const tsp = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+    tsp.setAttribute("x", position.x + position.width / 2);
+    if (i > 0) tsp.setAttribute("dy", lineHeight);
+    tsp.textContent = line;
+    text.appendChild(tsp);
+  });
+  g.appendChild(text);
+  g.addEventListener("click", (event) => {
+    event.stopPropagation();
+    selectState(stateName);
+  });
+  svg.appendChild(g);
+}
+
+function workflowEdgePath(fromPos, toPos, index, layout) {
+  const off = 35 + index * 16;
+  const sameCol = Math.abs(fromPos.x - toPos.x) < layout.nodeWidth * 0.6;
+  const forward = toPos.x > fromPos.x + layout.nodeWidth * 0.25;
+
+  let x1;
+  let y1;
+  let x2;
+  let y2;
+  let c1x;
+  let c1y;
+  let c2x;
+  let c2y;
+
+  if (sameCol) {
+    x1 = fromPos.x + fromPos.width;
+    y1 = fromPos.y + fromPos.height / 2;
+    x2 = toPos.x + toPos.width;
+    y2 = toPos.y + toPos.height / 2;
+    c1x = x1 + off;
+    c1y = y1;
+    c2x = x2 + off;
+    c2y = y2;
+  } else if (forward) {
+    x1 = fromPos.x + fromPos.width;
+    y1 = fromPos.y + fromPos.height / 2;
+    x2 = toPos.x;
+    y2 = toPos.y + toPos.height / 2;
+    const mx = (x1 + x2) / 2;
+    c1x = mx;
+    c1y = y1;
+    c2x = mx;
+    c2y = y2;
+    if (fromPos.lane !== toPos.lane) {
+      if (toPos.lane === "bottom") {
+        c1y = y1 + off;
+        c2y = y2 - off * 0.5;
+      } else {
+        c1y = y1 - off * 0.5;
+        c2y = y2 + off;
+      }
+    }
+  } else {
+    x1 = fromPos.x;
+    y1 = fromPos.y + fromPos.height / 2;
+    x2 = toPos.x + toPos.width;
+    y2 = toPos.y + toPos.height / 2;
+    const arcY = Math.min(fromPos.y, toPos.y) - layout.rowGap - index * 20;
+    c1x = x1 - off;
+    c1y = arcY;
+    c2x = x2 + off;
+    c2y = arcY;
+  }
+
+  return {
+    d: "M " + x1 + "," + y1 + " C " + c1x + "," + c1y + " " + c2x + "," + c2y + " " + x2 + "," + y2,
+  };
+}
+
+function prepareDiagramSurface(layout) {
+  currentLayout = layout;
+  svg.classList.remove("density-normal", "density-dense", "density-very-dense");
+  svg.classList.add(layout.densityClass || "density-normal");
+  svg.innerHTML = diagramDefs(layout);
+  applyViewBox();
+}
+
+function renderDiagram(items) {
+  syncViewerControlState();
+  if (getActiveDiagramType() === "workflow") {
+    renderWorkflowDiagram(items);
+  } else {
+    renderCircleDiagram(items);
+  }
 }
 
 function esc(s) {
@@ -393,10 +832,11 @@ function zoomDiagram(direction) {
 }
 
 window.resetDiagramZoom = function resetDiagramZoom() {
-  if (selectedLife) {
-    const states = statesForLife(selectedLife);
-    currentLayout = resolveLayout(states.length, lifeTransitionCount(selectedLife));
-    syncDefaultViewBox(currentLayout);
+  syncViewerControlState();
+  const resolved = resolveCurrentDiagramLayout();
+  if (resolved) {
+    currentLayout = resolved.layout;
+    syncDefaultViewBox(resolved.layout);
   } else {
     viewBoxState = { x: 0, y: 0, w: 1600, h: 1220 };
   }
@@ -807,17 +1247,10 @@ function diagramDefs(layout) {
   );
 }
 
-function renderDiagram(items) {
+function renderCircleDiagram(items) {
+  const layout = resolveCurrentDiagramLayout().layout;
+  prepareDiagramSurface(layout);
   const states = statesForLife(selectedLife);
-  const edgeCount = lifeTransitionCount(selectedLife);
-  const layout = resolveLayout(states.length, edgeCount);
-  currentLayout = layout;
-
-  svg.classList.remove("density-normal", "density-dense", "density-very-dense");
-  svg.classList.add(layout.densityClass);
-
-  svg.innerHTML = diagramDefs(layout);
-  applyViewBox();
 
   const cx = layout.centerX;
   const cy = layout.centerY;
@@ -964,6 +1397,458 @@ function renderDiagram(items) {
   };
 }
 
+function isTransitionHiddenByCheckbox(t) {
+  const c = cls(effective(t.security, selectedRole));
+  return (c === "deny" && !showDeny.checked) || (c === "none" && !showNone.checked);
+}
+
+function isForwardWorkflowTransition(t, positions) {
+  const from = positions[t.from];
+  const to = positions[t.to];
+  if (!from || !to) return true;
+  return to.column > from.column;
+}
+
+function isExceptionWorkflowTransition(t, positions) {
+  const from = positions[t.from];
+  const to = positions[t.to];
+  if (!from || !to) return false;
+
+  const fromName = String(t.from || "").toLowerCase();
+  const toName = String(t.to || "").toLowerCase();
+
+  const backward = to.column <= from.column;
+  const bottomLane = from.lane === "bottom" || to.lane === "bottom";
+  const exceptionName =
+    /reject|cancel|obsolete|quick-change|quick change|re-open|reopen|withdraw/i.test(
+      fromName + " " + toName,
+    );
+
+  return backward || bottomLane || exceptionName;
+}
+
+function isAllowForSelectedRole(t) {
+  return cls(effective(t.security, selectedRole)) === "allow";
+}
+
+function workflowViewModeText() {
+  if (workflowViewMode === "clean") return "Ren workflow";
+  if (workflowViewMode === "main") return "Primær rute";
+  if (workflowViewMode === "exceptions") return "Retur/afvigelser";
+  return "Alle transitions";
+}
+
+function buildCleanWorkflowTransitions(items, positions) {
+  const seenPairs = new Set();
+
+  return items.filter((t) => {
+    const from = positions[t.from];
+    const to = positions[t.to];
+    if (!from || !to) return false;
+
+    const pairKey = t.from + "||" + t.to;
+    if (seenPairs.has(pairKey)) return false;
+
+    const toName = String(t.to || "").toLowerCase();
+    const targetIsException = /obsolete|rejected|cancelled|canceled/.test(toName);
+
+    const forward = to.column > from.column;
+    const shortEnough = to.column - from.column <= 2;
+    const allowed = isAllowForSelectedRole(t);
+
+    if ((forward && shortEnough && allowed) || targetIsException) {
+      seenPairs.add(pairKey);
+      return true;
+    }
+
+    return false;
+  });
+}
+
+function filterWorkflowItemsForViewMode(items, positions) {
+  if (getActiveDiagramType() !== "workflow") return items;
+
+  if (workflowViewMode === "all") {
+    return items.filter((t) => getTransitionOverrideRole(t) !== "hidden");
+  }
+
+  if (workflowViewMode === "main") {
+    if (hasManualPrimaryTransitions()) {
+      return items.filter((t) => getTransitionOverrideRole(t) === "primary");
+    }
+    return items.filter(
+      (t) =>
+        getTransitionOverrideRole(t) !== "hidden" &&
+        isForwardWorkflowTransition(t, positions) &&
+        isAllowForSelectedRole(t),
+    );
+  }
+
+  if (workflowViewMode === "exceptions") {
+    return items.filter((t) => {
+      if (getTransitionOverrideRole(t) === "hidden") return false;
+      const role = getTransitionOverrideRole(t);
+      if (role === "secondary") return true;
+      return isExceptionWorkflowTransition(t, positions);
+    });
+  }
+
+  if (workflowViewMode === "clean") {
+    const ids = new Set(
+      buildCleanWorkflowTransitions(items, positions).map((t) => String(t.id)),
+    );
+    items.forEach((t) => {
+      const role = getTransitionOverrideRole(t);
+      if (role === "primary" || role === "secondary") ids.add(String(t.id));
+      if (role === "hidden") ids.delete(String(t.id));
+    });
+    return items.filter((t) => ids.has(String(t.id)));
+  }
+
+  return items;
+}
+
+function getTransitionOverrideRole(t) {
+  return (
+    workflowTransitionOverrides[selectedLife]?.transitions?.[String(t.id)]?.role ||
+    "auto"
+  );
+}
+
+function hasManualPrimaryTransitions() {
+  const tr = workflowTransitionOverrides[selectedLife]?.transitions;
+  if (!tr) return false;
+  return Object.values(tr).some((o) => o.role === "primary");
+}
+
+function hasManualLayoutOverridesForLife() {
+  const st = workflowLayoutOverrides[selectedLife]?.states;
+  return !!(st && Object.keys(st).length);
+}
+
+function hasManualTransitionOverridesForLife() {
+  const tr = workflowTransitionOverrides[selectedLife]?.transitions;
+  return !!(tr && Object.keys(tr).length);
+}
+
+function ensureLifeLayoutOverrideBucket() {
+  if (!workflowLayoutOverrides[selectedLife]) {
+    workflowLayoutOverrides[selectedLife] = { states: {} };
+  }
+  return workflowLayoutOverrides[selectedLife];
+}
+
+function ensureLifeTransitionOverrideBucket() {
+  if (!workflowTransitionOverrides[selectedLife]) {
+    workflowTransitionOverrides[selectedLife] = { transitions: {} };
+  }
+  return workflowTransitionOverrides[selectedLife];
+}
+
+function getStateLayoutOverride(stateName) {
+  return workflowLayoutOverrides[selectedLife]?.states?.[stateName] || null;
+}
+
+function transitionOverrideLabel(role) {
+  if (role === "primary") return "Primær";
+  if (role === "secondary") return "Sekundær";
+  if (role === "hidden") return "Skjult";
+  return "Auto";
+}
+
+function onWorkflowLayoutFieldChange(event) {
+  const target = event.target;
+  const stateName = target.getAttribute("data-state");
+  const field = target.getAttribute("data-field");
+  if (!stateName || !field) return;
+  ensureLifeLayoutOverrideBucket();
+  if (!workflowLayoutOverrides[selectedLife].states[stateName]) {
+    workflowLayoutOverrides[selectedLife].states[stateName] = {};
+  }
+  const entry = workflowLayoutOverrides[selectedLife].states[stateName];
+  if (field === "column" || field === "order") {
+    entry[field] = Number(target.value);
+  } else {
+    entry[field] = target.value;
+  }
+  window.resetDiagramZoom();
+  update();
+}
+
+function onWorkflowTransitionOverrideChange(event) {
+  const target = event.target;
+  const tid = target.getAttribute("data-transition-id");
+  if (!tid) return;
+  ensureLifeTransitionOverrideBucket();
+  const role = target.value;
+  if (role === "auto") {
+    delete workflowTransitionOverrides[selectedLife].transitions[tid];
+  } else {
+    workflowTransitionOverrides[selectedLife].transitions[tid] = { role };
+  }
+  window.resetDiagramZoom();
+  update();
+}
+
+function generateWorkflowLayoutFromCurrent() {
+  const states = statesForLife(selectedLife);
+  const items = transitions.filter((t) => t.life === selectedLife);
+  const meta = buildAutomaticStateWorkflowMeta(states, items);
+  ensureLifeLayoutOverrideBucket();
+  states.forEach((s) => {
+    const m = meta[s];
+    workflowLayoutOverrides[selectedLife].states[s] = {
+      column: m.columnHint,
+      lane: m.lane,
+      order: m.priority,
+    };
+  });
+  renderWorkflowLayoutPanel();
+  window.resetDiagramZoom();
+  update();
+}
+
+function copyWorkflowLayoutJson() {
+  const data = {
+    workflowLayoutOverrides,
+    workflowTransitionOverrides,
+  };
+  const text = JSON.stringify(data, null, 2);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(() => {
+      window.prompt("Kopiér layout JSON:", text);
+    });
+  } else {
+    window.prompt("Kopiér layout JSON:", text);
+  }
+}
+
+function pasteWorkflowLayoutJson() {
+  const text = window.prompt("Indsæt layout JSON:");
+  if (!text || !text.trim()) return;
+  try {
+    const data = JSON.parse(text);
+    if (data.workflowLayoutOverrides && typeof data.workflowLayoutOverrides === "object") {
+      workflowLayoutOverrides = data.workflowLayoutOverrides;
+    }
+    if (
+      data.workflowTransitionOverrides &&
+      typeof data.workflowTransitionOverrides === "object"
+    ) {
+      workflowTransitionOverrides = data.workflowTransitionOverrides;
+    }
+    renderWorkflowLayoutPanel();
+    window.resetDiagramZoom();
+    update();
+  } catch (err) {
+    window.alert("Ugyldig JSON: " + err.message);
+  }
+}
+
+function renderWorkflowLayoutPanel() {
+  syncWorkflowLayoutPanelVisibility();
+  if (!workflowStateLayoutTable || getActiveDiagramType() !== "workflow") return;
+
+  const states = statesForLife(selectedLife).slice().sort((a, b) => a.localeCompare(b, "da"));
+  const items = transitions.filter((t) => t.life === selectedLife);
+  const autoMeta = buildAutomaticStateWorkflowMeta(states, items);
+
+  const stateRows = states
+    .map((s) => {
+      const o = getStateLayoutOverride(s);
+      const m = autoMeta[s];
+      const column = o ? o.column : m.columnHint;
+      const lane = o ? o.lane : m.lane;
+      const order = o ? o.order : m.priority;
+      const laneOptions = ["top", "main", "bottom"]
+        .map(
+          (l) =>
+            '<option value="' +
+            l +
+            '"' +
+            (lane === l ? " selected" : "") +
+            ">" +
+            l +
+            "</option>",
+        )
+        .join("");
+      return (
+        "<tr><td>" +
+        esc(s) +
+        '</td><td><input type="number" min="0" step="1" data-state="' +
+        esc(s) +
+        '" data-field="column" value="' +
+        esc(column) +
+        '"></td><td><select data-state="' +
+        esc(s) +
+        '" data-field="lane">' +
+        laneOptions +
+        '</select></td><td><input type="number" min="0" step="1" data-state="' +
+        esc(s) +
+        '" data-field="order" value="' +
+        esc(order) +
+        "></td></tr>"
+      );
+    })
+    .join("");
+
+  workflowStateLayoutTable.innerHTML =
+    '<div class="tableWrap"><table class="workflow-layout-table"><thead><tr><th>State</th><th>Kolonne</th><th>Lane</th><th>Rækkefølge</th></tr></thead><tbody>' +
+    stateRows +
+    "</tbody></table></div>";
+
+  if (!workflowTransitionOverrideTable) return;
+
+  const lifeTransitions = items.slice().sort((a, b) =>
+    String(a.id).localeCompare(String(b.id), "da", { numeric: true }),
+  );
+
+  const transRows = lifeTransitions
+    .map((t) => {
+      const role = getTransitionOverrideRole(t);
+      const v = effective(t.security, selectedRole);
+      const options = ["auto", "primary", "secondary", "hidden"]
+        .map(
+          (r) =>
+            '<option value="' +
+            r +
+            '"' +
+            (role === r ? " selected" : "") +
+            ">" +
+            esc(transitionOverrideLabel(r)) +
+            "</option>",
+        )
+        .join("");
+      return (
+        "<tr><td>" +
+        esc(t.id) +
+        "</td><td>" +
+        esc(t.from) +
+        "</td><td>" +
+        esc(t.to) +
+        '</td><td class="' +
+        cls(v) +
+        '">' +
+        esc(v) +
+        '</td><td><select data-transition-id="' +
+        esc(String(t.id)) +
+        '">' +
+        options +
+        "</select></td></tr>"
+      );
+    })
+    .join("");
+
+  workflowTransitionOverrideTable.innerHTML =
+    '<h4>Transition-overrides</h4><div class="tableWrap"><table class="workflow-layout-table"><thead><tr><th>Id</th><th>From</th><th>To</th><th>Resultat</th><th>Valg</th></tr></thead><tbody>' +
+    transRows +
+    "</tbody></table></div>";
+}
+
+function renderWorkflowDiagram(items) {
+  const resolved = resolveCurrentDiagramLayout();
+  const layout = resolved.layout;
+  const wf = resolved.workflow;
+  prepareDiagramSurface(layout);
+  const states = statesForLife(selectedLife);
+
+  const sel = getSelectionContext(items);
+  const pos = wf.positions;
+  const workflowItems = filterWorkflowItemsForViewMode(items, pos);
+  const directedPairs = buildDirectedPairMap(workflowItems);
+  const allowFrom = new Set();
+  const allowTo = new Set();
+  const denyTo = new Set();
+  const visibleStates = new Set();
+  const suppressWorkflowJobLabels =
+    workflowViewMode === "clean" || workflowViewMode === "main";
+
+  workflowItems.forEach((t) => {
+    const fromPos = pos[t.from];
+    const toPos = pos[t.to];
+    if (!fromPos || !toPos) return;
+    const v = effective(t.security, selectedRole);
+    const c = cls(v);
+    const hide =
+      (c === "deny" && !showDeny.checked) || (c === "none" && !showNone.checked);
+    if (!hide) {
+      visibleStates.add(t.from);
+      visibleStates.add(t.to);
+    }
+    if (c === "allow") {
+      allowFrom.add(t.from);
+      allowTo.add(t.to);
+    }
+    if (c === "deny") denyTo.add(t.to);
+
+    const dirKey = t.from + "||" + t.to;
+    const group = directedPairs.get(dirKey) || [t];
+    const pairIndex = group.findIndex((x) => x.id === t.id);
+    const edgePath = workflowEdgePath(fromPos, toPos, pairIndex, layout);
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const pathId =
+      "edge-" + selectedLife.replace(/[^a-z0-9]+/gi, "-") + "-" + t.id;
+    let edgeClass = "edge " + c + (hide ? " hidden" : "");
+    const overrideRole = getTransitionOverrideRole(t);
+    if (overrideRole === "primary") edgeClass += " primaryEdge";
+    else if (overrideRole === "secondary") edgeClass += " secondaryEdge";
+    const tid = String(t.id);
+    if (sel.selectedEdge === tid) edgeClass += " selectedEdge";
+    else if (sel.highlightedEdges.has(tid)) edgeClass += " highlightedEdge";
+    else if (selectedElement && !hide) edgeClass += " dimmedEdge";
+    path.setAttribute("id", pathId);
+    path.setAttribute("class", edgeClass);
+    path.setAttribute("d", edgePath.d);
+    path.setAttribute("marker-end", "url(#arrow-" + c + ")");
+    path.innerHTML =
+      "<title>" +
+      esc(t.id) +
+      ": " +
+      esc(t.from) +
+      " -> " +
+      esc(t.to) +
+      " | " +
+      esc(v) +
+      " | " +
+      esc(t.security) +
+      " | Job: " +
+      esc(normalizeJobText(t.customJob || "")) +
+      "</title>";
+    path.addEventListener("click", (event) => {
+      event.stopPropagation();
+      selectTransition(t.id);
+    });
+    svg.appendChild(path);
+    const hideJobs =
+      hide ||
+      suppressWorkflowJobLabels ||
+      layout.densityClass === "density-very-dense" ||
+      !showJobs.checked;
+    addJobLabel(pathId, t.customJob, hideJobs);
+  });
+
+  states.forEach((s) => {
+    const p = pos[s];
+    if (!p) return;
+    let nc = "node workflowNode";
+    if (s === selectedState && selectedDirection !== "all") nc += " selectedState";
+    const unrelated =
+      selectedDirection !== "all" && !visibleStates.has(s) && s !== selectedState;
+    if (unrelated) nc += hideUnrelated.checked ? " hiddenNode" : " unrelated";
+    if (allowFrom.has(s)) nc += " activeFrom";
+    if (allowTo.has(s)) nc += " activeTo";
+    else if (denyTo.has(s)) nc += " deniedTo";
+    if (sel.selectedState === s) nc += " selectedNode";
+    else if (sel.relatedStates.has(s)) nc += " relatedNode";
+    else if (selectedElement) nc += " dimmedNode";
+    addWorkflowNode(s, p, nc, layout);
+  });
+
+  svg.onclick = () => {
+    if (selectedElement) clearSelection();
+  };
+}
+
 function directionText() {
   if (selectedDirection === "from") return "fra " + selectedState;
   if (selectedDirection === "to") return "til " + selectedState;
@@ -1005,43 +1890,82 @@ function update() {
   document.querySelectorAll(".roleBtn").forEach((b) => {
     b.classList.toggle("active", b.textContent === selectedRole);
   });
+  syncViewerControlState();
   permissionMode = permModeSelect.value;
   const items = filteredItems();
-  let ac = 0;
-  let dc = 0;
-  let nc = 0;
-  let jc = 0;
+  let vac = 0;
+  let vdc = 0;
+  let vnc = 0;
+  let jac = 0;
+  let hdc = 0;
+  let hnc = 0;
   items.forEach((t) => {
     const c = cls(effective(t.security, selectedRole));
-    if (c === "allow") ac++;
-    else if (c === "deny") dc++;
-    else nc++;
-    if (t.customJob) jc++;
+    const hidden = isTransitionHiddenByCheckbox(t);
+    if (hidden) {
+      if (c === "deny") hdc++;
+      else if (c === "none") hnc++;
+    } else {
+      if (c === "allow") vac++;
+      else if (c === "deny") vdc++;
+      else vnc++;
+      if (t.customJob) jac++;
+    }
   });
-  summary.innerHTML =
+  let countText =
+    "Viser: " +
+    vac +
+    " Allow, " +
+    vdc +
+    " Deny, " +
+    vnc +
+    " ikke specificeret";
+  if (jac) countText += ", " + jac + " Custom Job";
+  const hiddenParts = [];
+  if (hdc) hiddenParts.push(hdc + " Deny");
+  if (hnc) hiddenParts.push(hnc + " ikke specificeret");
+  if (hiddenParts.length) countText += ". Skjult: " + hiddenParts.join(", ");
+  let summaryHeader =
     "<b>" +
     esc(selectedLife) +
     "</b> / <b>" +
     esc(selectedRole) +
     "</b> / <b>" +
     esc(directionText()) +
-    "</b>: " +
-    ac +
-    " Allow, " +
-    dc +
-    " Deny, " +
-    nc +
-    " ikke specificeret, " +
-    jc +
-    " Custom Job. State permissions: " +
+    "</b>";
+  if (getActiveDiagramType() === "workflow") {
+    summaryHeader += " / Workflow: <b>" + esc(workflowViewModeText()) + "</b>";
+  }
+  let summaryTail = "";
+  if (getActiveDiagramType() === "workflow") {
+    if (hasManualLayoutOverridesForLife() || hasManualTransitionOverridesForLife()) {
+      summaryTail += " Manuelt layout aktivt.";
+    }
+    if (workflowViewMode === "main") {
+      summaryTail += hasManualPrimaryTransitions()
+        ? " Primær rute: manuel."
+        : " Primær rute: auto.";
+    }
+  }
+  summary.innerHTML =
+    summaryHeader +
+    ": " +
+    countText +
+    ". State permissions: " +
     (showPerms.checked
       ? permissionMode === "role"
         ? "for valgt rolle"
         : "summering"
       : "skjult") +
     "." +
+    summaryTail +
     (largeWorkflowHint && selectedDirection === "connected"
       ? ' <span class="layout-hint">Stor lifecycle: Starter med "Til/fra valgt state" for bedre overblik. Vælg "Alle transitions" for komplet graf.</span>'
+      : "") +
+    (diagramType === "circle" &&
+    (lifeTransitionCount(selectedLife) > 40 ||
+      statesForLife(selectedLife).length > 8)
+      ? ' <span class="layout-hint">Tip: Prøv Diagramtype = Workflow for et mere klassisk venstre-mod-højre workflow.</span>'
       : "");
   renderDiagram(items);
   const order = { allow: 0, deny: 1, none: 2 };
@@ -1078,6 +2002,7 @@ function update() {
     .join("");
   renderPermissionTable();
   renderDetailsPanel();
+  renderWorkflowLayoutPanel();
 }
 
 function bindControls() {
@@ -1111,10 +2036,24 @@ function bindControls() {
   if (layoutModeSelect) {
     layoutModeSelect.onchange = () => {
       layoutMode = layoutModeSelect.value;
-      const states = statesForLife(selectedLife);
-      currentLayout = resolveLayout(states.length, lifeTransitionCount(selectedLife));
-      syncDefaultViewBox(currentLayout);
-      applyViewBox();
+      window.resetDiagramZoom();
+      update();
+    };
+  }
+  if (diagramTypeSelect) {
+    diagramTypeSelect.onchange = () => {
+      diagramType = diagramTypeSelect.value;
+      selectedElement = null;
+      syncWorkflowViewModeControlAvailability();
+      window.resetDiagramZoom();
+      update();
+    };
+  }
+  if (workflowViewModeSelect) {
+    workflowViewModeSelect.onchange = () => {
+      workflowViewMode = workflowViewModeSelect.value;
+      selectedElement = null;
+      window.resetDiagramZoom();
       update();
     };
   }
@@ -1122,6 +2061,25 @@ function bindControls() {
   if (zoomInBtn) zoomInBtn.onclick = () => zoomDiagram("in");
   if (zoomOutBtn) zoomOutBtn.onclick = () => zoomDiagram("out");
   if (zoomResetBtn) zoomResetBtn.onclick = () => window.resetDiagramZoom();
+  if (workflowStateLayoutTable) {
+    workflowStateLayoutTable.addEventListener("change", onWorkflowLayoutFieldChange);
+    workflowStateLayoutTable.addEventListener("input", onWorkflowLayoutFieldChange);
+  }
+  if (workflowTransitionOverrideTable) {
+    workflowTransitionOverrideTable.addEventListener(
+      "change",
+      onWorkflowTransitionOverrideChange,
+    );
+  }
+  if (generateWorkflowLayoutBtn) {
+    generateWorkflowLayoutBtn.onclick = generateWorkflowLayoutFromCurrent;
+  }
+  if (copyWorkflowLayoutJsonBtn) {
+    copyWorkflowLayoutJsonBtn.onclick = copyWorkflowLayoutJson;
+  }
+  if (pasteWorkflowLayoutJsonBtn) {
+    pasteWorkflowLayoutJsonBtn.onclick = pasteWorkflowLayoutJson;
+  }
 }
 
 function setupViewer(initialContext) {
@@ -1167,6 +2125,14 @@ function setupViewer(initialContext) {
       layoutMode = initialContext.layoutMode;
       layoutModeSelect.value = layoutMode;
     }
+    if (initialContext.diagramType && diagramTypeSelect) {
+      diagramType = initialContext.diagramType;
+      diagramTypeSelect.value = diagramType;
+    }
+    if (initialContext.workflowViewMode && workflowViewModeSelect) {
+      workflowViewMode = initialContext.workflowViewMode;
+      workflowViewModeSelect.value = workflowViewMode;
+    }
     if (initialContext.permissionMode && permModeSelect) {
       permissionMode = initialContext.permissionMode;
       permModeSelect.value = permissionMode;
@@ -1191,11 +2157,10 @@ function setupViewer(initialContext) {
   applyLargeWorkflowDefaults(initialContext && initialContext.selectedDirection);
   applyDensePermissionDefaults(initialContext);
 
+  syncWorkflowViewModeControlAvailability();
+  syncWorkflowLayoutPanelVisibility();
   bindControls();
-  const initStates = statesForLife(selectedLife);
-  currentLayout = resolveLayout(initStates.length, lifeTransitionCount(selectedLife));
-  syncDefaultViewBox(currentLayout);
-  applyViewBox();
+  window.resetDiagramZoom();
   update();
 }
 
@@ -1237,6 +2202,16 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialConte
   permModeSelect = document.getElementById("permModeSelect");
   hideUnrelated = document.getElementById("hideUnrelated");
   layoutModeSelect = document.getElementById("layoutModeSelect");
+  diagramTypeSelect = document.getElementById("diagramTypeSelect");
+  workflowViewModeSelect = document.getElementById("workflowViewModeSelect");
+  workflowLayoutPanel = document.getElementById("workflowLayoutPanel");
+  workflowStateLayoutTable = document.getElementById("workflowStateLayoutTable");
+  workflowTransitionOverrideTable = document.getElementById(
+    "workflowTransitionOverrideTable",
+  );
+  generateWorkflowLayoutBtn = document.getElementById("generateWorkflowLayoutBtn");
+  copyWorkflowLayoutJsonBtn = document.getElementById("copyWorkflowLayoutJsonBtn");
+  pasteWorkflowLayoutJsonBtn = document.getElementById("pasteWorkflowLayoutJsonBtn");
   focusSelectedBtn = document.getElementById("focus-selected-btn");
   detailsPanel = document.getElementById("details-panel");
   zoomInBtn = document.getElementById("zoom-in-btn");
@@ -1253,6 +2228,10 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialConte
   selectedDirection = "all";
   permissionMode = "role";
   layoutMode = "auto";
+  diagramType = "circle";
+  workflowViewMode = "all";
+  workflowLayoutOverrides = {};
+  workflowTransitionOverrides = {};
   largeWorkflowHint = false;
 
   if (initialContext) {
@@ -1274,6 +2253,19 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialConte
     if (initialContext.layoutMode) {
       layoutMode = initialContext.layoutMode;
     }
+    if (initialContext.diagramType) {
+      diagramType = initialContext.diagramType;
+    }
+    if (initialContext.workflowLayoutOverrides) {
+      workflowLayoutOverrides = JSON.parse(
+        JSON.stringify(initialContext.workflowLayoutOverrides),
+      );
+    }
+    if (initialContext.workflowTransitionOverrides) {
+      workflowTransitionOverrides = JSON.parse(
+        JSON.stringify(initialContext.workflowTransitionOverrides),
+      );
+    }
   }
 
   setupViewer(initialContext);
@@ -1292,5 +2284,11 @@ window.getWorkflowViewerContext = function getWorkflowViewerContext() {
     permissionMode: permModeSelect ? permModeSelect.value : "role",
     hideUnrelated: hideUnrelated ? hideUnrelated.checked : true,
     layoutMode: layoutModeSelect ? layoutModeSelect.value : layoutMode,
+    diagramType: diagramTypeSelect ? diagramTypeSelect.value : diagramType,
+    workflowViewMode: workflowViewModeSelect
+      ? workflowViewModeSelect.value
+      : workflowViewMode,
+    workflowLayoutOverrides,
+    workflowTransitionOverrides,
   };
 };

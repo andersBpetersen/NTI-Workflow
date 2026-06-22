@@ -16,6 +16,24 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 - Eksportér Workflow Viewer som standalone HTML (offline til undervisning/review)
 - Dynamisk layout for store workflows (Auto, Normal, Kompakt, Stor)
 - Bedre læsbarhed ved mange transitions og states
+- Diagramtype: Cirkel eller Workflow
+- Workflow-layout tegner states som bokse fra venstre mod højre
+- Cirkel-layout bevares til netværksvisning
+- Workflow-visning: Alle transitions, Ren workflow, Primær rute og Retur/afvigelser
+- Ren workflow reducerer visuel støj ved store eller tæt forbundne lifecycles
+- Manuel workflow-layout: styr kolonne, lane og rækkefølge for states
+- Manuel primær rute: markér transitions som primær, sekundær eller skjult
+- Layout overrides gemmes i standalone HTML-export
+- Layout JSON kan kopieres/indsættes for deling uden database
+- **Vault Job Config Simulator** som separat React/TypeScript værktøj under `/tools/vault-job-config-simulator/`
+
+**v0.7.0** – Manuel workflow-layout og primær rute for læsbare Vault workflows.
+
+**v0.6.3** – Forbedret workflow-filterlogik: Primær rute viser Allow-hovedflow, og Workflow-visning deaktiveres i Cirkel-layout.
+
+**v0.6.2** – Workflow readability presets og mere retvisende summary.
+
+**v0.6** – Workflow-layout med skift mellem cirkel og venstre-mod-højre flowdiagram.
 
 ## Krav
 
@@ -34,6 +52,30 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 Åbn: http://127.0.0.1:8000 — forsiden vises først. Klik **Åbn Workflow Viewer** for at uploade Excel.
+
+### Vault Job Config Simulator (React)
+
+Separat Vite-app under `tools/vault-job-config-simulator/`:
+
+```powershell
+cd tools\vault-job-config-simulator
+npm install
+npm run dev
+```
+
+Build og test:
+
+```powershell
+cd tools\vault-job-config-simulator
+npm test
+npm run build
+```
+
+Efter `npm run build` serveres simulatoren via FastAPI på:
+
+```text
+http://127.0.0.1:8000/tools/vault-job-config-simulator/
+```
 
 ### Upload-validering
 

@@ -49,6 +49,20 @@ _VIEWER_BODY = """\
       </select>
     </label>
     <label><input type="checkbox" id="hideUnrelated" checked> Skjul irrelevante states</label>
+    <label><b>Diagramtype</b>
+      <select id="diagramTypeSelect">
+        <option value="circle">Cirkel</option>
+        <option value="workflow">Workflow</option>
+      </select>
+    </label>
+    <label><b>Workflow-visning</b>
+      <select id="workflowViewModeSelect">
+        <option value="all">Alle transitions</option>
+        <option value="clean">Ren workflow</option>
+        <option value="main">Primær rute</option>
+        <option value="exceptions">Retur/afvigelser</option>
+      </select>
+    </label>
     <label><b>Layout</b>
       <select id="layoutModeSelect">
         <option value="auto">Auto</option>
@@ -61,6 +75,18 @@ _VIEWER_BODY = """\
 
   <section id="selectedSummary"></section>
   {warnings_html}
+
+  <section id="workflowLayoutPanel" class="workflow-layout-panel hidden">
+    <h3>Workflow layout-indstillinger</h3>
+    <p class="note">Bruges kun i Workflow-layout. Ændringer gemmes i HTML-export.</p>
+    <div class="workflow-layout-actions">
+      <button type="button" class="zoom-btn" id="generateWorkflowLayoutBtn">Generér layout fra nuværende</button>
+      <button type="button" class="zoom-btn" id="copyWorkflowLayoutJsonBtn">Kopiér layout JSON</button>
+      <button type="button" class="zoom-btn" id="pasteWorkflowLayoutJsonBtn">Indsæt layout JSON</button>
+    </div>
+    <div id="workflowStateLayoutTable"></div>
+    <div id="workflowTransitionOverrideTable"></div>
+  </section>
 
   <div class="diagram-layout">
     <div class="diagram-column">

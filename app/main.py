@@ -22,7 +22,7 @@ MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 app = FastAPI(
     title="NTI Workflow",
     description="Visualiser Vault lifecycle transitions fra Excel-eksport.",
-    version="0.5.0",
+    version="0.7.0",
 )
 
 @app.get("/")
@@ -45,6 +45,10 @@ class ViewerContext(BaseModel):
     permissionMode: str | None = None
     hideUnrelated: bool | None = None
     layoutMode: str | None = None
+    diagramType: str | None = None
+    workflowViewMode: str | None = None
+    workflowLayoutOverrides: dict | None = None
+    workflowTransitionOverrides: dict | None = None
 
 
 class ExportHtmlRequest(BaseModel):
@@ -129,3 +133,14 @@ async def export_html(request: ExportHtmlRequest) -> Response:
 
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+SIMULATOR_DIST = (
+    BASE_DIR / "tools" / "vault-job-config-simulator" / "dist"
+)
+
+if SIMULATOR_DIST.exists():
+    app.mount(
+        "/tools/vault-job-config-simulator",
+        StaticFiles(directory=str(SIMULATOR_DIST), html=True),
+        name="vault_job_config_simulator",
+    )

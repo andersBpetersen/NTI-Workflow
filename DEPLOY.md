@@ -58,6 +58,10 @@ docker compose down
 
 Åbn i browser: `http://localhost:8000`
 
+**Vault Job Config Simulator:** `http://localhost:8000/tools/vault-job-config-simulator/`
+
+Dockerfile bygger simulatoren i en Node build-stage og kopierer `dist/` til final Python-image (ingen Node runtime i production).
+
 ### Opdater efter lokale kodeændringer
 
 ```powershell
@@ -261,6 +265,8 @@ NTI Workflow/
 
 ## Versionsinfo
 
+- **v0.6** – Workflow-layout med skift mellem cirkel og venstre-mod-højre flowdiagram
+- **v0.6** – Workflow-layout med skift mellem cirkel og venstre-mod-højre flowdiagram
 - **v0.5** – Forbedret layout og læsbarhed for store workflows
 - **v0.4** – Standalone HTML-export og Docker registry publish-flow
 - **v0.3** – Klikbart detaljepanel, import warnings og zoom

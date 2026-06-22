@@ -6,3 +6,4 @@ _xlam_extract2/
 _xlam.zip
 *.pyc
 .git/
+tools/vault-job-config-simulator/node_modules/

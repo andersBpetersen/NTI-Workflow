@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- NTI Workflow static version: 0.5.0 -->
+<!-- NTI Workflow static version: 0.7.0 -->
 <html lang="da">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NTI Workflow</title>
-  <link rel="stylesheet" href="/static/viewer.css?v=0.5.0">
+  <link rel="stylesheet" href="/static/viewer.css?v=0.7.0">
 </head>
 <body>
   <section id="home-root">
@@ -16,6 +16,11 @@
         <h2>Workflow Viewer</h2>
         <p>Upload Vault Excel-eksport og visualiser lifecycle transitions, roller og state permissions.</p>
         <button type="button" class="primary" id="open-workflow-btn">Åbn Workflow Viewer</button>
+      </article>
+      <article class="tool-card">
+        <h2>Vault Job Config Simulator</h2>
+        <p>Upload og simuler NTI For Vault Job Processor JSON-konfigurationer med lokale testscenarier.</p>
+        <a class="primary tool-link" href="/tools/vault-job-config-simulator/">Åbn simulator</a>
       </article>
       <article class="tool-card">
         <h2>Lifecycle Compare</h2>
@@ -81,6 +86,20 @@
               <option value="summary">Summering</option>
             </select>
           </label>
+          <label><b>Diagramtype</b>
+            <select id="diagramTypeSelect">
+              <option value="circle">Cirkel</option>
+              <option value="workflow">Workflow</option>
+            </select>
+          </label>
+          <label><b>Workflow-visning</b>
+            <select id="workflowViewModeSelect">
+              <option value="all">Alle transitions</option>
+              <option value="clean">Ren workflow</option>
+              <option value="main">Primær rute</option>
+              <option value="exceptions">Retur/afvigelser</option>
+            </select>
+          </label>
           <label><b>Layout</b>
             <select id="layoutModeSelect">
               <option value="auto">Auto</option>
@@ -94,6 +113,18 @@
 
         <section id="selectedSummary"></section>
         <section id="importWarnings" class="warning-box hidden"></section>
+
+        <section id="workflowLayoutPanel" class="workflow-layout-panel hidden">
+          <h3>Workflow layout-indstillinger</h3>
+          <p class="note">Bruges kun i Workflow-layout. Ændringer gemmes i HTML-export.</p>
+          <div class="workflow-layout-actions">
+            <button type="button" class="zoom-btn" id="generateWorkflowLayoutBtn">Generér layout fra nuværende</button>
+            <button type="button" class="zoom-btn" id="copyWorkflowLayoutJsonBtn">Kopiér layout JSON</button>
+            <button type="button" class="zoom-btn" id="pasteWorkflowLayoutJsonBtn">Indsæt layout JSON</button>
+          </div>
+          <div id="workflowStateLayoutTable"></div>
+          <div id="workflowTransitionOverrideTable"></div>
+        </section>
 
         <div class="diagram-layout">
           <div class="diagram-column">
@@ -140,7 +171,7 @@
     </div>
   </div>
 
-  <script src="/static/viewer.js?v=0.5.0"></script>
-  <script src="/static/app.js?v=0.5.0"></script>
+  <script src="/static/viewer.js?v=0.7.0"></script>
+  <script src="/static/app.js?v=0.7.0"></script>
 </body>
 </html>
