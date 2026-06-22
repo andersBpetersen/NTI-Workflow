@@ -13,9 +13,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Image version tag (fx 0.4.0)"
+        description: "Image version tag (fx 0.6.4)"
         required: true
-        default: "0.4.1"
+        default: "0.6.4"
       push_latest:
         description: "Push også :latest tag"
         required: false

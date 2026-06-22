@@ -29,6 +29,12 @@ def test_health(client: TestClient) -> None:
     assert response.json() == {"status": "ok"}
 
 
+def test_app_version(client: TestClient) -> None:
+    response = client.get("/openapi.json")
+    assert response.status_code == 200
+    assert response.json()["info"]["version"] == "0.6.4"
+
+
 def test_upload_sample_excel(client: TestClient) -> None:
     with SAMPLE_FILE.open("rb") as handle:
         response = client.post(

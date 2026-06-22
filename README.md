@@ -5,20 +5,28 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 ## Funktioner
 
 - Forside med flere værktøjer (første: **Workflow Viewer**)
-- Upload af Excel-fil (`.xlsx`, `.xlsm`) med validering af Vault-format
-- Drag-and-drop upload af Excel-outputfiler fra NTI Vault Dump Config
-- Læser arket `LifeCycleDefinitionTransitions`
+- Upload af Excel-output fra NTI Vault Dump Config
+- Drag-and-drop af `.xlsx` og `.xlsm`
+- Upload-validering af Vault-format (arket `LifeCycleDefinitionTransitions`)
 - Læser valgfrit arket `LifeCycleDefinitionStates` (state permissions)
-- Parser transitions til nodes/edges JSON
-- Interaktivt diagram i browser (samme visning som VBA add-in)
 - Klikbare states og transitions med detaljepanel
+- State permissions for valgt rolle
+- Toggle på `Vis kun valgt state` (gendan tidligere visning)
+- Dynamisk layout: Auto, Normal, Kompakt og Stor
+- Automatisk tekstombrydning af state-navne i cirkeldiagrammet
 - Tydelig visning af import-advarsler efter upload
 - Enkel zoom på diagrammet (ind/ud/nulstil)
-- Eksportér Workflow Viewer som standalone HTML (offline til undervisning/review)
-- Dynamisk layout for store workflows (Auto, Normal, Kompakt, Stor)
-- Bedre læsbarhed ved mange transitions og states
+- Eksport til standalone HTML (offline til undervisning/review)
 
-**v0.6.0** – Excel-filer fra NTI Vault Dump Config kan nu uploades med træk og slip.
+**v0.6.4** – Samlet UI-opdatering med drag-and-drop, forenklede state permissions, forbedret kontrollayout og ombrudte state-navne.
+
+**v0.6.0** – Excel-filer fra NTI Vault Dump Config kan uploades med træk og slip.
+
+**v0.6.1** – Kontrolområdet er opdelt i workflowvalg, roller og visningsindstillinger.
+
+**v0.6.2** – State-cirklerne blev midlertidigt forstørret (tilbageført i v0.6.3/v0.6.4).
+
+**v0.6.3** – State-navne ombrydes automatisk over flere linjer i cirkeldiagrammet.
 
 ## Krav
 

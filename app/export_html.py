@@ -27,30 +27,71 @@ _VIEWER_BODY = """\
 
 <main class="viewer-main">
   <section class="controls">
-    <label><b>LifeCycleDefinition</b><select id="lifeSelect"></select></label>
-    <label><b>Fokus-state</b><select id="stateSelect"></select></label>
-    <label><b>Visning</b>
-      <select id="directionSelect">
-        <option value="all">Alle transitions</option>
-        <option value="from">Fra valgt state</option>
-        <option value="to">Til valgt state</option>
-        <option value="connected">Til/fra valgt state</option>
-      </select>
-    </label>
-    <div><b>Rolle</b><div id="roleButtons"></div></div>
-    <label><input type="checkbox" id="showDeny" checked> Vis Deny</label>
-    <label><input type="checkbox" id="showNone"> Vis ikke specificeret</label>
-    <label><input type="checkbox" id="showJobs" checked> Vis Custom JobTypes</label>
-    <label><input type="checkbox" id="showPerms" checked> Vis state permissions</label>
-    <label><input type="checkbox" id="hideUnrelated" checked> Skjul irrelevante states</label>
-    <label><b>Layout</b>
-      <select id="layoutModeSelect">
-        <option value="auto">Auto</option>
-        <option value="normal">Normal</option>
-        <option value="dense">Kompakt</option>
-        <option value="large">Stor</option>
-      </select>
-    </label>
+    <div class="control-row control-row-main">
+      <label>
+        <b>LifeCycleDefinition</b>
+        <select id="lifeSelect"></select>
+      </label>
+
+      <label>
+        <b>Fokus-state</b>
+        <select id="stateSelect"></select>
+      </label>
+
+      <label>
+        <b>Visning</b>
+        <select id="directionSelect">
+          <option value="all">Alle transitions</option>
+          <option value="from">Fra valgt state</option>
+          <option value="to">Til valgt state</option>
+          <option value="connected">Til/fra valgt state</option>
+        </select>
+      </label>
+
+      <label>
+        <b>Layout</b>
+        <select id="layoutModeSelect">
+          <option value="auto">Auto</option>
+          <option value="normal">Normal</option>
+          <option value="dense">Kompakt</option>
+          <option value="large">Stor</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="control-row control-row-roles">
+      <div class="role-control">
+        <b>Rolle</b>
+        <div id="roleButtons"></div>
+      </div>
+    </div>
+
+    <div class="control-row control-row-options">
+      <label>
+        <input type="checkbox" id="showDeny" checked>
+        Vis Deny
+      </label>
+
+      <label>
+        <input type="checkbox" id="showNone">
+        Vis ikke specificeret
+      </label>
+
+      <label>
+        <input type="checkbox" id="showJobs" checked>
+        Vis Custom JobTypes
+      </label>
+
+      <label>
+        <input type="checkbox" id="showPerms" checked>
+        Vis state permissions
+      </label>
+
+      <label>
+        <input type="checkbox" id="hideUnrelated" checked>
+        Skjul irrelevante states
+      </label>
+    </div>
   </section>
 
   <section id="selectedSummary"></section>

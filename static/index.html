@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- NTI Workflow static version: 0.6.1 -->
+<!-- NTI Workflow static version: 0.6.4 -->
 <html lang="da">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NTI Workflow</title>
-  <link rel="stylesheet" href="/static/viewer.css?v=0.6.1">
+  <link rel="stylesheet" href="/static/viewer.css?v=0.6.4">
 </head>
 <body>
   <section id="home-root">
@@ -14,7 +14,7 @@
     <div class="tool-grid">
       <article class="tool-card">
         <h2>Workflow Viewer</h2>
-        <p>Upload Vault Excel-eksport og visualiser lifecycle transitions, roller og state permissions.</p>
+        <p>Upload Excel-output fra NTI Vault Dump Config og visualiser lifecycle transitions, roller og state permissions.</p>
         <button type="button" class="primary" id="open-workflow-btn">Åbn Workflow Viewer</button>
       </article>
       <article class="tool-card">
@@ -86,30 +86,71 @@
 
       <main class="viewer-main">
         <section class="controls">
-          <label><b>LifeCycleDefinition</b><select id="lifeSelect"></select></label>
-          <label><b>Fokus-state</b><select id="stateSelect"></select></label>
-          <label><b>Visning</b>
-            <select id="directionSelect">
-              <option value="all">Alle transitions</option>
-              <option value="from">Fra valgt state</option>
-              <option value="to">Til valgt state</option>
-              <option value="connected">Til/fra valgt state</option>
-            </select>
-          </label>
-          <div><b>Rolle</b><div id="roleButtons"></div></div>
-          <label><input type="checkbox" id="showDeny" checked> Vis Deny</label>
-          <label><input type="checkbox" id="showNone"> Vis ikke specificeret</label>
-          <label><input type="checkbox" id="showJobs" checked> Vis Custom JobTypes</label>
-          <label><input type="checkbox" id="showPerms" checked> Vis state permissions</label>
-          <label><b>Layout</b>
-            <select id="layoutModeSelect">
-              <option value="auto">Auto</option>
-              <option value="normal">Normal</option>
-              <option value="dense">Kompakt</option>
-              <option value="large">Stor</option>
-            </select>
-          </label>
-          <label><input type="checkbox" id="hideUnrelated" checked> Skjul irrelevante states</label>
+          <div class="control-row control-row-main">
+            <label>
+              <b>LifeCycleDefinition</b>
+              <select id="lifeSelect"></select>
+            </label>
+
+            <label>
+              <b>Fokus-state</b>
+              <select id="stateSelect"></select>
+            </label>
+
+            <label>
+              <b>Visning</b>
+              <select id="directionSelect">
+                <option value="all">Alle transitions</option>
+                <option value="from">Fra valgt state</option>
+                <option value="to">Til valgt state</option>
+                <option value="connected">Til/fra valgt state</option>
+              </select>
+            </label>
+
+            <label>
+              <b>Layout</b>
+              <select id="layoutModeSelect">
+                <option value="auto">Auto</option>
+                <option value="normal">Normal</option>
+                <option value="dense">Kompakt</option>
+                <option value="large">Stor</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="control-row control-row-roles">
+            <div class="role-control">
+              <b>Rolle</b>
+              <div id="roleButtons"></div>
+            </div>
+          </div>
+
+          <div class="control-row control-row-options">
+            <label>
+              <input type="checkbox" id="showDeny" checked>
+              Vis Deny
+            </label>
+
+            <label>
+              <input type="checkbox" id="showNone">
+              Vis ikke specificeret
+            </label>
+
+            <label>
+              <input type="checkbox" id="showJobs" checked>
+              Vis Custom JobTypes
+            </label>
+
+            <label>
+              <input type="checkbox" id="showPerms" checked>
+              Vis state permissions
+            </label>
+
+            <label>
+              <input type="checkbox" id="hideUnrelated" checked>
+              Skjul irrelevante states
+            </label>
+          </div>
         </section>
 
         <section id="selectedSummary"></section>
@@ -160,7 +201,7 @@
     </div>
   </div>
 
-  <script src="/static/viewer.js?v=0.6.1"></script>
-  <script src="/static/app.js?v=0.6.1"></script>
+  <script src="/static/viewer.js?v=0.6.4"></script>
+  <script src="/static/app.js?v=0.6.4"></script>
 </body>
 </html>

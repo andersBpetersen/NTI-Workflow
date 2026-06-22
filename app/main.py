@@ -22,7 +22,7 @@ MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 app = FastAPI(
     title="NTI Workflow",
     description="Visualiser Vault lifecycle transitions fra Excel-eksport.",
-    version="0.6.1",
+    version="0.6.4",
 )
 
 @app.get("/")

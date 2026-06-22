@@ -626,6 +626,69 @@ function addSvgText(g, txt, x, y, clsName, anchor = "start") {
   return t;
 }
 
+function splitCircleStateLabel(label) {
+  const words = String(label || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (words.length <= 1) {
+    return words.length ? words : [""];
+  }
+  if (words.length <= 3) {
+    return words;
+  }
+  if (words.length === 4) {
+    return [words.slice(0, 2).join(" "), words.slice(2).join(" ")];
+  }
+  const targetLineCount = Math.min(3, Math.ceil(words.length / 2));
+  const lines = [];
+  let start = 0;
+  for (let lineIndex = 0; lineIndex < targetLineCount; lineIndex++) {
+    const wordsLeft = words.length - start;
+    const linesLeft = targetLineCount - lineIndex;
+    const take = Math.ceil(wordsLeft / linesLeft);
+    lines.push(words.slice(start, start + take).join(" "));
+    start += take;
+  }
+  return lines.filter(Boolean);
+}
+
+function resolveCircleLabelFontSize(lines, baseFontSize) {
+  const longestLine = Math.max(...lines.map((line) => line.length), 0);
+  if (longestLine > 24) {
+    return Math.max(10, baseFontSize - 4);
+  }
+  if (longestLine > 18) {
+    return Math.max(11, baseFontSize - 2);
+  }
+  return baseFontSize;
+}
+
+function addCircleStateLabel(group, label, centerX, centerY, fontSize) {
+  const lines = splitCircleStateLabel(label);
+  const actualFontSize = resolveCircleLabelFontSize(lines, fontSize);
+  const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  text.setAttribute("x", centerX);
+  text.setAttribute("y", centerY);
+  text.setAttribute("text-anchor", "middle");
+  text.setAttribute("class", "nodeLabel");
+  text.setAttribute("style", "font-size:" + actualFontSize + "px");
+  const lineHeight = Math.round(actualFontSize * 1.15);
+  const firstLineOffset = -((lines.length - 1) * lineHeight) / 2;
+  lines.forEach((line, index) => {
+    const tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+    tspan.setAttribute("x", centerX);
+    if (index === 0) {
+      tspan.setAttribute("dy", String(firstLineOffset + actualFontSize * 0.35));
+    } else {
+      tspan.setAttribute("dy", String(lineHeight));
+    }
+    tspan.textContent = line;
+    text.appendChild(tspan);
+  });
+  group.appendChild(text);
+}
+
 function addPill(g, x, y, w, text, pillClass, textClass) {
   const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
   r.setAttribute("x", x);
@@ -932,22 +995,12 @@ function renderDiagram(items) {
     else if (sel.relatedStates.has(s)) nc += " relatedNode";
     else if (selectedElement) nc += " dimmedNode";
     g.setAttribute("class", nc);
-    g.innerHTML =
-      '<circle cx="' +
-      p.x +
-      '" cy="' +
-      p.y +
-      '" r="' +
-      nodeRadius +
-      '"></circle><text x="' +
-      p.x +
-      '" y="' +
-      (p.y + Math.round(fontSize * 0.35)) +
-      '" text-anchor="middle" style="font-size:' +
-      fontSize +
-      'px">' +
-      esc(s) +
-      "</text>";
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", p.x);
+    circle.setAttribute("cy", p.y);
+    circle.setAttribute("r", nodeRadius);
+    g.appendChild(circle);
+    addCircleStateLabel(g, s, p.x, p.y, fontSize);
     g.addEventListener("click", (event) => {
       event.stopPropagation();
       selectState(s);

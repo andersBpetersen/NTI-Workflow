@@ -79,6 +79,12 @@ def test_build_standalone_html_contains_viewer_and_payload(sample_payload: dict)
     assert "Tilbage til forside" not in html
     assert "Lifecycle Compare" not in html
     assert "open-workflow-btn" not in html
+    assert "control-row-main" in html
+    assert "control-row-options" in html
+    assert "permModeSelect" not in html
+    assert "Summering" not in html
+    assert 'id="excel-drop-zone"' not in html
+    assert "splitCircleStateLabel" in html
 
 
 def test_export_html_endpoint_returns_download(client: TestClient, sample_payload: dict) -> None:
