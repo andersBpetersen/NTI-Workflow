@@ -17,7 +17,7 @@ docker compose -f docker-compose.prod.yml up -d
 ```
 
 4. Åbn i browser: **http://localhost:8000**
-5. Klik **Åbn Workflow Viewer** og upload Vault Excel-eksport (`.xlsx` / `.xlsm`)
+5. Klik **Åbn Workflow Viewer** og upload Vault Excel-eksport (`.xlsx`)
 
 Testfil: `samples\sample-lifecycle.xlsx`
 

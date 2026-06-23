@@ -9,9 +9,11 @@ from datetime import datetime
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from app.export_html import build_export_filename, build_standalone_html
+from app.i18n_config import normalize_locale
+from app.upload_validation import is_supported_excel_filename
 from app.parser import TransitionParseError, parse_result_to_dict, parse_transitions_excel
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +24,7 @@ MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 app = FastAPI(
     title="NTI Workflow",
     description="Visualiser Vault lifecycle transitions fra Excel-eksport.",
-    version="0.6.6",
+    version="0.7.1",
 )
 
 @app.get("/")
@@ -46,6 +48,14 @@ class ViewerContext(BaseModel):
     permissionMode: str | None = None
     hideUnrelated: bool | None = None
     layoutMode: str | None = None
+    locale: str | None = None
+
+    @field_validator("locale", mode="before")
+    @classmethod
+    def validate_locale(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return normalize_locale(str(value))
 
 
 class ExportHtmlRequest(BaseModel):
@@ -66,10 +76,13 @@ async def upload_excel(file: UploadFile = File(...)) -> dict:
     if not file.filename:
         raise HTTPException(status_code=400, detail="Ingen fil modtaget.")
 
-    if not file.filename.lower().endswith((".xlsx", ".xlsm")):
+    if not is_supported_excel_filename(file.filename):
         raise HTTPException(
             status_code=400,
-            detail="Kun Excel-filer (.xlsx, .xlsm) understøttes.",
+            detail={
+                "code": "invalid_file_type",
+                "message": "Only .xlsx files are supported.",
+            },
         )
 
     content = await file.read()

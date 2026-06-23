@@ -1,0 +1,180 @@
+{
+  "language": {
+    "label": "Idioma"
+  },
+  "home": {
+    "title": "NTI Workflow",
+    "intro": "Herramientas internas para configuración de Vault y análisis de lifecycle.",
+    "workflowViewer": {
+      "title": "Workflow Viewer",
+      "description": "Cargue la salida Excel de NTI Vault Dump Config y visualice transitions, roles y state permissions.",
+      "open": "Abrir Workflow Viewer"
+    },
+    "lifecycleCompare": {
+      "title": "Lifecycle Compare",
+      "description": "Compare dos exportaciones de lifecycle de Vault y encuentre diferencias.",
+      "comingSoon": "Próximamente"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Herramientas de análisis para configuración de Vault.",
+      "comingSoon": "Próximamente"
+    }
+  },
+  "nav": {
+    "backHome": "Volver al inicio"
+  },
+  "upload": {
+    "chooseFile": "Elegir archivo Excel",
+    "dropTitle": "Arrastre el archivo Excel aquí",
+    "dropSubtitle": "o haga clic para seleccionar el archivo de salida Excel de",
+    "dropSubtitleStrong": "NTI Vault Dump Config",
+    "supportedTypes": "Tipo de archivo admitido: .xlsx",
+    "requiredSheet": "El archivo debe contener la hoja",
+    "optionalSheet": "Si la hoja",
+    "optionalSheetSuffix": "existe, también se pueden mostrar state permissions.",
+    "ariaLabel": "Cargar archivo de salida Excel de NTI Vault Dump Config",
+    "status": {
+      "chooseOrDrop": "Elija o arrastre el archivo de salida Excel de NTI Vault Dump Config.",
+      "uploading": "Cargando {filename}...",
+      "success": "Cargadas {count} transitions de {filename}{warnings}.",
+      "warningsSuffix": " ({count} advertencias)"
+    },
+    "error": {
+      "invalidFileType": "Solo se admiten archivos .xlsx.",
+      "emptyFile": "El archivo está vacío. Elija una exportación Excel válida de Vault.",
+      "fileTooLarge": "El archivo es demasiado grande. El tamaño máximo es 25 MB.",
+      "noFile": "No se recibió ningún archivo válido.",
+      "oneFileOnly": "Elija o arrastre un archivo Excel a la vez.",
+      "failed": "Error al cargar. Compruebe que el archivo es una exportación Excel válida de Vault.",
+      "requiredSheetMissing": "Al archivo Excel le falta la hoja LifeCycleDefinitionTransitions.",
+      "parseFailed": "No se pudo analizar el archivo.",
+      "noFileReceived": "No se recibió ningún archivo.",
+      "unexpected": "Se produjo un error inesperado."
+    },
+    "warningsTitle": "Advertencias de importación"
+  },
+  "viewer": {
+    "title": "Workflow Viewer",
+    "pageTitle": "LifeCycle transition flow",
+    "permissionsIntro": "Las state permissions se pueden mostrar para el rol seleccionado.",
+    "diagramAria": "Diagrama de LifeCycle transition"
+  },
+  "legend": {
+    "allowGreen": "Verde",
+    "allow": "Allow",
+    "denyRed": "Rojo discontinuo",
+    "deny": "Deny",
+    "unspecifiedGray": "Gris",
+    "unspecified": "información faltante / no especificado",
+    "customJobsOrange": "Marcador naranja",
+    "customJobs": "Custom JobTypes"
+  },
+  "controls": {
+    "lifecycle": "LifeCycleDefinition",
+    "focusState": "State de enfoque",
+    "view": "Vista",
+    "layout": "Diseño",
+    "role": "Rol"
+  },
+  "filters": {
+    "showAllow": "Mostrar Allow",
+    "showDeny": "Mostrar Deny",
+    "showUnspecified": "Mostrar no especificado",
+    "showCustomJobs": "Mostrar Custom JobTypes",
+    "showStatePermissions": "Mostrar state permissions",
+    "hideUnrelatedStates": "Ocultar states no relacionados"
+  },
+  "direction": {
+    "all": "Todas las transitions",
+    "from": "Desde el state seleccionado",
+    "to": "Hacia el state seleccionado",
+    "connected": "Hacia/desde el state seleccionado",
+    "textAll": "todas las transitions",
+    "textFrom": "desde {state}",
+    "textTo": "hacia {state}",
+    "textConnected": "hacia/desde {state}"
+  },
+  "layout": {
+    "auto": "Auto",
+    "normal": "Normal",
+    "compact": "Compacto",
+    "large": "Grande"
+  },
+  "toolbar": {
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "zoomReset": "Restablecer vista",
+    "focusSelected": "Mostrar solo el state seleccionado",
+    "focusRestore": "Mostrar vista anterior",
+    "exportHtml": "Exportar HTML"
+  },
+  "details": {
+    "placeholder": "Haga clic en un state, transition o marcador de job para ver detalles.",
+    "state": "State",
+    "transition": "Transition",
+    "type": "Tipo",
+    "fromState": "Desde state",
+    "toState": "Hacia state",
+    "role": "Rol seleccionado",
+    "result": "Resultado",
+    "customJobs": "Custom JobTypes",
+    "noCustomJobs": "Sin Custom JobTypes.",
+    "excelRow": "Fila Excel",
+    "security": "Security",
+    "lifecycle": "LifecycleDefinition",
+    "incoming": "Transitions entrantes",
+    "outgoing": "Transitions salientes",
+    "none": "Ninguno",
+    "notFound": "Transition no encontrada.",
+    "statePermissions": "State permissions"
+  },
+  "permission": {
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "download": "Download",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "No especificado",
+    "missing": "?"
+  },
+  "table": {
+    "transitionsTitle": "Transitions para el rol seleccionado",
+    "permissionsTitle": "State permissions – detalles completos",
+    "permissionsNote": "Esta sección muestra todos los roles y los cuatro tipos de permisos para el LifeCycleDefinition seleccionado.",
+    "permissionsMissing": "significa información faltante.",
+    "id": "Id",
+    "fromState": "Desde state",
+    "toState": "Hacia state",
+    "result": "Resultado",
+    "customJobs": "Custom JobTypes",
+    "security": "Security",
+    "state": "State",
+    "role": "Rol"
+  },
+  "summary": {
+    "showing": "Mostrando",
+    "hidden": "Oculto",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "no especificado",
+    "customJob": "Custom Job",
+    "customJobs": "Custom Jobs",
+    "statePermissionsHidden": "State permissions: ocultas",
+    "statePermissionsRole": "State permissions: para el rol seleccionado",
+    "largeLifecycleHint": "Lifecycle grande: Iniciando con \"Hacia/desde el state seleccionado\" para una mejor visión general. Seleccione \"Todas las transitions\" para el gráfico completo."
+  },
+  "export": {
+    "exporting": "Exportando HTML...",
+    "success": "Exportado {filename}.",
+    "failed": "Error al exportar.",
+    "sourceLabel": "Origen",
+    "exportedLabel": "Exportado",
+    "unknownFile": "Archivo desconocido"
+  },
+  "common": {
+    "unknown": "Desconocido",
+    "equals": "="
+  }
+}

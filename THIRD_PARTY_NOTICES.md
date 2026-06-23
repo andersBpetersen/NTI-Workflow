@@ -20,7 +20,7 @@ Disse pakker installeres via `requirements.txt` og bruges i den kørende webserv
 | [Pydantic](https://github.com/pydantic/pydantic) | 2.13.4* | MIT | Datavalidering (afhængighed af FastAPI) |
 | [Uvicorn](https://www.uvicorn.org/) | 0.34.0 | BSD-3-Clause | ASGI-server |
 | [python-multipart](https://github.com/Kludex/python-multipart) | 0.0.20 | Apache-2.0 | Multipart file upload |
-| [openpyxl](https://openpyxl.readthedocs.io/) | 3.1.5 | MIT | Læsning af Excel-filer (.xlsx/.xlsm) |
+| [openpyxl](https://openpyxl.readthedocs.io/) | 3.1.5 | MIT | Læsning af Excel-filer (`.xlsx`) |
 | [et-xmlfile](https://foss.heptapod.net/openpyxl/et_xmlfile) | 2.0.0* | MIT | XML-understøttelse (afhængighed af openpyxl) |
 
 \*Transitive afhængighed – version kan variere ved `pip install`. Kør `pip freeze` ved

@@ -116,8 +116,8 @@ Se **[PUBLISH.md](PUBLISH.md)** for build og push af nye versioner.
 ### Manuel metode (uden compose)
 
 ```powershell
-docker pull tickjf/nti-workflow:0.6.6
-docker run -d --restart unless-stopped -p 8000:8000 --name nti-workflow tickjf/nti-workflow:0.6.6
+docker pull tickjf/nti-workflow:0.7.1
+docker run -d --restart unless-stopped -p 8000:8000 --name nti-workflow tickjf/nti-workflow:0.7.1
 ```
 
 ---
@@ -167,7 +167,7 @@ New-NetFirewallRule -DisplayName "NTI Workflow" -Direction Inbound -Protocol TCP
 
 1. Bruger åbner websiden
 2. Klikker **Åbn Workflow Viewer**
-3. Uploader Vault-eksport (`.xlsx` / `.xlsm`)
+3. Uploader Vault-eksport (`.xlsx`)
 4. Diagram og tabeller vises
 
 ### Påkrævet Excel-format

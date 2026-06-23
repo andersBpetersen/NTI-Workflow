@@ -1,0 +1,180 @@
+{
+  "language": {
+    "label": "Tungumál"
+  },
+  "home": {
+    "title": "NTI Workflow",
+    "intro": "Innri verkfæri fyrir Vault-stillingar og lifecycle-greiningu.",
+    "workflowViewer": {
+      "title": "Workflow Viewer",
+      "description": "Hladdu upp Excel-úttaki úr NTI Vault Dump Config og sjáðu transitions, hlutverk og state permissions.",
+      "open": "Opna Workflow Viewer"
+    },
+    "lifecycleCompare": {
+      "title": "Lifecycle Compare",
+      "description": "Berðu saman tvær Vault lifecycle-útflutningar og finndu mismun.",
+      "comingSoon": "Væntanlegt"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Greiningarverkfæri fyrir Vault-stillingar.",
+      "comingSoon": "Væntanlegt"
+    }
+  },
+  "nav": {
+    "backHome": "Til baka á forsíðu"
+  },
+  "upload": {
+    "chooseFile": "Velja Excel-skrá",
+    "dropTitle": "Dragðu Excel-skrána hingað",
+    "dropSubtitle": "eða smelltu til að velja Excel-úttaksskrána frá",
+    "dropSubtitleStrong": "NTI Vault Dump Config",
+    "supportedTypes": "Studd skráartegund: .xlsx",
+    "requiredSheet": "Skráin verður að innihalda blaðið",
+    "optionalSheet": "Ef blaðið",
+    "optionalSheetSuffix": "er til staðar er einnig hægt að sýna state permissions.",
+    "ariaLabel": "Hlaða upp Excel-úttaksskrá frá NTI Vault Dump Config",
+    "status": {
+      "chooseOrDrop": "Veldu eða dragðu Excel-úttaksskrána frá NTI Vault Dump Config.",
+      "uploading": "Hleð upp {filename}...",
+      "success": "Hlaðið inn {count} transitions úr {filename}{warnings}.",
+      "warningsSuffix": " ({count} viðvaranir)"
+    },
+    "error": {
+      "invalidFileType": "Aðeins .xlsx skrár eru studdar.",
+      "emptyFile": "Skráin er tóm. Veldu gildan Vault Excel-útflutning.",
+      "fileTooLarge": "Skráin er of stór. Hámarksstærð er 25 MB.",
+      "noFile": "Engin gild skrá barst.",
+      "oneFileOnly": "Veldu eða dragðu eina Excel-skrá í einu.",
+      "failed": "Upphleðsla mistókst. Athugaðu hvort skráin sé gildur Vault Excel-útflutningur.",
+      "requiredSheetMissing": "Excel-skránni vantar blaðið LifeCycleDefinitionTransitions.",
+      "parseFailed": "Ekki tókst að þátta skrána.",
+      "noFileReceived": "Engin skrá barst.",
+      "unexpected": "Óvænt villa kom upp."
+    },
+    "warningsTitle": "Innflutningsviðvaranir"
+  },
+  "viewer": {
+    "title": "Workflow Viewer",
+    "pageTitle": "LifeCycle transition flow",
+    "permissionsIntro": "Hægt er að sýna state permissions fyrir valið hlutverk.",
+    "diagramAria": "LifeCycle transition skýringarmynd"
+  },
+  "legend": {
+    "allowGreen": "Grænt",
+    "allow": "Allow",
+    "denyRed": "Rautt brotalínu",
+    "deny": "Deny",
+    "unspecifiedGray": "Grátt",
+    "unspecified": "vantar upplýsingar / ótilgreint",
+    "customJobsOrange": "Appelsínugul merking",
+    "customJobs": "Custom JobTypes"
+  },
+  "controls": {
+    "lifecycle": "LifeCycleDefinition",
+    "focusState": "Fókus-state",
+    "view": "Yfirlit",
+    "layout": "Skipulag",
+    "role": "Hlutverk"
+  },
+  "filters": {
+    "showAllow": "Sýna Allow",
+    "showDeny": "Sýna Deny",
+    "showUnspecified": "Sýna ótilgreint",
+    "showCustomJobs": "Sýna Custom JobTypes",
+    "showStatePermissions": "Sýna state permissions",
+    "hideUnrelatedStates": "Fela óskyld states"
+  },
+  "direction": {
+    "all": "Allar transitions",
+    "from": "Frá völdu state",
+    "to": "Til vals state",
+    "connected": "Til/frá völdu state",
+    "textAll": "allar transitions",
+    "textFrom": "frá {state}",
+    "textTo": "til {state}",
+    "textConnected": "til/frá {state}"
+  },
+  "layout": {
+    "auto": "Auto",
+    "normal": "Normal",
+    "compact": "Þétt",
+    "large": "Stórt"
+  },
+  "toolbar": {
+    "zoomIn": "Renna að",
+    "zoomOut": "Renna frá",
+    "zoomReset": "Endurstilla yfirlit",
+    "focusSelected": "Sýna aðeins valið state",
+    "focusRestore": "Sýna fyrra yfirlit",
+    "exportHtml": "Flytja út HTML"
+  },
+  "details": {
+    "placeholder": "Smelltu á state, transition eða job-merkingu til að sjá nánari upplýsingar.",
+    "state": "State",
+    "transition": "Transition",
+    "type": "Tegund",
+    "fromState": "Frá state",
+    "toState": "Til state",
+    "role": "Valið hlutverk",
+    "result": "Niðurstaða",
+    "customJobs": "Custom JobTypes",
+    "noCustomJobs": "Engin Custom JobTypes.",
+    "excelRow": "Excel-lína",
+    "security": "Security",
+    "lifecycle": "LifecycleDefinition",
+    "incoming": "Innkomandi transitions",
+    "outgoing": "Útgangandi transitions",
+    "none": "Ekkert",
+    "notFound": "Transition fannst ekki.",
+    "statePermissions": "State permissions"
+  },
+  "permission": {
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "download": "Download",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "Ótilgreint",
+    "missing": "?"
+  },
+  "table": {
+    "transitionsTitle": "Transitions fyrir valið hlutverk",
+    "permissionsTitle": "State permissions – allar upplýsingar",
+    "permissionsNote": "Þessi hluti sýnir öll hlutverk og alla fjóra heimildategundir fyrir valda LifeCycleDefinition.",
+    "permissionsMissing": "þýðir vantar upplýsingar.",
+    "id": "Id",
+    "fromState": "Frá state",
+    "toState": "Til state",
+    "result": "Niðurstaða",
+    "customJobs": "Custom JobTypes",
+    "security": "Security",
+    "state": "State",
+    "role": "Hlutverk"
+  },
+  "summary": {
+    "showing": "Sýni",
+    "hidden": "Falið",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "ótilgreint",
+    "customJob": "Custom Job",
+    "customJobs": "Custom Jobs",
+    "statePermissionsHidden": "State permissions: falið",
+    "statePermissionsRole": "State permissions: fyrir valið hlutverk",
+    "largeLifecycleHint": "Stór lifecycle: Byrja með \"Til/frá völdu state\" fyrir betri yfirsýn. Veldu \"Allar transitions\" fyrir heila graf."
+  },
+  "export": {
+    "exporting": "Flyt út HTML...",
+    "success": "Flutt út {filename}.",
+    "failed": "Útflutningur mistókst.",
+    "sourceLabel": "Uppruni",
+    "exportedLabel": "Flutt út",
+    "unknownFile": "Óþekkt skrá"
+  },
+  "common": {
+    "unknown": "Óþekkt",
+    "equals": "="
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "language": {
+    "label": "Kieli"
+  },
+  "home": {
+    "title": "NTI Workflow",
+    "intro": "Sisäiset työkalut Vault-konfiguraatioon ja lifecycle-analyysiin.",
+    "workflowViewer": {
+      "title": "Workflow Viewer",
+      "description": "Lataa Excel-tuloste NTI Vault Dump Config -ohjelmasta ja visualisoi transitions, roolit ja state permissions.",
+      "open": "Avaa Workflow Viewer"
+    },
+    "lifecycleCompare": {
+      "title": "Lifecycle Compare",
+      "description": "Vertaa kahta Vault lifecycle -vientiä ja löydä erot.",
+      "comingSoon": "Tulossa pian"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Analyysityökalut Vault-konfiguraatioon.",
+      "comingSoon": "Tulossa pian"
+    }
+  },
+  "nav": {
+    "backHome": "Takaisin etusivulle"
+  },
+  "upload": {
+    "chooseFile": "Valitse Excel-tiedosto",
+    "dropTitle": "Vedä Excel-tiedosto tähän",
+    "dropSubtitle": "tai napsauta valitaksesi Excel-tulostetiedoston ohjelmasta",
+    "dropSubtitleStrong": "NTI Vault Dump Config",
+    "supportedTypes": "Tuettu tiedostotyyppi: .xlsx",
+    "requiredSheet": "Tiedoston on sisällettävä taulukko",
+    "optionalSheet": "Jos taulukko",
+    "optionalSheetSuffix": "on olemassa, state permissions voidaan myös näyttää.",
+    "ariaLabel": "Lataa Excel-tulostetiedosto NTI Vault Dump Config -ohjelmasta",
+    "status": {
+      "chooseOrDrop": "Valitse tai vedä Excel-tulostetiedosto NTI Vault Dump Config -ohjelmasta.",
+      "uploading": "Ladataan {filename}...",
+      "success": "Ladattu {count} transitions tiedostosta {filename}{warnings}.",
+      "warningsSuffix": " ({count} varoitusta)"
+    },
+    "error": {
+      "invalidFileType": "Vain .xlsx-tiedostot ovat tuettuja.",
+      "emptyFile": "Tiedosto on tyhjä. Valitse kelvollinen Vault Excel -vienti.",
+      "fileTooLarge": "Tiedosto on liian suuri. Suurin sallittu koko on 25 Mt.",
+      "noFile": "Kelvollista tiedostoa ei vastaanotettu.",
+      "oneFileOnly": "Valitse tai vedä yksi Excel-tiedosto kerrallaan.",
+      "failed": "Lataus epäonnistui. Tarkista, että tiedosto on kelvollinen Vault Excel -vienti.",
+      "requiredSheetMissing": "Excel-tiedostosta puuttuu taulukko LifeCycleDefinitionTransitions.",
+      "parseFailed": "Tiedostoa ei voitu jäsentää.",
+      "noFileReceived": "Tiedostoa ei vastaanotettu.",
+      "unexpected": "Odottamaton virhe tapahtui."
+    },
+    "warningsTitle": "Tuontivaroitukset"
+  },
+  "viewer": {
+    "title": "Workflow Viewer",
+    "pageTitle": "LifeCycle transition flow",
+    "permissionsIntro": "State permissions voidaan näyttää valitulle roolille.",
+    "diagramAria": "LifeCycle transition -kaavio"
+  },
+  "legend": {
+    "allowGreen": "Vihreä",
+    "allow": "Allow",
+    "denyRed": "Punainen katkoviiva",
+    "deny": "Deny",
+    "unspecifiedGray": "Harmaa",
+    "unspecified": "puuttuva tieto / määrittelemätön",
+    "customJobsOrange": "Oranssi merkintä",
+    "customJobs": "Custom JobTypes"
+  },
+  "controls": {
+    "lifecycle": "LifeCycleDefinition",
+    "focusState": "Kohde-state",
+    "view": "Näkymä",
+    "layout": "Asettelu",
+    "role": "Rooli"
+  },
+  "filters": {
+    "showAllow": "Näytä Allow",
+    "showDeny": "Näytä Deny",
+    "showUnspecified": "Näytä määrittelemätön",
+    "showCustomJobs": "Näytä Custom JobTypes",
+    "showStatePermissions": "Näytä state permissions",
+    "hideUnrelatedStates": "Piilota liittymättömät states"
+  },
+  "direction": {
+    "all": "Kaikki transitions",
+    "from": "Valitusta statesta",
+    "to": "Valittuun stateen",
+    "connected": "Valittuun stateen / valitusta statesta",
+    "textAll": "kaikki transitions",
+    "textFrom": "statesta {state}",
+    "textTo": "stateen {state}",
+    "textConnected": "stateen / statesta {state}"
+  },
+  "layout": {
+    "auto": "Auto",
+    "normal": "Normal",
+    "compact": "Tiivis",
+    "large": "Suuri"
+  },
+  "toolbar": {
+    "zoomIn": "Lähennä",
+    "zoomOut": "Loitonna",
+    "zoomReset": "Palauta näkymä",
+    "focusSelected": "Näytä vain valittu state",
+    "focusRestore": "Näytä edellinen näkymä",
+    "exportHtml": "Vie HTML"
+  },
+  "details": {
+    "placeholder": "Napsauta statea, transitionia tai job-merkintää nähdäksesi tiedot.",
+    "state": "State",
+    "transition": "Transition",
+    "type": "Tyyppi",
+    "fromState": "Statesta",
+    "toState": "Stateen",
+    "role": "Valittu rooli",
+    "result": "Tulos",
+    "customJobs": "Custom JobTypes",
+    "noCustomJobs": "Ei Custom JobTypes.",
+    "excelRow": "Excel-rivi",
+    "security": "Security",
+    "lifecycle": "LifecycleDefinition",
+    "incoming": "Saapuvat transitions",
+    "outgoing": "Lähtevät transitions",
+    "none": "Ei mitään",
+    "notFound": "Transitionia ei löytynyt.",
+    "statePermissions": "State permissions"
+  },
+  "permission": {
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "download": "Download",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "Määrittelemätön",
+    "missing": "?"
+  },
+  "table": {
+    "transitionsTitle": "Transitions valitulle roolille",
+    "permissionsTitle": "State permissions – kaikki tiedot",
+    "permissionsNote": "Tämä osio näyttää kaikki roolit ja kaikki neljä käyttöoikeustyyppiä valitulle LifeCycleDefinitionille.",
+    "permissionsMissing": "tarkoittaa puuttuvaa tietoa.",
+    "id": "Id",
+    "fromState": "Statesta",
+    "toState": "Stateen",
+    "result": "Tulos",
+    "customJobs": "Custom JobTypes",
+    "security": "Security",
+    "state": "State",
+    "role": "Rooli"
+  },
+  "summary": {
+    "showing": "Näytetään",
+    "hidden": "Piilotettu",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "määrittelemätön",
+    "customJob": "Custom Job",
+    "customJobs": "Custom Jobs",
+    "statePermissionsHidden": "State permissions: piilotettu",
+    "statePermissionsRole": "State permissions: valitulle roolille",
+    "largeLifecycleHint": "Suuri lifecycle: Aloitetaan \"Valittuun stateen / valitusta statesta\" paremman yleiskuvan saamiseksi. Valitse \"Kaikki transitions\" koko kaaviota varten."
+  },
+  "export": {
+    "exporting": "Viedään HTML...",
+    "success": "Viety {filename}.",
+    "failed": "Vienti epäonnistui.",
+    "sourceLabel": "Lähde",
+    "exportedLabel": "Viety",
+    "unknownFile": "Tuntematon tiedosto"
+  },
+  "common": {
+    "unknown": "Tuntematon",
+    "equals": "="
+  }
+}

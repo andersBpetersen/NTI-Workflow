@@ -1,12 +1,14 @@
 # NTI Workflow
 
-Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. Visualiserer lifecycle transitions fra Vault Excel-eksport. Ingen database og ingen login i første version.
+Internal web service for visualizing Vault lifecycle transitions from Excel export. NTI Workflow accepts Excel output files in `.xlsx` format.
+
+Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. NTI Workflow accepterer Excel-outputfiler i formatet `.xlsx`. Ingen database og ingen login i første version.
 
 ## Funktioner
 
 - Forside med flere værktøjer (første: **Workflow Viewer**)
 - Upload af Excel-output fra NTI Vault Dump Config
-- Drag-and-drop af `.xlsx` og `.xlsm`
+- Drag-and-drop af `.xlsx`
 - Upload-validering af Vault-format (arket `LifeCycleDefinitionTransitions`)
 - Læser valgfrit arket `LifeCycleDefinitionStates` (state permissions)
 - Klikbare states og transitions med detaljepanel
@@ -19,8 +21,11 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 - Tydelig visning af import-advarsler efter upload
 - Enkel zoom på diagrammet (ind/ud/nulstil)
 - Eksport til standalone HTML (offline til undervisning/review)
+- International brugerflade med 13 lande/locales og engelsk fallback
 
-**v0.6.4** – Samlet UI-opdatering med drag-and-drop, forenklede state permissions, forbedret kontrollayout og ombrudte state-navne.
+**v0.7.1** – Upload er begrænset til `.xlsx`-filer.
+
+**v0.7.0** – Internationalisering af brugerfladen med landvælger, sprogpakker og offline HTML-export med indlejrede oversættelser.
 
 **v0.6.6** – Allow-, Deny- og ikke-specificerede pilespidser er gjort dobbelt så store.
 
@@ -56,12 +61,45 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 
 Backend og frontend validerer upload:
 
-- Kun `.xlsx` og `.xlsm`
+- Kun `.xlsx`
 - Filen må ikke være tom (maks. 25 MB)
 - Skal være en gyldig Excel-fil med arket `LifeCycleDefinitionTransitions`
 - Påkrævede kolonner: `LifeCycleDefinition`, `From State`, `To State`, `Security`
 
 Fejlbeskeder vises på dansk ved forkert filtype, tom fil, for stor fil eller forkert Vault-format.
+
+## Internationalization
+
+The user interface supports multiple countries/locales. English (`en-GB`) is always the fallback language.
+
+| Country | Locale |
+|---------|--------|
+| Danmark | `da-DK` |
+| Brasil | `pt-BR` |
+| Deutschland | `de-DE` |
+| France | `fr-FR` |
+| España | `es-ES` |
+| Ireland | `en-IE` |
+| Ísland | `is-IS` |
+| Italia | `it-IT` |
+| Nederland | `nl-NL` |
+| Norge | `nb-NO` |
+| Suomi | `fi-FI` |
+| Sverige | `sv-SE` |
+| UK | `en-GB` |
+
+Translation files live in `static/i18n/` (`en.json` is the master file). The language selector stores the chosen locale in `localStorage` under `ntiWorkflow.locale`.
+
+To add a new language:
+
+1. Copy `static/i18n/en.json` to `static/i18n/<language>.json`
+2. Translate all values (keep the same keys)
+3. Add the locale to `supportedLocales` in `static/i18n.js` and `app/i18n_config.py`
+4. Add an `<option>` to the `#localeSelect` dropdown in `static/index.html` and `app/export_html.py`
+
+Vault data is never translated: lifecycle names, state names, role names, Custom JobTypes, Excel sheet names, and raw Excel values remain unchanged.
+
+Standalone HTML export embeds all translation files as `window.NTI_TRANSLATIONS` so offline export works without a server.
 
 ## Deploy
 

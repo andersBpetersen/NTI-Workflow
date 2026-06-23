@@ -33,7 +33,9 @@ function renderImportWarnings(warnings) {
   }
   importWarnings.classList.remove("hidden");
   importWarnings.innerHTML =
-    "<h3>Advarsler fra import</h3><ul>" +
+    "<h3>" +
+    escapeHtml(t("upload.warningsTitle")) +
+    "</h3><ul>" +
     warnings.map((w) => "<li>" + escapeHtml(w) + "</li>").join("") +
     "</ul>";
 }
@@ -77,40 +79,40 @@ function resetInitialUiState() {
   clearImportWarnings();
   clearWorkflowData();
   if (statusMessage) {
-    setStatus("Vælg eller træk Excel-outputfilen fra NTI Vault Dump Config.");
+    setStatus(t("upload.status.chooseOrDrop"));
   }
 }
 
-function isAllowedExcelFile(file) {
-  const name = file.name.toLowerCase();
-  return name.endsWith(".xlsx") || name.endsWith(".xlsm");
+function isSupportedExcelFile(file) {
+  if (!file || typeof file.name !== "string") {
+    return false;
+  }
+
+  return file.name.toLowerCase().endsWith(".xlsx");
 }
 
 function validateFileBeforeUpload(file) {
-  if (!isAllowedExcelFile(file)) {
-    return "Kun Excel-filer (.xlsx, .xlsm) understøttes.";
+  if (!isSupportedExcelFile(file)) {
+    return t("upload.error.invalidFileType");
   }
   if (file.size === 0) {
-    return "Filen er tom. Vælg en gyldig Vault Excel-eksport.";
+    return t("upload.error.emptyFile");
   }
   if (file.size > MAX_UPLOAD_BYTES) {
-    return "Filen er for stor. Maksimal filstørrelse er 25 MB.";
+    return t("upload.error.fileTooLarge");
   }
   return null;
 }
 
 function formatApiError(payload) {
+  if (typeof window.translateApiError === "function") {
+    return translateApiError(payload);
+  }
   const detail = payload?.detail;
   if (typeof detail === "string" && detail.trim()) {
     return detail;
   }
-  if (Array.isArray(detail) && detail.length > 0) {
-    return detail
-      .map((item) => (typeof item === "string" ? item : item?.msg || ""))
-      .filter(Boolean)
-      .join(" ");
-  }
-  return "Upload fejlede. Kontrollér at filen er en gyldig Vault Excel-eksport.";
+  return t("upload.error.failed");
 }
 
 function setDropZoneActive(active) {
@@ -120,14 +122,14 @@ function setDropZoneActive(active) {
 
 function handleSelectedFiles(files) {
   if (!files || files.length === 0) {
-    setStatus("Ingen gyldig fil blev modtaget.", "error");
+    setStatus(t("upload.error.noFile"), "error");
     clearImportWarnings();
     clearWorkflowData();
     return;
   }
 
   if (files.length !== 1) {
-    setStatus("Vælg eller træk én Excel-fil ind ad gangen.", "error");
+    setStatus(t("upload.error.oneFileOnly"), "error");
     clearImportWarnings();
     clearWorkflowData();
     return;
@@ -154,7 +156,7 @@ async function exportWorkflowHtml() {
     currentWorkflowPayload.lifecycleDefinitions?.[0] ||
     "";
 
-  setStatus("Eksporterer HTML...", "loading");
+  setStatus(t("export.exporting"), "loading");
 
   try {
     const response = await fetch("/api/export/html", {
@@ -183,9 +185,9 @@ async function exportWorkflowHtml() {
     link.download = filename;
     link.click();
     URL.revokeObjectURL(url);
-    setStatus(`Eksporteret ${filename}.`, "success");
+    setStatus(t("export.success", { filename }), "success");
   } catch (error) {
-    setStatus(error.message, "error");
+    setStatus(error.message || t("export.failed"), "error");
   }
 }
 
@@ -206,7 +208,7 @@ async function uploadFile(file) {
   clearImportWarnings();
   clearWorkflowData();
   excelDropZone?.classList.add("uploading");
-  setStatus(`Uploader ${file.name}...`, "loading");
+  setStatus(t("upload.status.uploading", { filename: file.name }), "loading");
 
   const formData = new FormData();
   formData.append("file", file);
@@ -231,9 +233,16 @@ async function uploadFile(file) {
     renderImportWarnings(payload.meta?.warnings || []);
 
     const warnings = payload.meta?.warnings?.length ?? 0;
-    const warningText = warnings > 0 ? ` (${warnings} advarsler)` : "";
+    const warningText =
+      warnings > 0
+        ? t("upload.status.warningsSuffix", { count: warnings })
+        : "";
     setStatus(
-      `Indlæst ${payload.meta.transitionCount} transitions fra ${file.name}${warningText}.`,
+      t("upload.status.success", {
+        count: payload.meta.transitionCount,
+        filename: file.name,
+        warnings: warningText,
+      }),
       "success",
     );
   } catch (error) {
@@ -305,4 +314,12 @@ if (exportHtmlBtn) {
   exportHtmlBtn.addEventListener("click", exportWorkflowHtml);
 }
 
-resetInitialUiState();
+async function bootstrapApp() {
+  await initI18n();
+  bindLocaleSelect();
+  resetInitialUiState();
+}
+
+bootstrapApp();
+
+window.isSupportedExcelFile = isSupportedExcelFile;

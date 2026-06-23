@@ -1,0 +1,180 @@
+{
+  "language": {
+    "label": "Taal"
+  },
+  "home": {
+    "title": "NTI Workflow",
+    "intro": "Interne tools voor Vault-configuratie en lifecycle-analyse.",
+    "workflowViewer": {
+      "title": "Workflow Viewer",
+      "description": "Upload Excel-output uit NTI Vault Dump Config en visualiseer transitions, rollen en state permissions.",
+      "open": "Workflow Viewer openen"
+    },
+    "lifecycleCompare": {
+      "title": "Lifecycle Compare",
+      "description": "Vergelijk twee Vault lifecycle-exports en vind verschillen.",
+      "comingSoon": "Binnenkort beschikbaar"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Analysetools voor Vault-configuratie.",
+      "comingSoon": "Binnenkort beschikbaar"
+    }
+  },
+  "nav": {
+    "backHome": "Terug naar start"
+  },
+  "upload": {
+    "chooseFile": "Excel-bestand kiezen",
+    "dropTitle": "Sleep het Excel-bestand hierheen",
+    "dropSubtitle": "of klik om het Excel-outputbestand te selecteren uit",
+    "dropSubtitleStrong": "NTI Vault Dump Config",
+    "supportedTypes": "Ondersteund bestandstype: .xlsx",
+    "requiredSheet": "Het bestand moet het blad bevatten",
+    "optionalSheet": "Als het blad",
+    "optionalSheetSuffix": "bestaat, kunnen state permissions ook worden weergegeven.",
+    "ariaLabel": "Excel-outputbestand uploaden uit NTI Vault Dump Config",
+    "status": {
+      "chooseOrDrop": "Kies of sleep het Excel-outputbestand uit NTI Vault Dump Config.",
+      "uploading": "{filename} uploaden...",
+      "success": "{count} transitions geladen uit {filename}{warnings}.",
+      "warningsSuffix": " ({count} waarschuwingen)"
+    },
+    "error": {
+      "invalidFileType": "Alleen .xlsx-bestanden worden ondersteund.",
+      "emptyFile": "Het bestand is leeg. Kies een geldige Vault Excel-export.",
+      "fileTooLarge": "Het bestand is te groot. Maximale bestandsgrootte is 25 MB.",
+      "noFile": "Geen geldig bestand ontvangen.",
+      "oneFileOnly": "Kies of sleep één Excel-bestand tegelijk.",
+      "failed": "Upload mislukt. Controleer of het bestand een geldige Vault Excel-export is.",
+      "requiredSheetMissing": "Het Excel-bestand mist het blad LifeCycleDefinitionTransitions.",
+      "parseFailed": "Het bestand kon niet worden verwerkt.",
+      "noFileReceived": "Geen bestand ontvangen.",
+      "unexpected": "Er is een onverwachte fout opgetreden."
+    },
+    "warningsTitle": "Importwaarschuwingen"
+  },
+  "viewer": {
+    "title": "Workflow Viewer",
+    "pageTitle": "LifeCycle transition flow",
+    "permissionsIntro": "State permissions kunnen worden weergegeven voor de geselecteerde rol.",
+    "diagramAria": "LifeCycle transition-diagram"
+  },
+  "legend": {
+    "allowGreen": "Groen",
+    "allow": "Allow",
+    "denyRed": "Rood gestreept",
+    "deny": "Deny",
+    "unspecifiedGray": "Grijs",
+    "unspecified": "ontbrekende info / niet gespecificeerd",
+    "customJobsOrange": "Oranje markering",
+    "customJobs": "Custom JobTypes"
+  },
+  "controls": {
+    "lifecycle": "LifeCycleDefinition",
+    "focusState": "Focus-state",
+    "view": "Weergave",
+    "layout": "Indeling",
+    "role": "Rol"
+  },
+  "filters": {
+    "showAllow": "Allow tonen",
+    "showDeny": "Deny tonen",
+    "showUnspecified": "Niet gespecificeerd tonen",
+    "showCustomJobs": "Custom JobTypes tonen",
+    "showStatePermissions": "state permissions tonen",
+    "hideUnrelatedStates": "Niet-gerelateerde states verbergen"
+  },
+  "direction": {
+    "all": "Alle transitions",
+    "from": "Van geselecteerde state",
+    "to": "Naar geselecteerde state",
+    "connected": "Naar/van geselecteerde state",
+    "textAll": "alle transitions",
+    "textFrom": "van {state}",
+    "textTo": "naar {state}",
+    "textConnected": "naar/van {state}"
+  },
+  "layout": {
+    "auto": "Auto",
+    "normal": "Normal",
+    "compact": "Compact",
+    "large": "Groot"
+  },
+  "toolbar": {
+    "zoomIn": "Inzoomen",
+    "zoomOut": "Uitzoomen",
+    "zoomReset": "Weergave resetten",
+    "focusSelected": "Alleen geselecteerde state tonen",
+    "focusRestore": "Vorige weergave tonen",
+    "exportHtml": "HTML exporteren"
+  },
+  "details": {
+    "placeholder": "Klik op een state, transition of jobmarkering om details te bekijken.",
+    "state": "State",
+    "transition": "Transition",
+    "type": "Type",
+    "fromState": "Van state",
+    "toState": "Naar state",
+    "role": "Geselecteerde rol",
+    "result": "Resultaat",
+    "customJobs": "Custom JobTypes",
+    "noCustomJobs": "Geen Custom JobTypes.",
+    "excelRow": "Excel-rij",
+    "security": "Security",
+    "lifecycle": "LifecycleDefinition",
+    "incoming": "Inkomende transitions",
+    "outgoing": "Uitgaande transitions",
+    "none": "Geen",
+    "notFound": "Transition niet gevonden.",
+    "statePermissions": "State permissions"
+  },
+  "permission": {
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "download": "Download",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "Niet gespecificeerd",
+    "missing": "?"
+  },
+  "table": {
+    "transitionsTitle": "Transitions voor geselecteerde rol",
+    "permissionsTitle": "State permissions – volledige details",
+    "permissionsNote": "Deze sectie toont alle rollen en alle vier permissietypen voor de geselecteerde LifeCycleDefinition.",
+    "permissionsMissing": "betekent ontbrekende info.",
+    "id": "Id",
+    "fromState": "Van state",
+    "toState": "Naar state",
+    "result": "Resultaat",
+    "customJobs": "Custom JobTypes",
+    "security": "Security",
+    "state": "State",
+    "role": "Rol"
+  },
+  "summary": {
+    "showing": "Weergave",
+    "hidden": "Verborgen",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "niet gespecificeerd",
+    "customJob": "Custom Job",
+    "customJobs": "Custom Jobs",
+    "statePermissionsHidden": "State permissions: verborgen",
+    "statePermissionsRole": "State permissions: voor geselecteerde rol",
+    "largeLifecycleHint": "Grote lifecycle: start met \"Naar/van geselecteerde state\" voor een beter overzicht. Selecteer \"Alle transitions\" voor de volledige grafiek."
+  },
+  "export": {
+    "exporting": "HTML exporteren...",
+    "success": "{filename} geëxporteerd.",
+    "failed": "Exporteren mislukt.",
+    "sourceLabel": "Bron",
+    "exportedLabel": "Geëxporteerd",
+    "unknownFile": "Onbekend bestand"
+  },
+  "common": {
+    "unknown": "Onbekend",
+    "equals": "="
+  }
+}

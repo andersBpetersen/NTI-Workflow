@@ -215,8 +215,8 @@ function syncFocusSelectedButton() {
   if (!focusSelectedBtn) return;
 
   focusSelectedBtn.textContent = focusSelectedActive
-    ? "Vis tidligere visning"
-    : "Vis kun valgt state";
+    ? t("toolbar.focusRestore")
+    : t("toolbar.focusSelected");
 }
 
 function focusSelectedStateView() {
@@ -303,7 +303,25 @@ function permCls(v) {
 }
 
 function permText(v) {
-  return v === "Allow" ? "Allow" : v === "Deny" ? "Deny" : "?";
+  if (v === "Allow") return t("permission.allow");
+  if (v === "Deny") return t("permission.deny");
+  return t("permission.missing");
+}
+
+function resultLabel(v) {
+  if (v === "Allow") return t("permission.allow");
+  if (v === "Deny") return t("permission.deny");
+  if (v === "Not specified") return t("permission.unspecified");
+  return v;
+}
+
+function permTypeLabel(perm) {
+  const key = String(perm || "").toLowerCase();
+  if (key === "read") return t("permission.read");
+  if (key === "write") return t("permission.write");
+  if (key === "delete") return t("permission.delete");
+  if (key === "download") return t("permission.download");
+  return perm;
 }
 
 function uniq(a) {
@@ -487,7 +505,7 @@ function renderTransitionListItem(t) {
     ' \u2014 <span class="' +
     cls(result) +
     '">' +
-    esc(result) +
+    esc(resultLabel(result)) +
     "</span>" +
     (job ? ' \u2014 <span class="jobCell">' + esc(job) + "</span>" : "") +
     "</li>"
@@ -502,24 +520,38 @@ function renderStateDetails(stateName) {
   const perms = ["Read", "Write", "Delete", "Download"];
 
   let html =
-    "<h3>State</h3><dl>" +
-    "<dt>Type</dt><dd>State</dd>" +
-    "<dt>State</dt><dd>" +
+    "<h3>" +
+    esc(t("details.state")) +
+    "</h3><dl>" +
+    "<dt>" +
+    esc(t("details.type")) +
+    "</dt><dd>" +
+    esc(t("details.state")) +
+    "</dd>" +
+    "<dt>" +
+    esc(t("details.state")) +
+    "</dt><dd>" +
     esc(stateName) +
     "</dd>" +
-    "<dt>LifecycleDefinition</dt><dd>" +
+    "<dt>" +
+    esc(t("details.lifecycle")) +
+    "</dt><dd>" +
     esc(selectedLife) +
     "</dd>" +
-    "<dt>Valgt rolle</dt><dd>" +
+    "<dt>" +
+    esc(t("details.role")) +
+    "</dt><dd>" +
     esc(selectedRole) +
     "</dd></dl>" +
-    "<h3>State permissions</h3><dl>";
+    "<h3>" +
+    esc(t("details.statePermissions")) +
+    "</h3><dl>";
 
   perms.forEach((perm) => {
     const v = statePermValue(info, selectedRole, perm);
     html +=
       "<dt>" +
-      esc(perm) +
+      esc(permTypeLabel(perm)) +
       '</dt><dd><span class="' +
       permCls(v) +
       '">' +
@@ -528,67 +560,104 @@ function renderStateDetails(stateName) {
   });
 
   html +=
-    "</dl><h3>Indgående transitions</h3>" +
+    "</dl><h3>" +
+    esc(t("details.incoming")) +
+    "</h3>" +
     (incoming.length
       ? "<ul>" + incoming.map(renderTransitionListItem).join("") + "</ul>"
-      : "<p class=\"details-placeholder\">Ingen</p>") +
-    "<h3>Udgående transitions</h3>" +
+      : '<p class="details-placeholder">' + esc(t("details.none")) + "</p>") +
+    "<h3>" +
+    esc(t("details.outgoing")) +
+    "</h3>" +
     (outgoing.length
       ? "<ul>" + outgoing.map(renderTransitionListItem).join("") + "</ul>"
-      : "<p class=\"details-placeholder\">Ingen</p>");
+      : '<p class="details-placeholder">' + esc(t("details.none")) + "</p>");
 
   return html;
 }
 
 function renderTransitionDetails(transitionId) {
-  const t = transitions.find(
+  const transition = transitions.find(
     (item) => item.life === selectedLife && String(item.id) === String(transitionId),
   );
-  if (!t) {
-    return "<p class=\"details-placeholder\">Transition ikke fundet.</p>";
+  if (!transition) {
+    return (
+      '<p class="details-placeholder">' + esc(t("details.notFound")) + "</p>"
+    );
   }
 
-  const result = effective(t.security, selectedRole);
-  const jobNames = parseCustomJobNames(t.customJob || "");
+  const result = effective(transition.security, selectedRole);
+  const jobNames = parseCustomJobNames(transition.customJob || "");
   const displayJobNames = jobNames.length
     ? jobNames
-    : normalizeJobText(t.customJob || "")
-      ? [normalizeJobText(t.customJob || "")]
+    : normalizeJobText(transition.customJob || "")
+      ? [normalizeJobText(transition.customJob || "")]
       : [];
-  const rowIndex = t.rowIndex != null && t.rowIndex !== "" ? String(t.rowIndex) : "-";
+  const rowIndex =
+    transition.rowIndex != null && transition.rowIndex !== ""
+      ? String(transition.rowIndex)
+      : "-";
   const jobHtml = displayJobNames.length
-    ? "<h3>Custom JobTypes</h3><ul class=\"job-detail-list\">" +
+    ? "<h3>" +
+      esc(t("details.customJobs")) +
+      '</h3><ul class="job-detail-list">' +
       displayJobNames.map((name) => "<li>" + esc(name) + "</li>").join("") +
       "</ul>"
-    : "<h3>Custom JobTypes</h3><p class=\"details-placeholder\">Ingen Custom JobTypes.</p>";
+    : "<h3>" +
+      esc(t("details.customJobs")) +
+      '</h3><p class="details-placeholder">' +
+      esc(t("details.noCustomJobs")) +
+      "</p>";
 
   return (
-    "<h3>Transition</h3><dl>" +
-    "<dt>Type</dt><dd>Transition</dd>" +
-    "<dt>Id</dt><dd>" +
-    esc(t.id) +
+    "<h3>" +
+    esc(t("details.transition")) +
+    "</h3><dl>" +
+    "<dt>" +
+    esc(t("details.type")) +
+    "</dt><dd>" +
+    esc(t("details.transition")) +
     "</dd>" +
-    "<dt>LifecycleDefinition</dt><dd>" +
-    esc(t.life) +
+    "<dt>" +
+    esc(t("table.id")) +
+    "</dt><dd>" +
+    esc(transition.id) +
     "</dd>" +
-    "<dt>Fra state</dt><dd>" +
-    esc(t.from) +
+    "<dt>" +
+    esc(t("details.lifecycle")) +
+    "</dt><dd>" +
+    esc(transition.life) +
     "</dd>" +
-    "<dt>Til state</dt><dd>" +
-    esc(t.to) +
+    "<dt>" +
+    esc(t("details.fromState")) +
+    "</dt><dd>" +
+    esc(transition.from) +
     "</dd>" +
-    "<dt>Valgt rolle</dt><dd>" +
+    "<dt>" +
+    esc(t("details.toState")) +
+    "</dt><dd>" +
+    esc(transition.to) +
+    "</dd>" +
+    "<dt>" +
+    esc(t("details.role")) +
+    "</dt><dd>" +
     esc(selectedRole) +
     "</dd>" +
-    "<dt>Resultat</dt><dd><span class=\"" +
+    "<dt>" +
+    esc(t("details.result")) +
+    '</dt><dd><span class="' +
     cls(result) +
     '">' +
-    esc(result) +
+    esc(resultLabel(result)) +
     "</span></dd>" +
-    "<dt>Security</dt><dd>" +
-    esc(t.security || "-") +
+    "<dt>" +
+    esc(t("details.security")) +
+    "</dt><dd>" +
+    esc(transition.security || "-") +
     "</dd>" +
-    "<dt>Excel-række</dt><dd>" +
+    "<dt>" +
+    esc(t("details.excelRow")) +
+    "</dt><dd>" +
     esc(rowIndex) +
     "</dd></dl>" +
     jobHtml
@@ -599,7 +668,7 @@ function renderDetailsPanel() {
   if (!detailsPanel) return;
   if (!selectedElement) {
     detailsPanel.innerHTML =
-      '<p class="details-placeholder">Klik på en state, transition eller jobmarkering for at se detaljer.</p>';
+      '<p class="details-placeholder">' + esc(t("details.placeholder")) + "</p>";
     return;
   }
   if (selectedElement.type === "state") {
@@ -1045,10 +1114,16 @@ function renderDiagram(items) {
 }
 
 function directionText() {
-  if (selectedDirection === "from") return "fra " + selectedState;
-  if (selectedDirection === "to") return "til " + selectedState;
-  if (selectedDirection === "connected") return "til/fra " + selectedState;
-  return "alle transitions";
+  if (selectedDirection === "from") {
+    return t("direction.textFrom", { state: selectedState });
+  }
+  if (selectedDirection === "to") {
+    return t("direction.textTo", { state: selectedState });
+  }
+  if (selectedDirection === "connected") {
+    return t("direction.textConnected", { state: selectedState });
+  }
+  return t("direction.textAll");
 }
 
 function tdPerm(v) {
@@ -1116,33 +1191,51 @@ function update() {
     esc(selectedRole) +
     "</b> / <b>" +
     esc(directionText()) +
-    "</b>: Viser: " +
-    visibleAllow +
-    " Allow, " +
-    visibleDeny +
-    " Deny, " +
-    visibleNone +
-    " ikke specificeret.";
+    "</b>: " +
+    t("summary.showing") +
+    ": " +
+    formatNumber(visibleAllow) +
+    " " +
+    t("summary.allow") +
+    ", " +
+    formatNumber(visibleDeny) +
+    " " +
+    t("summary.deny") +
+    ", " +
+    formatNumber(visibleNone) +
+    " " +
+    t("summary.unspecified") +
+    ".";
 
   const hiddenParts = [];
-  if (hiddenAllow) hiddenParts.push(hiddenAllow + " Allow");
-  if (hiddenDeny) hiddenParts.push(hiddenDeny + " Deny");
-  if (hiddenNone) hiddenParts.push(hiddenNone + " ikke specificeret");
+  if (hiddenAllow) {
+    hiddenParts.push(formatNumber(hiddenAllow) + " " + t("summary.allow"));
+  }
+  if (hiddenDeny) {
+    hiddenParts.push(formatNumber(hiddenDeny) + " " + t("summary.deny"));
+  }
+  if (hiddenNone) {
+    hiddenParts.push(formatNumber(hiddenNone) + " " + t("summary.unspecified"));
+  }
   if (hiddenParts.length) {
-    summaryText += " Skjult: " + hiddenParts.join(", ") + ".";
+    summaryText += " " + t("summary.hidden") + ": " + hiddenParts.join(", ") + ".";
   }
 
   summaryText +=
     " " +
-    jc +
-    " Custom Job. State permissions: " +
-    (showPerms.checked ? "for valgt rolle" : "skjult") +
+    formatNumber(jc) +
+    " " +
+    (jc === 1 ? t("summary.customJob") : t("summary.customJobs")) +
+    ". " +
+    (showPerms.checked
+      ? t("summary.statePermissionsRole")
+      : t("summary.statePermissionsHidden")) +
     ".";
 
   summary.innerHTML =
     summaryText +
     (largeWorkflowHint && selectedDirection === "connected"
-      ? ' <span class="layout-hint">Stor lifecycle: Starter med "Til/fra valgt state" for bedre overblik. Vælg "Alle transitions" for komplet graf.</span>'
+      ? ' <span class="layout-hint">' + esc(t("summary.largeLifecycleHint")) + "</span>"
       : "");
   renderDiagram(items);
   const order = { allow: 0, deny: 1, none: 2 };
@@ -1168,7 +1261,7 @@ function update() {
         "</td><td class=\"" +
         c +
         "\">" +
-        esc(v) +
+        esc(resultLabel(v)) +
         "</td><td class=\"jobCell\">" +
         esc(normalizeJobText(t.customJob || "")) +
         "</td><td>" +
@@ -1392,6 +1485,16 @@ window.initWorkflowViewer = function initWorkflowViewer(apiPayload, initialConte
   setupViewer(initialContext);
 };
 
+window.rerenderTranslatedContent = function rerenderTranslatedContent() {
+  if (typeof applyTranslations === "function") {
+    applyTranslations();
+  }
+  syncFocusSelectedButton();
+  if (transitions && transitions.length && summary) {
+    update();
+  }
+};
+
 window.getWorkflowViewerContext = function getWorkflowViewerContext() {
   return {
     selectedLifeCycle: selectedLife,
@@ -1406,5 +1509,9 @@ window.getWorkflowViewerContext = function getWorkflowViewerContext() {
     permissionMode: "role",
     hideUnrelated: hideUnrelated ? hideUnrelated.checked : true,
     layoutMode: layoutModeSelect ? layoutModeSelect.value : layoutMode,
+    locale:
+      typeof window.getCurrentLocale === "function"
+        ? window.getCurrentLocale()
+        : "en-GB",
   };
 };

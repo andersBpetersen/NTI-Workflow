@@ -1,28 +1,11 @@
 """Tests for FastAPI upload endpoint."""
 
-from pathlib import Path
-
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import MAX_UPLOAD_BYTES, app
+from app.main import MAX_UPLOAD_BYTES
 
-SAMPLE_FILE = Path(__file__).resolve().parent.parent / "samples" / "sample-lifecycle.xlsx"
-
-
-@pytest.fixture(scope="module", autouse=True)
-def ensure_sample_file() -> None:
-    if not SAMPLE_FILE.exists():
-        from scripts.create_sample_excel import main
-
-        main()
-
-
-@pytest.fixture
-def client() -> TestClient:
-    return TestClient(app)
-
-
+from tests.conftest import SAMPLE_FILE
 def test_health(client: TestClient) -> None:
     response = client.get("/health")
     assert response.status_code == 200
@@ -32,7 +15,7 @@ def test_health(client: TestClient) -> None:
 def test_app_version(client: TestClient) -> None:
     response = client.get("/openapi.json")
     assert response.status_code == 200
-    assert response.json()["info"]["version"] == "0.6.6"
+    assert response.json()["info"]["version"] == "0.7.1"
 
 
 def test_upload_sample_excel(client: TestClient) -> None:
@@ -75,7 +58,11 @@ def test_upload_wrong_extension_returns_400(client: TestClient) -> None:
     )
 
     assert response.status_code == 400
-    assert ".xlsx" in response.json()["detail"]
+    detail = response.json()["detail"]
+    if isinstance(detail, dict):
+        assert detail.get("code") == "invalid_file_type"
+    else:
+        assert ".xlsx" in detail
 
 
 def test_upload_empty_file_returns_400(client: TestClient) -> None:

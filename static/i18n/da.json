@@ -1,0 +1,180 @@
+{
+  "language": {
+    "label": "Sprog"
+  },
+  "home": {
+    "title": "NTI Workflow",
+    "intro": "Interne værktøjer til Vault-konfiguration og lifecycle-analyse.",
+    "workflowViewer": {
+      "title": "Workflow Viewer",
+      "description": "Upload Excel-output fra NTI Vault Dump Config og visualiser lifecycle transitions, roller og state permissions.",
+      "open": "Åbn Workflow Viewer"
+    },
+    "lifecycleCompare": {
+      "title": "Lifecycle Compare",
+      "description": "Sammenlign to Vault lifecycle exports og find forskelle.",
+      "comingSoon": "Kommer senere"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Analyseværktøjer til Vault-konfiguration.",
+      "comingSoon": "Kommer senere"
+    }
+  },
+  "nav": {
+    "backHome": "Tilbage til forside"
+  },
+  "upload": {
+    "chooseFile": "Vælg Excel-fil",
+    "dropTitle": "Træk Excel-filen hertil",
+    "dropSubtitle": "eller klik for at vælge Excel-outputfilen fra",
+    "dropSubtitleStrong": "NTI Vault Dump Config",
+    "supportedTypes": "Understøttet filtype: .xlsx",
+    "requiredSheet": "Filen skal indeholde arket",
+    "optionalSheet": "Hvis arket",
+    "optionalSheetSuffix": "findes, kan state permissions også vises.",
+    "ariaLabel": "Upload Excel-outputfil fra NTI Vault Dump Config",
+    "status": {
+      "chooseOrDrop": "Vælg eller træk Excel-outputfilen fra NTI Vault Dump Config.",
+      "uploading": "Uploader {filename}...",
+      "success": "Indlæst {count} transitions fra {filename}{warnings}.",
+      "warningsSuffix": " ({count} advarsler)"
+    },
+    "error": {
+      "invalidFileType": "Kun .xlsx-filer understøttes.",
+      "emptyFile": "Filen er tom. Vælg en gyldig Vault Excel-eksport.",
+      "fileTooLarge": "Filen er for stor. Maksimal filstørrelse er 25 MB.",
+      "noFile": "Ingen gyldig fil blev modtaget.",
+      "oneFileOnly": "Vælg eller træk én Excel-fil ind ad gangen.",
+      "failed": "Upload fejlede. Kontrollér at filen er en gyldig Vault Excel-eksport.",
+      "requiredSheetMissing": "Excel-filen mangler arket LifeCycleDefinitionTransitions.",
+      "parseFailed": "Filen kunne ikke parses.",
+      "noFileReceived": "Ingen fil modtaget.",
+      "unexpected": "Der opstod en uventet fejl."
+    },
+    "warningsTitle": "Advarsler fra import"
+  },
+  "viewer": {
+    "title": "Workflow Viewer",
+    "pageTitle": "LifeCycle transition flow",
+    "permissionsIntro": "State permissions kan vises for den valgte rolle.",
+    "diagramAria": "LifeCycle transition diagram"
+  },
+  "legend": {
+    "allowGreen": "Grøn",
+    "allow": "Allow",
+    "denyRed": "Rød stiplet",
+    "deny": "Deny",
+    "unspecifiedGray": "Grå",
+    "unspecified": "mangler info / ikke specificeret",
+    "customJobsOrange": "Orange markering",
+    "customJobs": "Custom JobTypes"
+  },
+  "controls": {
+    "lifecycle": "LifeCycleDefinition",
+    "focusState": "Fokus-state",
+    "view": "Visning",
+    "layout": "Layout",
+    "role": "Rolle"
+  },
+  "filters": {
+    "showAllow": "Vis Allow",
+    "showDeny": "Vis Deny",
+    "showUnspecified": "Vis ikke specificeret",
+    "showCustomJobs": "Vis Custom JobTypes",
+    "showStatePermissions": "Vis state permissions",
+    "hideUnrelatedStates": "Skjul irrelevante states"
+  },
+  "direction": {
+    "all": "Alle transitions",
+    "from": "Fra valgt state",
+    "to": "Til valgt state",
+    "connected": "Til/fra valgt state",
+    "textAll": "alle transitions",
+    "textFrom": "fra {state}",
+    "textTo": "til {state}",
+    "textConnected": "til/fra {state}"
+  },
+  "layout": {
+    "auto": "Auto",
+    "normal": "Normal",
+    "compact": "Kompakt",
+    "large": "Stor"
+  },
+  "toolbar": {
+    "zoomIn": "Zoom ind",
+    "zoomOut": "Zoom ud",
+    "zoomReset": "Nulstil visning",
+    "focusSelected": "Vis kun valgt state",
+    "focusRestore": "Vis tidligere visning",
+    "exportHtml": "Eksportér HTML"
+  },
+  "details": {
+    "placeholder": "Klik på en state, transition eller jobmarkering for at se detaljer.",
+    "state": "State",
+    "transition": "Transition",
+    "type": "Type",
+    "fromState": "Fra state",
+    "toState": "Til state",
+    "role": "Valgt rolle",
+    "result": "Resultat",
+    "customJobs": "Custom JobTypes",
+    "noCustomJobs": "Ingen Custom JobTypes.",
+    "excelRow": "Excel-række",
+    "security": "Security",
+    "lifecycle": "LifecycleDefinition",
+    "incoming": "Indgående transitions",
+    "outgoing": "Udgående transitions",
+    "none": "Ingen",
+    "notFound": "Transition ikke fundet.",
+    "statePermissions": "State permissions"
+  },
+  "permission": {
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "download": "Download",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "Ikke specificeret",
+    "missing": "?"
+  },
+  "table": {
+    "transitionsTitle": "Overgange for valgt rolle",
+    "permissionsTitle": "State permissions – alle detaljer",
+    "permissionsNote": "Denne sektion viser alle roller og alle fire permission-typer for den valgte LifeCycleDefinition.",
+    "permissionsMissing": "betyder mangler info.",
+    "id": "Id",
+    "fromState": "Fra state",
+    "toState": "Til state",
+    "result": "Resultat",
+    "customJobs": "Custom JobTypes",
+    "security": "Security",
+    "state": "State",
+    "role": "Rolle"
+  },
+  "summary": {
+    "showing": "Viser",
+    "hidden": "Skjult",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "ikke specificeret",
+    "customJob": "Custom Job",
+    "customJobs": "Custom Jobs",
+    "statePermissionsHidden": "State permissions: skjult",
+    "statePermissionsRole": "State permissions: for valgt rolle",
+    "largeLifecycleHint": "Stor lifecycle: Starter med \"Til/fra valgt state\" for bedre overblik. Vælg \"Alle transitions\" for komplet graf."
+  },
+  "export": {
+    "exporting": "Eksporterer HTML...",
+    "success": "Eksporteret {filename}.",
+    "failed": "Eksport fejlede.",
+    "sourceLabel": "Kilde",
+    "exportedLabel": "Eksporteret",
+    "unknownFile": "Ukendt fil"
+  },
+  "common": {
+    "unknown": "Ukendt",
+    "equals": "="
+  }
+}
