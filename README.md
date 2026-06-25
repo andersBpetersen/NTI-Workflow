@@ -110,6 +110,18 @@ Se **[docs/shared-frontend.md](docs/shared-frontend.md)** for shared CSS/JS util
 
 Se **[docs/architecture.md](docs/architecture.md)** for samlet arkitektur (moduler, API-flow, grænser).
 
+### Brugervejledninger (PDF)
+
+Programbeskrivelse: [docs/user-guides/pdf/NTI-Workflow-Programbeskrivelse.pdf](docs/user-guides/pdf/NTI-Workflow-Programbeskrivelse.pdf)
+
+GitHub-gendannelse: [docs/user-guides/pdf/NTI-Workflow-GitHub-Gendannelse.pdf](docs/user-guides/pdf/NTI-Workflow-GitHub-Gendannelse.pdf)
+
+Regenerér PDF'erne:
+
+```powershell
+python scripts\generate_user_guide_pdfs.py
+```
+
 Se **[docs/backend-architecture.md](docs/backend-architecture.md)** for backend-moduler, routers og services.
 
 Se **[docs/openapi-contract.json](docs/openapi-contract.json)** for canonical API-schema.
