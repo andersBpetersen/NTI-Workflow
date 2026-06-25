@@ -1,212 +1,65 @@
 <!DOCTYPE html>
-<!-- NTI Workflow static version: 0.6.6 -->
-<html lang="da">
+<!-- NTI Workflow app shell -->
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NTI Workflow</title>
-  <link rel="stylesheet" href="/static/viewer.css?v=0.6.6">
+  <link rel="stylesheet" href="/static/shared/ui/tokens.css">
+  <link rel="stylesheet" href="/static/shared/ui/forms.css">
+  <link rel="stylesheet" href="/static/shared/ui/buttons.css">
+  <link rel="stylesheet" href="/static/shared/ui/feedback.css">
+  <link rel="stylesheet" href="/static/app-shell.css">
 </head>
 <body>
+  <header class="app-topbar">
+    <span class="app-brand" data-i18n="home.title">NTI Workflow</span>
+    <div class="topbar-right">
+      <span id="app-version" class="version-chip"></span>
+      <label class="locale-control">
+        <span data-i18n="language.label">Language</span>
+        <select id="localeSelect" aria-label="Language"></select>
+      </label>
+    </div>
+  </header>
+
   <section id="home-root">
-    <h1>NTI Workflow</h1>
-    <p class="home-intro">Interne værktøjer til Vault-konfiguration og lifecycle-analyse.</p>
+    <h1 data-i18n="home.title">NTI Workflow</h1>
+    <p class="home-intro" data-i18n="home.intro">Internal tools for Vault configuration and lifecycle analysis.</p>
     <div class="tool-grid">
       <article class="tool-card">
-        <h2>Workflow Viewer</h2>
-        <p>Upload Excel-output fra NTI Vault Dump Config og visualiser lifecycle transitions, roller og state permissions.</p>
-        <button type="button" class="primary" id="open-workflow-btn">Åbn Workflow Viewer</button>
+        <h2 data-i18n="home.workflowViewer.title">Workflow Viewer</h2>
+        <p data-i18n="home.workflowViewer.description">Upload Excel output from NTI Vault Dump Config and visualize lifecycle transitions, roles, and state permissions.</p>
+        <a id="open-workflow-link" class="primary" href="/workflow/" data-i18n="home.workflowViewer.open">Open Workflow Viewer</a>
       </article>
       <article class="tool-card">
-        <h2>Lifecycle Compare</h2>
-        <p>Sammenlign to Vault lifecycle exports og find forskelle.</p>
-        <button type="button" class="tool-disabled-btn" disabled>Kommer senere</button>
+        <h2 data-i18n="home.lifecycleCompare.title">Lifecycle Compare</h2>
+        <p data-i18n="home.lifecycleCompare.description">Compare two Vault lifecycle exports and find differences.</p>
+        <button type="button" class="tool-disabled-btn" disabled data-i18n="home.lifecycleCompare.comingSoon">Coming soon</button>
       </article>
       <article class="tool-card">
-        <h2>Vault Config Tools</h2>
-        <p>Analyseværktøjer til Vault-konfiguration.</p>
-        <button type="button" class="tool-disabled-btn" disabled>Kommer senere</button>
+        <h2 data-i18n="home.vaultConfigViewer.title">NTI for Vault Config</h2>
+        <p data-i18n="home.vaultConfigViewer.description">Browse containers, processors, jobs and settings in an NTI for Vault Job JSON configuration.</p>
+        <a id="open-vault-config-link" class="primary tool-link" href="/vault-config/" data-i18n="home.vaultConfigViewer.open">Open Vault Config Viewer</a>
+      </article>
+      <article class="tool-card">
+        <h2 data-i18n="home.vaultConfigTools.title">Vault Config Tools</h2>
+        <p data-i18n="home.vaultConfigTools.description">Analysis tools for Vault configuration.</p>
+        <button type="button" class="tool-disabled-btn" disabled data-i18n="home.vaultConfigTools.comingSoon">Coming soon</button>
       </article>
     </div>
   </section>
 
-  <div id="workflow-shell" class="hidden">
-    <div class="upload-bar">
-      <button type="button" class="back-button" id="back-home-btn">Tilbage til forside</button>
-      <h1>Workflow Viewer</h1>
-      <label class="upload-button">
-        Vælg Excel-fil
-        <input id="file-input" type="file" accept=".xlsx,.xlsm">
-      </label>
-      <span id="status-message" class="status-msg">Vælg eller træk Excel-outputfilen fra NTI Vault Dump Config.</span>
-    </div>
-
-    <div id="empty-state">
-      <div
-        id="excel-drop-zone"
-        class="excel-drop-zone"
-        role="button"
-        tabindex="0"
-        aria-label="Upload Excel-outputfil fra NTI Vault Dump Config"
-      >
-        <div class="drop-zone-icon" aria-hidden="true">⇩</div>
-
-        <h2>Træk Excel-filen hertil</h2>
-
-        <p>
-          eller klik for at vælge Excel-outputfilen fra
-          <strong>NTI Vault Dump Config</strong>.
-        </p>
-
-        <p class="drop-zone-file-info">
-          Understøttede filtyper: <strong>.xlsx</strong> og
-          <strong>.xlsm</strong>
-        </p>
-
-        <p class="drop-zone-requirements">
-          Filen skal indeholde arket
-          <strong>LifeCycleDefinitionTransitions</strong>.
-          Hvis arket <strong>LifeCycleDefinitionStates</strong> findes,
-          kan state permissions også vises.
-        </p>
-      </div>
-    </div>
-
-    <div id="viewer-root" class="hidden">
-      <header class="viewer-header">
-        <h1>LifeCycle transition flow</h1>
-        <p>State permissions kan vises for den valgte rolle.</p>
-        <div class="legend">
-          <span class="green"><b>Grøn</b> = Allow</span>
-          <span class="red"><b>Rød stiplet</b> = Deny</span>
-          <span class="gray"><b>Grå</b> = mangler info / ikke specificeret</span>
-          <span class="jobLegend"><b>Orange tekst</b> = Custom JobTypes</span>
-        </div>
-      </header>
-
-      <main class="viewer-main">
-        <section class="controls">
-          <div class="control-row control-row-main">
-            <label>
-              <b>LifeCycleDefinition</b>
-              <select id="lifeSelect"></select>
-            </label>
-
-            <label>
-              <b>Fokus-state</b>
-              <select id="stateSelect"></select>
-            </label>
-
-            <label>
-              <b>Visning</b>
-              <select id="directionSelect">
-                <option value="all">Alle transitions</option>
-                <option value="from">Fra valgt state</option>
-                <option value="to">Til valgt state</option>
-                <option value="connected">Til/fra valgt state</option>
-              </select>
-            </label>
-
-            <label>
-              <b>Layout</b>
-              <select id="layoutModeSelect">
-                <option value="auto">Auto</option>
-                <option value="normal">Normal</option>
-                <option value="dense">Kompakt</option>
-                <option value="large">Stor</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="control-row control-row-roles">
-            <div class="role-control">
-              <b>Rolle</b>
-              <div id="roleButtons"></div>
-            </div>
-          </div>
-
-          <div class="control-row control-row-options">
-            <label>
-              <input type="checkbox" id="showAllow" checked>
-              Vis Allow
-            </label>
-
-            <label>
-              <input type="checkbox" id="showDeny" checked>
-              Vis Deny
-            </label>
-
-            <label>
-              <input type="checkbox" id="showNone">
-              Vis ikke specificeret
-            </label>
-
-            <label>
-              <input type="checkbox" id="showJobs" checked>
-              Vis Custom JobTypes
-            </label>
-
-            <label>
-              <input type="checkbox" id="showPerms" checked>
-              Vis state permissions
-            </label>
-
-            <label>
-              <input type="checkbox" id="hideUnrelated" checked>
-              Skjul irrelevante states
-            </label>
-          </div>
-        </section>
-
-        <section id="selectedSummary"></section>
-        <section id="importWarnings" class="warning-box hidden"></section>
-
-        <div class="diagram-layout">
-          <div class="diagram-column">
-            <div class="diagram-toolbar">
-              <button type="button" class="zoom-btn" id="zoom-in-btn">Zoom ind</button>
-              <button type="button" class="zoom-btn" id="zoom-out-btn">Zoom ud</button>
-              <button type="button" class="zoom-btn" id="zoom-reset-btn">Nulstil visning</button>
-              <button type="button" class="zoom-btn" id="focus-selected-btn">Vis kun valgt state</button>
-              <button type="button" class="zoom-btn hidden" id="export-html-btn" disabled>Eksportér HTML</button>
-            </div>
-            <svg id="diagram" viewBox="0 0 1600 1220" role="img" aria-label="LifeCycle transition diagram"></svg>
-          </div>
-          <aside id="details-panel" class="details-panel">
-            <p class="details-placeholder">Klik på en state, transition eller jobmarkering for at se detaljer.</p>
-          </aside>
-        </div>
-
-        <h2>Overgange for valgt rolle</h2>
-        <div class="tableWrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Id</th><th>Fra state</th><th>Til state</th><th>Resultat</th>
-                <th>Custom JobTypes</th><th>Security</th>
-              </tr>
-            </thead>
-            <tbody id="transitionTable"></tbody>
-          </table>
-        </div>
-
-        <h2>State permissions – alle detaljer</h2>
-        <p class="note">Denne sektion viser alle roller og alle fire permission-typer for den valgte LifeCycleDefinition. <b>?</b> betyder mangler info.</p>
-        <div class="tableWrap">
-          <table>
-            <thead>
-              <tr>
-                <th>State</th><th>Rolle</th><th>Read</th><th>Write</th><th>Delete</th><th>Download</th>
-              </tr>
-            </thead>
-            <tbody id="permissionTable"></tbody>
-          </table>
-        </div>
-      </main>
-    </div>
-  </div>
-
-  <script src="/static/viewer.js?v=0.6.6"></script>
-  <script src="/static/app.js?v=0.6.6"></script>
+  <script>
+    (function syncLocaleFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      const lang = params.get("lang");
+      if (lang) {
+        localStorage.setItem("nti.locale", lang);
+      }
+    })();
+  </script>
+  <script src="/static/i18n.js"></script>
+  <script src="/static/app-shell.js"></script>
 </body>
 </html>

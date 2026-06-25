@@ -1,0 +1,83 @@
+.nti-btn {
+  display: inline-block;
+  border: 1px solid transparent;
+  border-radius: var(--nti-radius-sm);
+  padding: var(--nti-space-2) 14px;
+  font-size: 14px;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.nti-btn:focus-visible {
+  outline: 2px solid var(--nti-color-primary);
+  outline-offset: 2px;
+}
+
+.nti-btn:disabled,
+.nti-btn-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.nti-btn-primary,
+.tool-card .primary,
+.tool-card a.tool-link,
+.upload-bar label.upload-button {
+  background: var(--nti-color-primary);
+  color: #fff;
+  border-color: var(--nti-color-primary);
+}
+
+.nti-btn-primary:hover,
+.tool-card .primary:hover,
+.tool-card a.tool-link:hover,
+.upload-bar label.upload-button:hover {
+  background: var(--nti-color-primary-hover);
+}
+
+.nti-btn-secondary,
+.back-link,
+.back-button {
+  background: var(--nti-color-surface);
+  color: var(--nti-color-text);
+  border: 1px solid #cbd5e1;
+}
+
+.nti-btn-secondary:hover,
+.back-link:hover,
+.back-button:hover {
+  background: #f9fafb;
+}
+
+.tool-card .tool-disabled-btn {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.upload-bar label.upload-button input {
+  display: none;
+}
+
+.zoom-btn {
+  background: var(--nti-color-surface);
+  color: var(--nti-color-text);
+  border: 1px solid #cbd5e1;
+  border-radius: var(--nti-radius-sm);
+  padding: var(--nti-space-2) var(--nti-space-3);
+  font-size: 14px;
+  cursor: pointer;
+  white-space: normal;
+  min-width: 0;
+}
+
+.zoom-btn:hover {
+  background: #f9fafb;
+}
+
+.zoom-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

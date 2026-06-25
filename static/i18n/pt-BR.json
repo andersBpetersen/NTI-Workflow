@@ -1,0 +1,206 @@
+{
+  "language": {
+    "label": "Idioma"
+  },
+  "home": {
+    "title": "NTI Workflow",
+    "intro": "Ferramentas internas para configuração do Vault e análise de lifecycle.",
+    "workflowViewer": {
+      "title": "Workflow Viewer",
+      "description": "Carregue a saída Excel do NTI Vault Dump Config e visualize transitions, funções e state permissions.",
+      "open": "Abrir Workflow Viewer"
+    },
+    "lifecycleCompare": {
+      "title": "Lifecycle Compare",
+      "description": "Compare duas exportações de lifecycle do Vault e encontre diferenças.",
+      "comingSoon": "Em breve"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Ferramentas de análise para configuração do Vault.",
+      "comingSoon": "Em breve"
+    },
+    "vaultConfigViewer": {
+      "title": "NTI for Vault Config",
+      "description": "Navegue por cont?ineres, processadores, jobs e configura??es em um arquivo JSON do NTI for Vault Job.",
+      "open": "Abrir Vault Config Viewer"
+    }
+  },
+  "nav": {
+    "backHome": "Voltar ao início"
+  },
+  "upload": {
+    "chooseFile": "Selecionar arquivo Excel",
+    "dropTitle": "Arraste o arquivo Excel aqui",
+    "dropSubtitle": "ou clique para selecionar o arquivo Excel exportado pelo",
+    "dropSubtitleStrong": "NTI Vault Dump Config",
+    "supportedTypes": "Tipo de arquivo suportado: .xlsx",
+    "requiredSheet": "O arquivo deve conter a planilha",
+    "optionalSheet": "Se a planilha",
+    "optionalSheetSuffix": "existir, as permissões de estado também poderão ser exibidas.",
+    "ariaLabel": "Carregar arquivo de saída Excel do NTI Vault Dump Config",
+    "status": {
+      "chooseOrDrop": "Escolha ou arraste o arquivo Excel exportado pelo NTI Vault Dump Config.",
+      "uploading": "Carregando {filename}...",
+      "success": "Carregadas {count} transitions de {filename}{warnings}.",
+      "warningsSuffix": " ({count} avisos)"
+    },
+    "error": {
+      "invalidFileType": "Somente arquivos .xlsx são suportados.",
+      "emptyFile": "O arquivo está vazio. Escolha uma exportação Excel válida do Vault.",
+      "fileTooLarge": "O arquivo é muito grande. O tamanho máximo é 25 MB.",
+      "noFile": "Nenhum arquivo válido foi recebido.",
+      "oneFileOnly": "Escolha ou arraste um arquivo Excel por vez.",
+      "failed": "Falha no carregamento. Verifique se o arquivo é uma exportação Excel válida do Vault.",
+      "requiredSheetMissing": "O arquivo Excel não contém a planilha LifeCycleDefinitionTransitions.",
+      "parseFailed": "Não foi possível analisar o arquivo.",
+      "noFileReceived": "Nenhum arquivo recebido.",
+      "unexpected": "Ocorreu um erro inesperado."
+    },
+    "warningsTitle": "Avisos de importação"
+  },
+  "viewer": {
+    "title": "Workflow Viewer",
+    "pageTitle": "LifeCycle transition flow",
+    "permissionsIntro": "State permissions podem ser exibidas para a função selecionada.",
+    "diagramAria": "Diagrama de LifeCycle transition"
+  },
+  "legend": {
+    "allowGreen": "Verde",
+    "allow": "Allow",
+    "denyRed": "Vermelho tracejado",
+    "deny": "Deny",
+    "unspecifiedGray": "Cinza",
+    "unspecified": "informação ausente / não especificado",
+    "customJobsOrange": "Marcador laranja",
+    "customJobs": "Custom JobTypes"
+  },
+  "controls": {
+    "lifecycle": "LifeCycleDefinition",
+    "focusState": "Foco no state",
+    "view": "Visualização",
+    "layout": "Layout",
+    "role": "Função"
+  },
+  "filters": {
+    "showAllow": "Mostrar Allow",
+    "showDeny": "Mostrar Deny",
+    "showUnspecified": "Mostrar não especificado",
+    "showCustomJobs": "Mostrar Custom JobTypes",
+    "showStatePermissions": "Mostrar state permissions",
+    "hideUnrelatedStates": "Ocultar states não relacionados"
+  },
+  "direction": {
+    "all": "Todas as transitions",
+    "from": "Do state selecionado",
+    "to": "Para o state selecionado",
+    "connected": "Para/de o state selecionado",
+    "textAll": "todas as transitions",
+    "textFrom": "de {state}",
+    "textTo": "para {state}",
+    "textConnected": "para/de {state}"
+  },
+  "layout": {
+    "auto": "Auto",
+    "normal": "Normal",
+    "compact": "Compacto",
+    "large": "Grande"
+  },
+  "toolbar": {
+    "zoomIn": "Aumentar zoom",
+    "zoomOut": "Diminuir zoom",
+    "zoomReset": "Redefinir visualização",
+    "focusSelected": "Mostrar apenas o state selecionado",
+    "focusRestore": "Mostrar visualização anterior",
+    "exportHtml": "Exportar HTML"
+  },
+  "details": {
+    "placeholder": "Clique em um state, transition ou marcador de job para ver detalhes.",
+    "state": "State",
+    "transition": "Transition",
+    "type": "Tipo",
+    "fromState": "Do state",
+    "toState": "Para o state",
+    "role": "Função selecionada",
+    "result": "Resultado",
+    "customJobs": "Custom JobTypes",
+    "noCustomJobs": "Nenhum Custom JobTypes.",
+    "excelRow": "Linha Excel",
+    "security": "Security",
+    "lifecycle": "LifecycleDefinition",
+    "incoming": "Transitions de entrada",
+    "outgoing": "Transitions de saída",
+    "none": "Nenhum",
+    "notFound": "Transition não encontrada.",
+    "statePermissions": "State permissions"
+  },
+  "permission": {
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "download": "Download",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "Não especificado",
+    "missing": "?"
+  },
+  "table": {
+    "transitionsTitle": "Transitions para a função selecionada",
+    "permissionsTitle": "State permissions – detalhes completos",
+    "permissionsNote": "Esta seção mostra todas as funções e os quatro tipos de permissão para o LifeCycleDefinition selecionado.",
+    "permissionsMissing": "significa informação ausente.",
+    "id": "Id",
+    "fromState": "Do state",
+    "toState": "Para o state",
+    "result": "Resultado",
+    "customJobs": "Custom JobTypes",
+    "security": "Security",
+    "state": "State",
+    "role": "Função"
+  },
+  "summary": {
+    "showing": "Exibindo",
+    "hidden": "Oculto",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "não especificado",
+    "customJob": "Custom Job",
+    "customJobs": "Custom Jobs",
+    "statePermissionsHidden": "State permissions: ocultas",
+    "statePermissionsRole": "State permissions: para a função selecionada",
+    "largeLifecycleHint": "Lifecycle grande: Iniciando com \"Para/de o state selecionado\" para melhor visão geral. Selecione \"Todas as transitions\" para o gráfico completo."
+  },
+  "export": {
+    "exporting": "Exportando HTML...",
+    "success": "Exportado {filename}.",
+    "failed": "Falha na exportação.",
+    "sourceLabel": "Origem",
+    "exportedLabel": "Exportado",
+    "unknownFile": "Arquivo desconhecido"
+  },
+  "common": {
+    "unknown": "Desconhecido",
+    "equals": "="
+  },
+  "vault": {
+    "languageLabel": "Idioma",
+    "backHome": "Voltar ao in?cio",
+    "loadConfig": "Carregar configura??o",
+    "dropTitle": "Arraste o arquivo JSON do NTI for Vault Job aqui",
+    "dropSubtitle": "ou clique em Carregar configura??o acima",
+    "topContainers": "Cont?ineres de processador de job",
+    "topDeactivate": "Desativar processadores de job",
+    "topFilepaths": "Caminhos exclu?dos na limpeza de jobs",
+    "hideInactive": "Ocultar inativos",
+    "showAll": "Mostrar todos",
+    "findNext": "Localizar pr?ximo",
+    "statusReady": "Pronto - carregue um arquivo de configura??o para come?ar.",
+    "errorJsonOnly": "Somente arquivos .json s?o suportados.",
+    "errorEmptyArray": "O arquivo de configura??o cont?m um array vazio.",
+    "errorInvalidFormat": "O JSON foi lido, mas o formato da configura??o ? inv?lido.",
+    "errorMissingContainers": "O JSON foi lido, mas n?o cont?m JobProcessor.JobProcessorContainers.",
+    "errorParsePrefix": "N?o foi poss?vel ler o JSON:\n",
+    "statusLoaded": "Carregado",
+    "containersCountSuffix": "cont?ineres"
+  }
+}

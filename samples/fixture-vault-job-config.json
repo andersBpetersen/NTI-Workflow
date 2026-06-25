@@ -1,0 +1,62 @@
+{
+  "Name": "Sample NTI For Vault Job",
+  "Version": "1.0.0",
+  "JobProcessorContainers": [
+    {
+      "Name": "Item Container",
+      "JobProcessors": [
+        {
+          "Name": "PreProcessItem",
+          "Active": true,
+          "TargetFolderPathScheme": "$/Released",
+          "NamingScheme": "{FileName}.pdf",
+          "Conditions": [
+            {
+              "Type": "ItemCategory",
+              "Value": "Engineering"
+            }
+          ],
+          "Jobs": [
+            {
+              "JobName": "PreProcessItem",
+              "JobType": "ItemJob"
+            }
+          ],
+          "CopyProperties": [
+            {
+              "FromPropertyDefinition": "Created By",
+              "ToPropertyDefinition": "Release By"
+            }
+          ],
+          "SetProperties": [
+            {
+              "PropertyDefinition": "Release Date",
+              "PropertyValue": "Today"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "File Container",
+      "JobProcessors": [
+        {
+          "Name": "PreProcessFile",
+          "Active": false,
+          "FileJobs": [
+            {
+              "JobName": "Inventor.Create.pdf",
+              "JobType": "FileJob"
+            }
+          ],
+          "ExportedFileJobs": [
+            {
+              "JobName": "Watermark PDF",
+              "JobType": "ExportedFileJob"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

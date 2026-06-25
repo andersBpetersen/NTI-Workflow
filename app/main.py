@@ -11,6 +11,7 @@ from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from app.core.version import APP_VERSION
 from app.export_html import build_export_filename, build_standalone_html
 from app.parser import TransitionParseError, parse_result_to_dict, parse_transitions_excel
 
@@ -22,7 +23,7 @@ MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 app = FastAPI(
     title="NTI Workflow",
     description="Visualiser Vault lifecycle transitions fra Excel-eksport.",
-    version="0.6.6",
+    version=APP_VERSION,
 )
 
 @app.get("/")
@@ -56,9 +57,31 @@ class ExportHtmlRequest(BaseModel):
     viewerContext: ViewerContext | None = None
 
 
+@app.get("/workflow")
+@app.get("/workflow/")
+async def workflow_viewer() -> FileResponse:
+    return FileResponse(
+        STATIC_DIR / "workflow" / "index.html",
+        headers={"Cache-Control": "no-cache, no-store, must-revalidate"},
+    )
+
+
+@app.get("/vault-config/")
+async def vault_config_viewer() -> FileResponse:
+    return FileResponse(
+        STATIC_DIR / "vault-config" / "index.html",
+        headers={"Cache-Control": "no-cache, no-store, must-revalidate"},
+    )
+
+
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/api/version")
+async def api_version() -> dict[str, str]:
+    return {"version": APP_VERSION}
 
 
 @app.post("/api/upload")

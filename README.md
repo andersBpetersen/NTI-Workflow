@@ -24,6 +24,15 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 
 **v0.6.6** – Allow-, Deny- og ikke-specificerede pilespidser er gjort dobbelt så store.
 
+## NTI for Vault Config Viewer
+
+- Åbnes fra forsiden via kortet **NTI for Vault Config** (`/vault-config/`).
+- Accepterer NTI for Vault Job JSON-filer (`.json`) via filvælger eller træk-og-slip.
+- Al JSON-behandling sker lokalt i browseren — ingen data sendes til serveren.
+- Viewer er skrivebeskyttet (kun visning af konfiguration).
+- Første version viser den tekniske konfiguration (containere, processorer, jobs, conditions m.m.).
+- En visuel procesoversigt planlægges som senere udvidelse.
+
 **v0.6.5** – Ens pilespidser, Vis Allow-filter og Custom JobTypes som klikbare markeringer på transitions.
 
 **v0.6.0** – Excel-filer fra NTI Vault Dump Config kan uploades med træk og slip.
@@ -50,7 +59,13 @@ python scripts\create_sample_excel.py
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Åbn: http://127.0.0.1:8000 — forsiden vises først. Klik **Åbn Workflow Viewer** for at uploade Excel.
+Åbn: http://127.0.0.1:8000 — forsiden vises først. Klik **Åbn Workflow Viewer** for at gå til workflow-siden.
+
+## Routes
+
+- `/` – Forside / app shell
+- `/workflow/` – Workflow Viewer
+- `/vault-config/` – NTI for Vault Config Viewer
 
 ### Upload-validering
 
@@ -68,6 +83,10 @@ Fejlbeskeder vises på dansk ved forkert filtype, tom fil, for stor fil eller fo
 Se **[DEPLOY.md](DEPLOY.md)** for komplet guide til IT/drift (Docker, firewall, reverse proxy, fejlfinding).
 
 Se **[PUBLISH.md](PUBLISH.md)** for build, tag og push til Docker registry ([tickjf/nti-workflow](https://hub.docker.com/r/tickjf/nti-workflow/)).
+
+Se **[docs/i18n.md](docs/i18n.md)** for i18n-registry, fallback, normalisering og locale-validering.
+
+Se **[docs/shared-frontend.md](docs/shared-frontend.md)** for shared CSS/JS utilities og modulgrænser.
 
 Installér [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) og sørg for at Docker kører.
 
@@ -169,6 +188,14 @@ Forventet svar: `{"status":"ok"}`
 
 Returnerer `{"status":"ok"}`.
 
+### `GET /api/version`
+
+Returnerer den centrale applikationsversion:
+
+```json
+{"version":"0.6.6"}
+```
+
 ### `POST /api/upload`
 
 Multipart upload med feltet `file`.
@@ -187,6 +214,15 @@ Returnerer JSON med:
 JSON-body med `payload` (samme struktur som upload-svaret), valgfrit `sourceFileName`, `selectedLifeCycle`, `title` og `viewerContext`.
 
 Returnerer en selvstændig `.html`-fil som download. Filen kan åbnes offline i browseren uden server.
+
+## Modulgrænser
+
+- Forsiden (`/`) ejer navigation og sprogvælger.
+- Workflow Viewer har egen side på `/workflow/`.
+- Vault Config Viewer har egen side på `/vault-config/`.
+- Moduler deler fortsat i18n via samme locale-storage.
+- Workflow Viewer bruger backend-API (`/api/upload`, `/api/export/html`).
+- Vault Config Viewer behandler JSON lokalt i browseren.
 
 ## Excel-format (matcher VBA add-in)
 

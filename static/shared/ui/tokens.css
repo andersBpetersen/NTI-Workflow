@@ -1,0 +1,44 @@
+:root {
+  --nti-font-family: Arial, sans-serif;
+  --nti-color-text: #111827;
+  --nti-color-muted: #6b7280;
+  --nti-color-border: #d1d5db;
+  --nti-color-border-soft: #ddd;
+  --nti-color-surface: #ffffff;
+  --nti-color-background: #f5f6f8;
+  --nti-color-primary: #2563eb;
+  --nti-color-primary-hover: #1d4ed8;
+  --nti-color-danger: #b91c1c;
+  --nti-color-success: #1b7f4a;
+  --nti-radius-sm: 8px;
+  --nti-radius-md: 10px;
+  --nti-radius-pill: 999px;
+  --nti-space-1: 4px;
+  --nti-space-2: 8px;
+  --nti-space-3: 12px;
+  --nti-space-4: 16px;
+
+  /* Legacy aliases used by workflow styles */
+  --ink: var(--nti-color-text);
+  --bg: var(--nti-color-background);
+  --panel: var(--nti-color-surface);
+  --muted: var(--nti-color-muted);
+  --border: var(--nti-color-border);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.hidden {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: var(--nti-font-family);
+  color: var(--nti-color-text);
+  background: var(--nti-color-background);
+}

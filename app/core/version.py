@@ -1,0 +1,3 @@
+"""Central application version."""
+
+APP_VERSION = "0.6.6"

@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<title>NTI for Vault Job Viewer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size:12px;background:#ececec;color:#1a1a1a;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+#topbar{background:#3c3c3c;color:#f0f0f0;padding:5px 10px;display:flex;align-items:center;gap:10px;flex-shrink:0;min-height:30px}
+#topbar h1{font-size:13px;font-weight:600;flex:1}
+#topbar .version{font-size:11px;color:#999}
+.back-home{color:#f0f0f0;text-decoration:none;border:1px solid #666;padding:2px 8px;border-radius:2px;font-size:11px;background:#4a4a4a}
+.back-home:hover{background:#5a5a5a}
+.locale-control{display:flex;align-items:center;gap:6px;font-size:11px}
+.locale-control select{font-size:11px;padding:2px 6px;border:1px solid #777;border-radius:2px;background:#fff;color:#111}
+
+#loadScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.drop-zone{border:2px dashed #aaa;border-radius:8px;padding:40px 60px;text-align:center;color:#666;cursor:pointer;transition:all .2s;background:white}
+.drop-zone:hover,.drop-zone.drag-over{border-color:#3498db;background:#f0f8ff;color:#3498db}
+.drop-zone .dz-icon{font-size:36px;margin-bottom:10px}
+.drop-zone p{font-size:13px;margin-bottom:4px}
+
+#app{flex:1;display:none;flex-direction:column;overflow:hidden}
+
+.tab-bar{display:flex;background:#d8d8d8;border-bottom:1px solid #b0b0b0;flex-shrink:0;padding:2px 4px 0}
+.tab-btn{padding:4px 12px;border:1px solid transparent;border-bottom:none;cursor:pointer;background:#d0d0d0;color:#333;font-size:12px;margin-right:2px;border-radius:3px 3px 0 0;white-space:nowrap}
+.tab-btn.active{background:white;border-color:#b0b0b0;border-bottom-color:white;margin-bottom:-1px;z-index:1;position:relative}
+.tab-btn:hover:not(.active){background:#c8c8c8}
+
+.toolbar{display:flex;gap:3px;padding:4px 6px;background:#f0f0f0;border-bottom:1px solid #ddd;flex-shrink:0;align-items:center;flex-wrap:wrap}
+.btn{padding:3px 10px;font-size:11px;border:1px solid transparent;border-radius:2px;cursor:pointer;white-space:nowrap;line-height:1.4}
+.btn:hover{filter:brightness(1.08)}
+.btn-red{background:#c0392b;color:white;border-color:#a93226}
+.btn-green{background:#27ae60;color:white;border-color:#229954}
+.btn-grey{background:#717d7e;color:white;border-color:#626a6b}
+.btn-dark{background:#555;color:white;border-color:#444}
+.btn-outline{background:#e8e8e8;border:1px solid #bbb;color:#333}
+.btn-load{background:#2980b9;color:white;border-color:#2471a3;cursor:pointer;padding:3px 10px;font-size:11px;border-radius:2px;line-height:1.4;border:1px solid #2471a3}
+
+#splitView{flex:1;display:flex;overflow:hidden}
+
+#leftPanel{width:310px;min-width:160px;display:flex;flex-direction:column;border-right:1px solid #b0b0b0;background:white;overflow:hidden;flex-shrink:0}
+#leftSearch{display:flex;gap:4px;padding:3px 6px;background:#f0f0f0;border-bottom:1px solid #ddd;flex-shrink:0}
+#leftSearch input{flex:1;padding:2px 5px;border:1px solid #bbb;font-size:11px;border-radius:2px}
+
+#rightPanel{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+#processorSection{flex-shrink:0;display:flex;flex-direction:column;border-bottom:1px solid #b0b0b0;overflow:hidden}
+#procTableWrap{overflow:auto;max-height:180px}
+
+#detailSection{flex:1;display:flex;flex-direction:column;overflow:hidden;background:white}
+#detailTabBar{background:#f0f0f0;min-height:26px}
+#detailContent{flex:1;overflow:auto}
+
+.tbl-wrap{flex:1;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:#e8e8e8;border:1px solid #c0c0c0;padding:4px 6px;text-align:left;font-weight:600;position:sticky;top:0;z-index:2;white-space:nowrap}
+tbody td{border:1px solid #e0e0e0;padding:3px 6px;vertical-align:middle}
+tbody tr{cursor:pointer}
+tbody tr:hover:not(.sel){background:#f0f5ff}
+tbody tr.sel{background:#b8d4f0}
+tbody tr.inact{color:#bbb}
+tbody tr.inact td{color:#bbb}
+.cb{text-align:center;width:44px}
+input[type=checkbox]{pointer-events:none}
+input[type=text],select,textarea{font-size:12px;font-family:inherit}
+
+.splitter{width:4px;background:#ccc;cursor:col-resize;flex-shrink:0}
+.splitter:hover{background:#888}
+
+.empty-state{color:#999;font-style:italic;padding:20px;text-align:center}
+.section-label{font-weight:600;font-size:12px;color:#333;border-bottom:1px solid #e8e8e8;padding:4px 0;margin:8px 0 6px}
+
+/* Detail pad - form layout */
+.detail-pad{padding:10px}
+.frow{display:flex;align-items:center;gap:8px;margin-bottom:5px;min-height:22px}
+.frow .flbl{min-width:210px;flex-shrink:0;color:#333;font-size:12px}
+.frow .fval{display:flex;align-items:center;gap:4px}
+.frow input[type=text],.frow select{padding:2px 5px;border:1px solid #bbb;background:#fafafa;border-radius:2px}
+.frow textarea{padding:3px 5px;border:1px solid #bbb;background:#fafafa;border-radius:2px;resize:vertical}
+
+/* Condition groups */
+.cond-group{border:1px solid #ddd;border-radius:3px;margin-bottom:6px;overflow:hidden}
+.cond-head{display:flex;align-items:center;gap:6px;padding:4px 8px;background:#f5f5f5;border-bottom:1px solid #eee;cursor:pointer;user-select:none}
+.cond-head:hover{background:#ebebeb}
+.exp-icon{font-size:9px;color:#666;width:12px;flex-shrink:0}
+.grp-name{font-weight:600;flex:1;font-size:12px}
+.grp-logic{font-size:10px;color:#888;background:#e0e0e0;padding:1px 5px;border-radius:10px}
+.grp-desc{font-size:11px;color:#888;font-style:italic}
+.cond-rows{display:none}
+.cond-rows.open{display:block}
+.cond-rows table thead th{background:#f0f0f0;font-size:11px;padding:3px 5px}
+.cond-rows table tbody td{font-size:11px;padding:2px 5px}
+
+/* Sub-table section (Jobs, FileJobs) */
+.sub-section{margin-top:10px}
+.sub-title{font-weight:600;font-size:12px;margin-bottom:4px}
+.sub-toolbar{display:flex;gap:3px;margin-bottom:4px}
+
+/* Boxed section (Design rep conditions, External rules) */
+.box-section{border:1px solid #ccc;border-radius:3px;padding:6px;margin-top:8px}
+.box-title{font-weight:600;font-size:12px;margin-bottom:6px}
+
+/* Item tab specific */
+.item-wrap{padding:8px}
+.link-box{border:1px solid #ccc;padding:2px 8px;background:#fafafa;min-width:120px;display:inline-block;font-size:12px}
+
+/* Modal */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal{background:white;border:1px solid #888;box-shadow:0 4px 20px rgba(0,0,0,.3);width:600px;max-width:92vw;max-height:82vh;display:flex;flex-direction:column;border-radius:2px}
+.modal-hdr{background:#2c2c2c;color:white;padding:8px 12px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-close{background:none;border:none;color:white;font-size:18px;cursor:pointer;line-height:1;padding:0 2px}
+.modal-fields{padding:10px 12px;display:grid;grid-template-columns:110px 1fr;gap:5px 8px;border-bottom:1px solid #ddd;flex-shrink:0;align-items:center}
+.fld-lbl{color:#555;font-size:12px}
+.fld-val input{width:100%;padding:2px 5px;border:1px solid #ccc;font-size:12px;background:#f8f8f8;border-radius:2px}
+.modal-tabs{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.modal-content{flex:1;overflow:auto;padding:10px}
+.modal-footer{padding:7px 12px;border-top:1px solid #ddd;display:flex;justify-content:flex-end;flex-shrink:0}
+
+#statusBar{background:#f0f0f0;border-top:1px solid #ccc;padding:2px 10px;font-size:11px;color:#666;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <a id="back-home-link" class="back-home" href="/">← Tilbage til forsiden</a>
+  <h1>NTI for Vault Job Viewer</h1>
+  <span id="versionDisplay" class="version"></span>
+  <label class="locale-control">
+    <span id="localeLabel">Language</span>
+    <select id="localeSelect" aria-label="Language"></select>
+  </label>
+  <label class="btn-load">Indlæs konfiguration<input type="file" id="fileInput" accept=".json" style="display:none"></label>
+</div>
+
+<div id="loadScreen">
+  <div class="drop-zone" id="dropZone">
+    <div class="dz-icon">📂</div>
+    <p><strong>Træk en NTI for Vault Job JSON-fil hertil</strong></p>
+    <p style="font-size:11px;color:#999;margin-top:6px">eller klik på <strong>Indlæs konfiguration</strong> ovenfor</p>
+  </div>
+</div>
+
+<div id="app">
+  <div class="tab-bar" id="topTabBar">
+    <button class="tab-btn active" data-tab="containers">Jobprocessor-containere</button>
+    <button class="tab-btn" data-tab="deactivate">Deaktiver jobprocessorer</button>
+    <button class="tab-btn" data-tab="filepaths">Filstier der udelades ved joboprydning</button>
+  </div>
+  <div id="splitView">
+    <div id="leftPanel">
+      <div class="toolbar">
+        <button class="btn btn-red" onclick="roAlert()">Fjern</button>
+        <button class="btn btn-grey" onclick="roAlert()">Flyt op</button>
+        <button class="btn btn-grey" onclick="roAlert()">Flyt ned</button>
+        <button class="btn btn-grey" id="btnHide" onclick="setShowInactive(false)">Skjul inaktive</button>
+        <button class="btn btn-grey" id="btnShow" onclick="setShowInactive(true)" style="display:none">Vis alle</button>
+        <button class="btn btn-outline" onclick="roAlert()">Gem grid-tilstand</button>
+        <button class="btn btn-outline" onclick="roAlert()">Nulstil grid-tilstand</button>
+      </div>
+      <div id="leftSearch">
+        <input type="text" id="searchInput" placeholder="Find…" oninput="onSearch(this.value)">
+        <button class="btn btn-dark" onclick="onSearch(document.getElementById('searchInput').value)">Find næste</button>
+      </div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>Name &#9660;</th><th>Description</th></tr></thead>
+        <tbody id="leftBody"></tbody></table>
+      </div>
+    </div>
+
+    <div class="splitter" id="splitter"></div>
+
+    <div id="rightPanel">
+      <div id="processorSection">
+        <div class="toolbar">
+          <button class="btn btn-green" onclick="roAlert()">Add</button>
+          <button class="btn btn-red" onclick="roAlert()">Remove</button>
+          <button class="btn btn-grey" onclick="roAlert()">Move up</button>
+          <button class="btn btn-grey" onclick="roAlert()">Move down</button>
+          <button class="btn btn-outline" onclick="roAlert()">Save grid state</button>
+          <button class="btn btn-outline" onclick="roAlert()">Reset grid state</button>
+        </div>
+        <div id="procTableWrap">
+          <table><thead><tr>
+            <th class="cb">Active &#9660;</th>
+            <th>Name</th>
+            <th>Job processor key &#9660;</th>
+            <th class="cb" style="min-width:60px">Run only via job processor key &#9660;</th>
+            <th>Description &#9660;</th>
+          </tr></thead>
+          <tbody id="procBody"></tbody></table>
+        </div>
+      </div>
+      <div id="detailSection">
+        <div class="tab-bar" id="detailTabBar"></div>
+        <div id="detailContent"><div class="empty-state">Vælg en container og jobprocessor for at se detaljer.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="statusBar">Klar — indlæs en konfigurationsfil for at begynde.</div>
+
+<div class="modal-ov" id="modal" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-hdr"><span id="modalTitle">Job</span><button class="modal-close" onclick="closeModal()">&#x2715;</button></div>
+    <div class="modal-fields" id="modalFields"></div>
+    <div class="modal-tabs">
+      <div class="tab-bar" id="modalTabBar" style="background:#f5f5f5">
+        <button class="tab-btn active" onclick="switchModalTab('conditions',this)">Conditions</button>
+        <button class="tab-btn" onclick="switchModalTab('parameters',this)">Parameters</button>
+      </div>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-red" onclick="closeModal()">Luk</button></div>
+  </div>
+</div>
+
+<div class="modal-ov" id="schemeModal" style="display:none" onclick="if(event.target===this)closeSchemeModal()">
+  <div class="modal" style="width:520px">
+    <div class="modal-hdr"><span id="schemeMTitle">Path scheme</span><button class="modal-close" onclick="closeSchemeModal()">&#x2715;</button></div>
+    <div class="modal-fields" id="schemeMFields"></div>
+    <div class="modal-content" id="schemeMContent"></div>
+    <div class="modal-footer"><button class="btn btn-red" onclick="closeSchemeModal()">Luk</button></div>
+  </div>
+</div>
+
+<script src="/static/shared/utils/html.js"></script>
+<script src="/static/shared/utils/files.js"></script>
+<script src="/static/i18n.js"></script>
+<script>
+// ── CONSTANTS ──────────────────────────────────────────────────────────────────
+const VC = {0:'contains',1:'does not contain',2:'is empty',3:'is not empty',4:'=',5:'≠',6:'starts with',7:'ends with'};
+const LV = {0:'AND',1:'OR'};
+const LT = {1:'Primary',2:'Secondary',4:'Tertiary',8:'Represented by',16:'Visualization',32:'Substitute'};
+const VG = {0:'Latest',1:'Oldest',2:'Current'};
+const LL = {0:'None',1:'Error',2:'Warning',3:'Info',4:'Debug',5:'Verbose',7:'Default'};
+const IRT = {0:'Run all',1:'Run by name',2:'Run by trigger',3:'None'};
+const SR = {1:'kPrintCurrentSheet',2:'kPrintSheetRange',14082:'kPrintAllSheets'};
+const AP = {0:'None',1:'AP214',2:'AP203_E2',3:'AP242'};
+function vt(key, fallback = "") {
+  if (typeof window.t === "function") {
+    return window.t(`vault.${key}`);
+  }
+  return fallback || key;
+}
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+const S = {
+  cfg: null, containers: [],
+  selContainer: null, selProcessor: null, selProcessorIdx: -1,
+  showInactive: true, searchTerm: '',
+  leftTab: 'containers', detailTab: 'general', detailSubTab: 'conditions',
+  modalJob: null, cgCounter: 0
+};
+
+function applyVaultLocaleTexts() {
+  const currentLocale = typeof window.getCurrentLocale === "function" ? window.getCurrentLocale() : "en-GB";
+  document.getElementById("localeLabel").textContent = vt("languageLabel", "Language");
+  document.getElementById("back-home-link").textContent = vt("backHome", "Back to home");
+  document.querySelector(".btn-load").childNodes[0].nodeValue = vt("loadConfig", "Load Config");
+  document.querySelector("#dropZone strong").textContent = vt("dropTitle", "Drop NTI for Vault Job Config.json here");
+  document.querySelector("#dropZone p:nth-of-type(2)").textContent = vt("dropSubtitle", "or click Load Config above");
+  const topTabs = document.querySelectorAll("#topTabBar .tab-btn");
+  if (topTabs[0]) topTabs[0].textContent = vt("topContainers", "Job processor containers");
+  if (topTabs[1]) topTabs[1].textContent = vt("topDeactivate", "Deactivate job processors");
+  if (topTabs[2]) topTabs[2].textContent = vt("topFilepaths", "File paths to exclude during job clean up");
+  const hideBtn = document.getElementById("btnHide");
+  const showBtn = document.getElementById("btnShow");
+  if (hideBtn) hideBtn.textContent = vt("hideInactive", "Hide inactive");
+  if (showBtn) showBtn.textContent = vt("showAll", "Show all");
+  const findNextBtn = document.querySelector("#leftSearch button");
+  if (findNextBtn) findNextBtn.textContent = vt("findNext", "Find next");
+  const statusBar = document.getElementById("statusBar");
+  if (statusBar && !S.cfg) statusBar.textContent = vt("statusReady", "Ready - load a config file to begin.");
+  document.getElementById("back-home-link").href = `/?lang=${encodeURIComponent(currentLocale)}`;
+  document.documentElement.lang = currentLocale.split("-")[0];
+}
+
+window.addEventListener("nti:locale-changed", applyVaultLocaleTexts);
+
+async function bootstrapVaultPage() {
+  if (typeof window.initI18n === "function") {
+    await window.initI18n();
+  }
+  if (typeof window.bindLocaleSelect === "function") {
+    window.bindLocaleSelect();
+  }
+  applyVaultLocaleTexts();
+  bindVaultFileUi();
+}
+
+function bindVaultFileUi() {
+  const fileInput = document.getElementById("fileInput");
+  const dropZone = document.getElementById("dropZone");
+  window.NTIShared.files.preventDocumentDrop();
+  fileInput.addEventListener("change", (event) => {
+    if (event.target.files[0]) readFile(event.target.files[0]);
+    event.target.value = "";
+  });
+  window.NTIShared.files.bindDropZone({
+    element: dropZone,
+    dragOverClass: "drag-over",
+    clickInput: fileInput,
+    onFiles: (files) => {
+      if (files && files[0]) readFile(files[0]);
+    },
+  });
+}
+
+bootstrapVaultPage();
+
+function readFile(file) {
+  if (!window.NTIShared.files.hasExtension(file, [".json"])) {
+    alert(vt("errorJsonOnly", "Only .json files are supported."));
+    return;
+  }
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      console.log("Parsed root:", parsed);
+      let cfg;
+      if (Array.isArray(parsed)) {
+        if (parsed.length === 0) {
+          throw new Error(vt("errorEmptyArray", "The configuration file contains an empty array."));
+        }
+        cfg = parsed[0];
+      } else {
+        cfg = parsed;
+      }
+      if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) {
+        throw new Error(vt("errorInvalidFormat", "The JSON could be read, but the configuration format is invalid."));
+      }
+      const containers = cfg?.JobProcessor?.JobProcessorContainers;
+      if (!Array.isArray(containers)) {
+        throw new Error(vt("errorMissingContainers", "The JSON could be read, but does not contain JobProcessor.JobProcessorContainers."));
+      }
+      console.log("Normalized config:", cfg);
+      console.log("Containers:", containers);
+      initConfig(cfg, file);
+    } catch(ex) { alert(vt("errorParsePrefix", "Could not parse JSON:\n") + ex.message); }
+  };
+  r.readAsText(file);
+}
+
+function initConfig(cfg, file) {
+  S.cfg = cfg; S.containers = cfg.JobProcessor?.JobProcessorContainers || [];
+  S.selContainer = null; S.selProcessor = null;
+  document.getElementById('versionDisplay').textContent = cfg.Version ? 'Version: ' + cfg.Version : '';
+  const cfgName = cfg.DisplayName || cfg.Name || cfg.Description || file?.name || 'Ukendt konfiguration';
+  document.getElementById('statusBar').textContent =
+    `${vt("statusLoaded", "Loaded")}: ${cfgName} — ${S.containers.length} ${vt("containersCountSuffix", "containers")}`;
+  document.getElementById('loadScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  renderLeft(); renderProc(); renderDetail(); enforceReadOnlyUI();
+}
+
+// ── LEFT PANEL ─────────────────────────────────────────────────────────────────
+function renderLeft() {
+  const tbody = document.getElementById('leftBody');
+  if (S.leftTab === 'filepaths') {
+    const paths = S.cfg?.General?.FilePathsToExcludeFromJobsFileCleanUp || [];
+    tbody.innerHTML = paths.length
+      ? paths.map(p => `<tr><td colspan="2">${esc(p)}</td></tr>`).join('')
+      : `<tr><td colspan="2" class="empty-state">Ingen filstier konfigureret.</td></tr>`;
+    enforceReadOnlyUI();
+    return;
+  }
+  if (S.leftTab === 'deactivate') {
+    tbody.innerHTML = `<tr><td colspan="2" class="empty-state">Ingen deaktiveringskonfiguration fundet.</td></tr>`;
+    enforceReadOnlyUI();
+    return;
+  }
+  let list = S.containers;
+  if (!S.showInactive) list = list.filter(c => c.IsActive);
+  const q = S.searchTerm.toLowerCase();
+  if (q) list = list.filter(c => (c.JobName||'').toLowerCase().includes(q) || (c.JobDescription||'').toLowerCase().includes(q) || (c.Name||'').toLowerCase().includes(q));
+  tbody.innerHTML = list.length ? list.map(c => {
+    const sel = S.selContainer?.Id === c.Id ? 'sel' : '';
+    const inact = !c.IsActive ? 'inact' : '';
+    const dot = c.IsActive ? ((c.JobProcessors?.length ? '<span style="color:#27ae60">●</span>' : '<span style="color:#ccc">●</span>') + ' ') : '<span style="color:#e74c3c">●</span> ';
+    return `<tr class="${sel} ${inact}" onclick="selectContainer('${c.Id}')">
+      <td>${dot}${esc(c.JobName || c.Name)}</td>
+      <td>${esc(c.JobDescription || c.Description || '')}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="2" class="empty-state">Ingen containere.</td></tr>`;
+  enforceReadOnlyUI();
+}
+
+function selectContainer(id) {
+  S.selContainer = S.containers.find(c => c.Id === id) || null;
+  S.selProcessor = null;
+  S.selProcessorIdx = -1;
+  renderLeft(); renderProc(); renderDetail();
+}
+
+// ── PROCESSOR GRID ─────────────────────────────────────────────────────────────
+function renderProc() {
+  const tbody = document.getElementById('procBody');
+  if (!S.selContainer) { tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Vælg en container.</td></tr>`; enforceReadOnlyUI(); return; }
+  const procs = S.selContainer.JobProcessors || [];
+  if (!procs.length) { tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Ingen jobprocessorer konfigureret.</td></tr>`; enforceReadOnlyUI(); return; }
+  tbody.innerHTML = procs.map((p, i) => {
+    const sel = S.selProcessorIdx === i ? 'sel' : '';
+    const inact = !p.IsActive ? 'inact' : '';
+    return `<tr class="${sel} ${inact}" onclick="selectProc(${i})">
+      <td class="cb"><input type="checkbox" ${p.IsActive?'checked':''}></td>
+      <td>${esc(p.DisplayName || p.Name || p.JobName || '')}</td>
+      <td>${esc(p.JobKey || '')}</td>
+      <td class="cb"><input type="checkbox" ${p.RunOnlyOnJobKey?'checked':''}></td>
+      <td>${esc(p.Description || '')}</td>
+    </tr>`;
+  }).join('');
+  enforceReadOnlyUI();
+}
+
+function selectProc(idx) {
+  S.selProcessorIdx = idx;
+  S.selProcessor = (S.selContainer?.JobProcessors || [])[idx] || null;
+  S.detailTab = 'general';
+  S.detailSubTab = 'conditions';
+  renderProc(); renderDetail();
+}
+
+// ── TAB CONFIGURATION PER PROCESSOR TYPE ───────────────────────────────────────
+function getTabsForProcessor(p) {
+  const jn = p.JobName || '';
+  if (jn === 'PreProcessItem' || jn === 'PreProcessFile' || jn === 'PreProcessChangeOrder' || jn === 'PreProcessCustomObject')
+    return [{id:'general',l:'Generelt'},{id:'prevstate',l:'Tidligere state'},{id:'properties',l:'Egenskaber'},{id:'item',l:'Item'}];
+  if (jn === 'PreProcessItemForIntegrator')
+    return [{id:'general',l:'Generelt'},{id:'common',l:'Common'},{id:'item',l:'Item'}];
+  if (jn === 'RuniLogicRule')
+    return [{id:'general',l:'Generelt'},{id:'inventor',l:'Inventor'},{id:'ilogic',l:'iLogic'}];
+  if (jn === 'WatermarkPdf')
+    return [{id:'general',l:'Generelt'},{id:'watermark',l:'Watermark'}];
+  if (jn === 'ChangeStateForItem')
+    return [{id:'general',l:'Generelt'},{id:'state',l:'State'}];
+  if (jn === 'ImportFileOnExternalDriveAsDesignRepresentationFile')
+    return [{id:'general',l:'Generelt'},{id:'export',l:'Eksport'},{id:'import',l:'Import'}];
+  // Inventor file export processors
+  if (jn.startsWith('Inventor.Create.') || jn.startsWith('Autocad.Create.') || jn.startsWith('DwgTrueView.Create.') || jn.startsWith('Word.Create') || jn.startsWith('Excel.Create') || jn.startsWith('Visio.Create')) {
+    const tabs = [{id:'general',l:'Generelt'},{id:'export',l:'Eksport'},{id:'file',l:'Fil'}];
+    if (jn.startsWith('Inventor.')) tabs.push({id:'inventor',l:'Inventor'});
+    if (jn === 'Inventor.Create.pdf') tabs.push({id:'pdf',l:'Pdf'});
+    else if (jn === 'Inventor.Create.dwf') tabs.push({id:'dwf',l:'Dwf'});
+    else if (jn === 'Inventor.Create.stp') tabs.push({id:'stp',l:'Stp'});
+    else if (jn === 'Inventor.Create.SheetMetal.dxf') tabs.push({id:'dxf',l:'Dxf'});
+    return tabs;
+  }
+  return [{id:'general',l:'General'},{id:'config',l:'Configuration'}];
+}
+
+// ── DETAIL PANEL ───────────────────────────────────────────────────────────────
+function renderDetail() {
+  const tabBar = document.getElementById('detailTabBar');
+  const content = document.getElementById('detailContent');
+  if (!S.selProcessor) {
+    tabBar.innerHTML = '';
+    content.innerHTML = `<div class="empty-state">Vælg en jobprocessor for at se detaljer.</div>`;
+    enforceReadOnlyUI();
+    return;
+  }
+  const p = S.selProcessor;
+  const tabs = getTabsForProcessor(p);
+  if (!tabs.find(t => t.id === S.detailTab)) S.detailTab = tabs[0].id;
+  tabBar.innerHTML = tabs.map(t =>
+    `<button class="tab-btn ${t.id===S.detailTab?'active':''}" onclick="switchDetailTab('${t.id}',this)">${esc(t.l)}</button>`
+  ).join('');
+  content.innerHTML = renderTabContent(p, S.detailTab);
+  enforceReadOnlyUI();
+}
+
+function switchDetailTab(id, btn) {
+  S.detailTab = id;
+  document.querySelectorAll('#detailTabBar .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('detailContent').innerHTML = renderTabContent(S.selProcessor, id);
+  enforceReadOnlyUI();
+}
+
+function renderTabContent(p, id) {
+  switch(id) {
+    case 'general':    return tabGeneral(p);
+    case 'prevstate':  return tabPrevState(p);
+    case 'properties': return tabProperties(p);
+    case 'item':       return p.JobName === 'PreProcessItemForIntegrator' ? tabItemIntegrator(p) : tabItemProcess(p);
+    case 'common':     return tabCommon(p);
+    case 'export':     return tabExport(p);
+    case 'file':       return tabFile(p);
+    case 'inventor':   return tabInventor(p);
+    case 'pdf':        return tabPdf(p);
+    case 'dwf':        return tabDwf(p);
+    case 'stp':        return tabStp(p);
+    case 'dxf':        return tabDxf(p);
+    case 'ilogic':     return tabILogic(p);
+    case 'watermark':  return tabWatermark(p);
+    case 'state':      return tabState(p);
+    case 'import':     return tabImport(p);
+    case 'config':     return tabConfig(p);
+    default: return `<div class="empty-state">Tab not implemented.</div>`;
+  }
+}
+
+// ── TAB: GENERAL ───────────────────────────────────────────────────────────────
+function tabGeneral(p) {
+  const sub = S.detailSubTab || 'conditions';
+  return `<div class="detail-pad">
+    ${frow('Active', cb(p.IsActive))}
+    ${frow('Description', `<input type="text" value="${esc(p.Description||p.DisplayName||p.Name||'')}" readonly style="width:300px">`)}
+    ${frow('Job processor key', `<input type="text" value="${esc(p.JobKey||'')}" readonly style="width:200px">`)}
+    ${frow('Run only via job processor key', cb(p.RunOnlyOnJobKey))}
+    <div style="display:flex;gap:0;margin-top:12px;margin-bottom:6px">
+      <button class="btn gen-sub-btn ${sub==='conditions'?'btn-dark':'btn-outline'}" style="border-radius:2px 0 0 2px;border-right:none" onclick="switchGenSubTab('conditions',this)">Processor conditions</button>
+      <button class="btn gen-sub-btn ${sub==='queuejobs'?'btn-dark':'btn-outline'}" style="border-radius:0 2px 2px 0" onclick="switchGenSubTab('queuejobs',this)">Queue jobs after job</button>
+    </div>
+    <div id="genSubContent">${renderGenSubContent(p, sub)}</div>
+  </div>`;
+}
+
+function renderGenSubContent(p, sub) {
+  if (sub === 'queuejobs') {
+    return jobsTable('Queue jobs after job', p.Jobs || [], 'openJobModal2');
+  }
+  const cls = p.ConditionLists || [];
+  if (!cls.length) return `<div class="empty-state">No trigger conditions configured.</div>`;
+  return cls.map(cl => condGroup(cl)).join('');
+}
+
+function switchGenSubTab(sub, btn) {
+  S.detailSubTab = sub;
+  document.querySelectorAll('.gen-sub-btn').forEach(b => {
+    b.classList.remove('btn-dark'); b.classList.add('btn-outline');
+  });
+  btn.classList.remove('btn-outline'); btn.classList.add('btn-dark');
+  const el = document.getElementById('genSubContent');
+  if (el && S.selProcessor) el.innerHTML = renderGenSubContent(S.selProcessor, sub);
+}
+
+// ── TAB: PREVIOUS STATE ────────────────────────────────────────────────────────
+function tabPrevState(p) {
+  const cls = p.PreviousStateConditionLists || [];
+  if (!cls.length) return `<div class="detail-pad"><div class="empty-state">No previous state conditions configured.</div></div>`;
+  return `<div class="detail-pad"><div class="section-label">Previous state conditions</div>${cls.map(cl=>condGroup(cl)).join('')}</div>`;
+}
+
+// ── TAB: PROPERTIES ────────────────────────────────────────────────────────────
+function tabProperties(p) {
+  const copy = p.CopyProperties || [], set = p.SetProperties || [];
+  const h = [`<div class="detail-pad">`];
+  h.push(frow('Synchronize file properties', cb(p.SyncFileProperties)));
+  h.push(frow('Update item', cb(p.UpdateItem)));
+  h.push(`<div class="section-label" style="margin-top:10px">Copy properties (${copy.length})</div>`);
+  h.push(copy.length
+    ? `<table><thead><tr><th>Source</th><th>Target</th><th>Description</th></tr></thead><tbody>${copy.map(c=>`<tr><td>${esc(copySource(c))}</td><td>${esc(copyTarget(c))}</td><td>${esc(c.Description||'')}</td></tr>`).join('')}</tbody></table>`
+    : `<div style="color:#aaa;font-style:italic;padding:4px 0">None configured.</div>`);
+  h.push(`<div class="section-label" style="margin-top:10px">Set properties (${set.length})</div>`);
+  h.push(set.length
+    ? `<table><thead><tr><th>Property</th><th>Value</th><th>Description</th></tr></thead><tbody>${set.map(s=>`<tr><td>${esc(s.PropertyDefinition?.DispName||s.DisplayName||s.Name||'')}</td><td>${esc(s.PropertyValue ?? s.Value ?? '')}</td><td>${esc(s.Description||'')}</td></tr>`).join('')}</tbody></table>`
+    : `<div style="color:#aaa;font-style:italic;padding:4px 0">None configured.</div>`);
+  h.push('</div>');
+  return h.join('');
+}
+
+// ── TAB: ITEM (PreProcessItem) ─────────────────────────────────────────────────
+function tabItemProcess(p) {
+  const fileJobs = p.FileJobs || [];
+  const opts = p.FileJobsItemFileLinkTypeOptionConfiguration?.ItemFileLinkTypeOptions || [];
+  const linkNames = opts.filter(o=>o.IsChecked).map(o=>LT[o.ItemFileLinkTypeOption]||('Type '+o.ItemFileLinkTypeOption)).join(', ') || '—';
+  const h = [`<div class="item-wrap">`];
+  h.push(`<div style="margin-bottom:8px">${frow('Update item', cb(p.UpdateItem))}</div>`);
+  h.push(`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px">
+    <button class="btn btn-outline">Synchronize properties item/file</button>
+    <button class="btn btn-outline">Set properties on associated files</button>
+  </div>
+  <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+    <button class="btn btn-outline">Synchronize properties on associated files</button>
+    <button class="btn btn-outline">Queue jobs for associated files</button>
+  </div>`);
+  h.push(`<div style="margin-bottom:8px">${frow('Item file link types', `<span class="link-box">${esc(linkNames)}</span>`)}</div>`);
+  h.push(jobsTable('File Jobs', fileJobs, 'openFileJobModal'));
+  h.push('</div>');
+  return h.join('');
+}
+
+// ── TAB: ITEM (PreProcessItemForIntegrator) ────────────────────────────────────
+function tabItemIntegrator(p) {
+  const folder = p.TempFolder?.FullName || '';
+  return `<div class="detail-pad">
+    ${frow('Item bom depth (0 = all levels)', `<input type="text" value="${esc(p.ItemDepth??0)}" readonly style="width:100px">`)}
+    ${frow('Use legacy transfer method (required for Integrator version lower than 8.0)', cb(p.UseLegacyTransferMethod))}
+    ${frow('Temp folder', `<input type="text" value="${esc(folder)}" readonly style="width:280px"> <button class="btn btn-outline" onclick="roAlert()">Browse</button>`)}
+  </div>`;
+}
+
+// ── TAB: COMMON (PreProcessItemForIntegrator) ──────────────────────────────────
+function tabCommon(p) {
+  const srcId = p.SourcePersistentIdPropertyDefinition?.DispName || '';
+  const drcls = p.DesignRepresentationConditionLists || [];
+  const h = [`<div class="detail-pad">`];
+  h.push(frow('Source persistent id', `<select style="width:200px"><option>${esc(srcId)}</option></select> <button class="btn btn-red" onclick="roAlert()">Remove</button>`));
+  h.push(frow('Include design rep item attachments', cb(p.IncludeItemAttachments)));
+  h.push(frow('Include other item attachments', cb(p.IncludeOtherAttachments)));
+  h.push(frow('Include visualizations', cb(p.IncludeVisualizations)));
+  h.push(frow('Include file attachments', cb(p.IncludeFileAttachments)));
+  h.push(`<div class="box-section">
+    <div class="box-title">Design representation conditions</div>
+    <div class="sub-toolbar">
+      <button class="btn btn-green" onclick="roAlert()">Add</button>
+      <button class="btn btn-red" onclick="roAlert()">Remove</button>
+      <button class="btn btn-grey" onclick="roAlert()">Move up</button>
+      <button class="btn btn-grey" onclick="roAlert()">Move down</button>
+      <button class="btn btn-outline" onclick="roAlert()">Copy list</button>
+      <button class="btn btn-outline" onclick="roAlert()">Paste list</button>
+    </div>
+    <table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>`);
+  h.push(drcls.length
+    ? drcls.map(cl=>`<tr><td>${esc(cl.DisplayName||cl.Name||'')}</td><td>${esc(cl.Description||'')}</td></tr>`).join('')
+    : `<tr><td colspan="2" class="empty-state">None.</td></tr>`);
+  h.push(`</tbody></table></div></div>`);
+  return h.join('');
+}
+
+// ── TAB: EXPORT ────────────────────────────────────────────────────────────────
+function tabExport(p) {
+  const folderScheme = p.TargetFolderPathScheme?.DisplayName || '';
+  const namingScheme = p.NamingScheme?.DisplayName || '';
+  const category =
+    typeof p.Category === "string"
+      ? p.Category
+      : (p.Category?.DisplayName || p.Category?.Name || "");
+  const srcId = p.SourcePersistentIdPropertyDefinition?.DispName || '';
+  const exportJobs = p.ExportedFileJobs || [];
+  const h = [`<div class="detail-pad">`];
+  h.push(frow('Synchronize state', cb(p.SyncState)));
+  h.push(frow('Synchronize revision', cb(p.SyncRevision)));
+  h.push(frow('Hidden', cb(p.Hidden)));
+  h.push(frow('Attach to parent file', cb(p.AttachToParent)));
+  h.push(frow('Attach to item', cb(p.AttachToItem)));
+  h.push(frow('Pin', cb(p.AttachToItemPin)));
+  h.push(frow('Target folder scheme', `<select style="width:220px"><option>${esc(folderScheme)}</option></select> <button class="btn btn-outline" onclick="showSchemeModal('folder','Path scheme')">Edit</button>`));
+  h.push(frow('Naming scheme', `<select style="width:220px"><option>${esc(namingScheme)}</option></select> <button class="btn btn-outline" onclick="showSchemeModal('naming','Naming scheme')">Edit</button> <button class="btn btn-red" onclick="roAlert()">Remove</button>`));
+  h.push(frow('Override rule categorization', `<select style="width:220px"><option>${esc(category)}</option></select> <button class="btn btn-red" onclick="roAlert()">Remove</button>`));
+  if (srcId) h.push(frow('Source persistent id', `<select style="width:220px"><option>${esc(srcId)}</option></select> <button class="btn btn-red" onclick="roAlert()">Remove</button>`));
+  h.push(`<div style="margin:8px 0">
+    <button class="btn btn-outline" style="width:100%;margin-bottom:3px;text-align:center">Copy properties from parent to exported file</button>
+    <div style="display:flex;gap:4px">
+      <button class="btn btn-outline" style="flex:1">Copy properties from parent item to exported file (if job via item)</button>
+      <button class="btn btn-outline" style="flex:1">Queue jobs for exported file</button>
+    </div>
+  </div>`);
+  h.push(`<div class="sub-toolbar">
+    <button class="btn btn-green" onclick="roAlert()">Add</button>
+    <button class="btn btn-red" onclick="roAlert()">Remove</button>
+    <button class="btn btn-grey" onclick="roAlert()">Move up</button>
+    <button class="btn btn-grey" onclick="roAlert()">Move down</button>
+    <button class="btn btn-outline" onclick="roAlert()">Copy list</button>
+    <button class="btn btn-outline" onclick="roAlert()">Paste list</button>
+  </div>
+  <table><thead><tr><th class="cb">Active</th><th>Name</th><th>Description</th><th>Priority</th><th></th></tr></thead><tbody>`);
+  if (exportJobs.length) {
+    exportJobs.forEach((j,i) => {
+      h.push(`<tr class="${!j.IsActive?'inact':''}">
+        <td class="cb"><input type="checkbox" ${j.IsActive?'checked':''}></td>
+        <td>${esc(j.DisplayName||j.Name||'')}</td>
+        <td>${esc(j.Description||'')}</td>
+        <td>${j.Priority??''}</td>
+        <td><button class="btn btn-dark" style="padding:2px 8px" onclick="openExportJobModal(${i})">Edit</button></td>
+      </tr>`);
+    });
+  } else {
+    h.push(`<tr><td colspan="5" class="empty-state">No exported file jobs.</td></tr>`);
+  }
+  h.push(`</tbody></table></div>`);
+  return h.join('');
+}
+
+// ── TAB: FILE ──────────────────────────────────────────────────────────────────
+function tabFile(p) {
+  return `<div class="detail-pad">${frow('Version gathering', `<select style="width:150px"><option>${esc(VG[p.VersionGatheringOption??0]||String(p.VersionGatheringOption??0))}</option></select>`)}</div>`;
+}
+
+// ── TAB: INVENTOR ──────────────────────────────────────────────────────────────
+function tabInventor(p) {
+  const isILogic = p.JobName === 'RuniLogicRule';
+  const h = [`<div class="detail-pad">`];
+  h.push(frow('Use inventor', cb(p.UseInventor)));
+  h.push(frow(isILogic ? 'Fast open [skips all references]' : 'Fast open (skips all references)', cb(p.FastOpen)));
+  if (isILogic && p.VersionGatheringOption !== undefined)
+    h.push(frow('Version gathering', `<select style="width:150px"><option>${esc(VG[p.VersionGatheringOption]||String(p.VersionGatheringOption))}</option></select>`));
+  h.push('</div>');
+  return h.join('');
+}
+
+// ── TAB: PDF ───────────────────────────────────────────────────────────────────
+function tabPdf(p) {
+  return `<div class="detail-pad">
+    ${frow('All colors as black', cb(p.AllColorAsBlack))}
+    ${frow('Remove line weights', cb(p.RemoveLineWeights))}
+    ${frow('Vector resolution', `<input type="text" value="${esc(p.VectorResolution??400)}" readonly style="width:80px">`)}
+    ${frow('Sheet range', `<select style="width:200px"><option>${esc(SR[p.SheetRange]||String(p.SheetRange??0))}</option></select>`)}
+  </div>`;
+}
+
+// ── TAB: DWF ───────────────────────────────────────────────────────────────────
+function tabDwf(p) {
+  return `<div class="detail-pad">
+    ${frow('Publish all sheets', cb(p.PublishAllSheets))}
+    ${frow('Add as design visualization', cb(p.AddAsDesignVisualization))}
+  </div>`;
+}
+
+// ── TAB: STP ───────────────────────────────────────────────────────────────────
+function tabStp(p) {
+  return `<div class="detail-pad">
+    ${frow('Application protocol', `<select style="width:150px"><option>${esc(AP[p.ApplicationProtocolType]||String(p.ApplicationProtocolType??0))}</option></select>`)}
+    ${frow('Author', `<input type="text" value="${esc(p.Author||'')}" readonly style="width:200px">`)}
+    ${frow('Organization', `<input type="text" value="${esc(p.Organization||'')}" readonly style="width:200px">`)}
+    ${frow('Export fit tolerance', `<input type="text" value="${esc(p.ExportFitTolerance||'0.001')}" readonly style="width:100px">`)}
+    ${frow('Include sketches', cb(p.IncludeSketches))}
+    ${frow('Include model states', cb(p.IncludeModelStates))}
+  </div>`;
+}
+
+// ── TAB: DXF ───────────────────────────────────────────────────────────────────
+function tabDxf(p) {
+  return `<div class="detail-pad">
+    ${frow('Unfold if flat pattern is missing', cb(p.UnfoldIfFlatPatternIsMissing))}
+    ${frow('Use ini file', cb(p.UseIniFile))}
+    ${frow('Include model states', cb(p.IncludeModelStates))}
+    <div class="section-label" style="margin-top:8px">Export string</div>
+    <textarea readonly rows="5" style="width:100%;font-size:10px;font-family:monospace;resize:vertical">${esc(p.ExportString||'')}</textarea>
+  </div>`;
+}
+
+// ── TAB: ILOGIC ────────────────────────────────────────────────────────────────
+function tabILogic(p) {
+  const rules = p.ExternalRules || [];
+  const h = [`<div class="detail-pad">`];
+  h.push(frow("Addins dll's directory", `<input type="text" value="${esc(p.AddInsDirectory||'')}" readonly style="width:240px"> <button class="btn btn-outline" onclick="roAlert()">Browse</button>`));
+  h.push(frow('Log level', `<select style="width:130px"><option>${esc(LL[p.LogLevel??7]||String(p.LogLevel))}</option></select>`));
+  h.push(frow('Internal rules option', `<select style="width:130px"><option>${esc(IRT[p.InternalRuleOption??3]||String(p.InternalRuleOption))}</option></select>`));
+  h.push(frow('Break for debugging', cb(p.BreakForDebug)));
+  h.push(frow('Check out/in file before/after', cb(p.CheckOutAndInFile)));
+  h.push(frow('Log file for error message to job queue', `<input type="text" value="${esc(p.LogFileForErrorMessageToJobQueue||'')}" readonly style="width:240px"> <button class="btn btn-outline" onclick="roAlert()">Browse</button>`));
+  h.push(`<div class="box-section">
+    <div class="box-title">External rules</div>
+    <div class="sub-toolbar">
+      <button class="btn btn-green" onclick="roAlert()">Add</button>
+      <button class="btn btn-red" onclick="roAlert()">Remove</button>
+      <button class="btn btn-grey" onclick="roAlert()">Move up</button>
+      <button class="btn btn-grey" onclick="roAlert()">Move down</button>
+    </div>
+    <table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>`);
+  h.push(rules.length
+    ? rules.map(r=>`<tr><td>${esc(r.VaultFile?.Name||r.DisplayName||r.Name||'')}</td><td>${esc(r.Description||'')}</td></tr>`).join('')
+    : `<tr><td colspan="2" class="empty-state">None.</td></tr>`);
+  h.push(`</tbody></table></div></div>`);
+  return h.join('');
+}
+
+// ── TAB: STATE ─────────────────────────────────────────────────────────────────
+function tabState(p) {
+  return `<div class="detail-pad">
+    ${frow('Lifecycle state name', `<input type="text" value="${esc(p.LifeCycleStateName||'')}" readonly style="width:200px">`)}
+    ${frow('Validate has no jobs in queue', cb(p.ValidateHasNoJobsInQueue))}
+    ${frow('Validate timeout (seconds)', `<input type="text" value="${esc(p.ValidateHasNoRunningJobsInQueueTimeOutInSeconds??0)}" readonly style="width:80px">`)}
+  </div>`;
+}
+
+// ── TAB: IMPORT ────────────────────────────────────────────────────────────────
+function tabImport(p) {
+  return `<div class="detail-pad">
+    ${frow('Design representation file import folder', `<input type="text" value="${esc(p.ImportFolder||'')}" readonly style="width:250px"> <button class="btn btn-outline" onclick="roAlert()">Browse</button>`)}
+    ${frow('Error if no file in import folder', cb(p.ErrorIfNoFileInImportFolder))}
+    ${frow('Delete original file after import', cb(p.DeleteFileAfterImport))}
+  </div>`;
+}
+
+// ── TAB: WATERMARK ─────────────────────────────────────────────────────────────
+function tabWatermark(p) {
+  const pts = p.PageSizeToInsertPoints || [];
+  const h = [`<div class="detail-pad">`];
+  h.push(frow('Use legacy watermark', cb(p.UseLegacyWatermark)));
+  h.push(`<div class="section-label" style="margin-top:8px">Page size configurations (${pts.length})</div>`);
+  if (pts.length) {
+    pts.forEach((pt, i) => {
+      const items = pt.WatermarkTextItems || [];
+      h.push(`<div class="box-section">
+        <div class="box-title">Page size ${i+1}: ${pt.UseForAllWidths?'All widths':'Custom'} × ${pt.UseForAllHeights?'All heights':'Custom'}</div>
+        <table><thead><tr><th>Type</th><th>Property/Text</th><th>X</th><th>Y</th><th>Font</th><th>Size</th></tr></thead><tbody>`);
+      h.push(items.length
+        ? items.map(it=>`<tr><td>${esc(it.Name||'')}</td><td>${esc(it.PropertyDefinition?.PropertyDefinition?.DispName||it.DisplayName||'')}</td><td>${it.InsertPointX??0}</td><td>${it.InsertPointY??0}</td><td>${esc(it.Font||'')}</td><td>${it.FontSize??0}pt</td></tr>`).join('')
+        : `<tr><td colspan="6" class="empty-state">No watermark items.</td></tr>`);
+      h.push(`</tbody></table></div>`);
+    });
+  } else h.push(`<div style="color:#aaa;font-style:italic;padding:4px 0">No page sizes configured.</div>`);
+  h.push('</div>');
+  return h.join('');
+}
+
+// ── TAB: CONFIG (fallback) ─────────────────────────────────────────────────────
+function tabConfig(p) {
+  const skip = new Set(['JobName','Jobs','FileJobs','ConditionLists','PreviousStateConditionLists','RunOnlyOnJobKey','JobKey','Name','DisplayName','Description','Id','IsActive','IsChecked']);
+  const entries = Object.entries(p).filter(([k]) => !skip.has(k));
+  if (!entries.length) return `<div class="empty-state">No additional configuration.</div>`;
+  return `<div class="detail-pad">` + entries.map(([k,v]) => {
+    let val;
+    if (typeof v === 'boolean') val = cb(v);
+    else if (v === null || v === undefined) val = `<span style="color:#aaa">—</span>`;
+    else if (typeof v === 'object') val = `<code style="font-size:10px;color:#666;word-break:break-all">${esc(JSON.stringify(v).substring(0,120))}</code>`;
+    else val = `<input type="text" value="${esc(String(v))}" readonly style="width:250px">`;
+    return frow(k, val);
+  }).join('') + `</div>`;
+}
+
+// ── JOBS TABLE HELPER ──────────────────────────────────────────────────────────
+function jobsTable(title, jobs, openFn) {
+  const h = [`<div class="sub-section">
+    <div class="sub-title">${esc(title)} (${jobs.length})</div>
+    <div class="sub-toolbar">
+      <button class="btn btn-green" onclick="roAlert()">Add</button>
+      <button class="btn btn-red" onclick="roAlert()">Remove</button>
+      <button class="btn btn-grey" onclick="roAlert()">Move up</button>
+      <button class="btn btn-grey" onclick="roAlert()">Move down</button>
+      <button class="btn btn-outline" onclick="roAlert()">Copy list</button>
+      <button class="btn btn-outline" onclick="roAlert()">Paste list</button>
+    </div>`];
+  if (jobs.length) {
+    h.push(`<table><thead><tr><th class="cb">Active</th><th>Name</th><th>Description</th><th>Priority</th><th></th></tr></thead><tbody>`);
+    jobs.forEach((j,i) => h.push(`<tr class="${!j.IsActive?'inact':''}">
+      <td class="cb"><input type="checkbox" ${j.IsActive?'checked':''}></td>
+      <td>${esc(j.DisplayName||j.Name||'')}</td>
+      <td>${esc(j.Description||'')}</td>
+      <td>${j.Priority??''}</td>
+      <td><button class="btn btn-dark" style="padding:2px 8px" onclick="${openFn}(${i})">Edit</button></td>
+    </tr>`));
+    h.push(`</tbody></table>`);
+  } else h.push(`<div style="color:#aaa;font-style:italic;padding:4px 0">None configured.</div>`);
+  h.push('</div>');
+  return h.join('');
+}
+
+// ── CONDITION GROUP ────────────────────────────────────────────────────────────
+function condGroup(cl) {
+  const id = 'cg' + (++S.cgCounter);
+  const logic = LV[cl.ListValidation] ?? String(cl.ListValidation);
+  const conds = cl.Conditions || [];
+  const desc = cl.Description && cl.Description !== (cl.DisplayName||cl.Name) ? esc(cl.Description) : '';
+  return `<div class="cond-group">
+    <div class="cond-head" onclick="toggleCG('${id}')">
+      <span class="exp-icon" id="ei${id}">&#9658;</span>
+      <span class="grp-name">${esc(cl.DisplayName||cl.Name||'')}</span>
+      <span class="grp-logic">${logic}</span>
+      ${desc ? `<span class="grp-desc">${desc}</span>` : ''}
+    </div>
+    <div class="cond-rows" id="${id}">
+      ${conds.length ? `<table>
+        <thead><tr><th>Property</th><th>Operator</th><th>Value</th><th class="cb">Active</th></tr></thead>
+        <tbody>${conds.map(c => {
+          const prop = c.PropertyDefinition?.DispName || c.PropertyDefinition?.SysName || '';
+          const op = VC[c.ValidationCondition] ?? ('op:'+c.ValidationCondition);
+          const needsVal = c.ValidationCondition !== 2 && c.ValidationCondition !== 3;
+          return `<tr class="${!c.IsActive?'inact':''}">
+            <td>${esc(prop)}</td><td><em>${op}</em></td>
+            <td>${needsVal ? esc(c.Value??'') : '<em style="color:#aaa">—</em>'}</td>
+            <td class="cb"><input type="checkbox" ${c.IsActive?'checked':''}></td>
+          </tr>`;
+        }).join('')}</tbody></table>`
+      : `<div class="empty-state" style="padding:6px">No individual conditions.</div>`}
+    </div>
+  </div>`;
+}
+
+function toggleCG(id) {
+  const el = document.getElementById(id), ei = document.getElementById('ei'+id);
+  el.classList.toggle('open');
+  ei.innerHTML = el.classList.contains('open') ? '&#9660;' : '&#9658;';
+}
+
+// ── MODAL ──────────────────────────────────────────────────────────────────────
+function openFileJobModal(idx) {
+  const job = (S.selProcessor?.FileJobs||[])[idx];
+  if (job) showModal(job, 'Item file job');
+}
+function openJobModal2(idx) {
+  const job = (S.selProcessor?.Jobs||[])[idx];
+  if (job) showModal(job, 'Job');
+}
+function openExportJobModal(idx) {
+  const job = (S.selProcessor?.ExportedFileJobs||[])[idx];
+  if (job) showModal(job, 'Exported file job');
+}
+
+function showModal(job, title) {
+  S.modalJob = job;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalFields').innerHTML = `
+    <span class="fld-lbl">Name</span>       <span class="fld-val"><input value="${esc(job.DisplayName||job.Name||'')}" readonly></span>
+    <span class="fld-lbl">Description</span><span class="fld-val"><input value="${esc(job.Description||'')}" readonly></span>
+    <span class="fld-lbl">Active</span>     <span class="fld-val"><input type="checkbox" ${job.IsActive?'checked':''} style="pointer-events:none"></span>
+    <span class="fld-lbl">Priority</span>   <span class="fld-val"><input value="${job.Priority??''}" readonly style="width:80px"></span>
+    <span class="fld-lbl">Id</span>         <span class="fld-val"><input value="${esc(job.Id||'')}" readonly style="font-size:10px;color:#888"></span>`;
+  document.querySelectorAll('#modalTabBar .tab-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  renderModalContent('conditions');
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function switchModalTab(tab, btn) {
+  document.querySelectorAll('#modalTabBar .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderModalContent(tab);
+}
+
+function renderModalContent(tab) {
+  const el = document.getElementById('modalContent'), job = S.modalJob;
+  if (!job) return;
+  if (tab === 'conditions') {
+    const cls = job.ConditionLists || [], pcls = job.PropertyCompareConditionListsItemFile || [];
+    let html = '';
+    if (cls.length) { html += `<div class="section-label">Conditions</div>`; html += cls.map(cl=>condGroup(cl)).join(''); }
+    html += `<div class="section-label" style="margin-top:8px">Item file property compare conditions</div>`;
+    html += `<table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>`;
+    html += pcls.length ? pcls.map(c=>`<tr><td>${esc(c.DisplayName||c.Name||'')}</td><td>${esc(c.Description||'')}</td></tr>`).join('') : `<tr><td colspan="2" class="empty-state">None.</td></tr>`;
+    html += `</tbody></table>`;
+    if (!cls.length && !pcls.length) html = `<div class="empty-state">No conditions configured.</div>`;
+    el.innerHTML = html;
+  } else {
+    const params = job.Parameters || [];
+    el.innerHTML = params.length
+      ? `<table><thead><tr><th>Name</th><th>Value</th><th>Description</th></tr></thead><tbody>${params.map(p=>`<tr><td>${esc(p.DisplayName||p.Name||'')}</td><td>${esc(p.Value||'')}</td><td>${esc(p.Description||'')}</td></tr>`).join('')}</tbody></table>`
+      : `<div class="empty-state">No parameters configured.</div>`;
+  }
+}
+
+function closeModal() { document.getElementById('modal').style.display = 'none'; S.modalJob = null; }
+
+// ── SCHEME MODAL ───────────────────────────────────────────────────────────────
+function showSchemeModal(schemeRef, title) {
+  const p = S.selProcessor;
+  if (!p) return;
+  const scheme = schemeRef === 'folder' ? p.TargetFolderPathScheme : p.NamingScheme;
+  if (!scheme) { alert('No scheme configured.'); return; }
+  document.getElementById('schemeMTitle').textContent = title;
+  document.getElementById('schemeMFields').innerHTML = `
+    <span class="fld-lbl">Name</span>       <span class="fld-val"><input value="${esc(scheme.DisplayName||scheme.Name||'')}" readonly style="width:250px"></span>
+    <span class="fld-lbl">Description</span><span class="fld-val"><input value="${esc(scheme.Description||'')}" readonly style="width:250px"></span>`;
+  const items = scheme.SchemeItems || [];
+  const typeLabel = it => {
+    const n = it.Name||'';
+    if (n==='PathSchemeItemStatic') return 'Static text';
+    if (n==='PathSchemeItemPropertyVault') return 'Vault property';
+    if (n==='NamingSchemeItemParentName') return 'Parent name';
+    if (n==='NamingSchemeItemParentExtension') return 'Parent extension';
+    if (n==='NamingSchemeItemDesignRepresentationExtension') return 'Export extension';
+    if (n==='NamingSchemeItemStaticText') return 'Static text';
+    return n;
+  };
+  let html = `<div style="font-weight:600;margin-bottom:6px">Scheme items (${items.length})</div>`;
+  html += `<table><thead><tr><th>Type</th><th>Display name</th><th>Description</th></tr></thead><tbody>`;
+  html += items.length
+    ? items.map(it => `<tr><td>${esc(typeLabel(it))}</td><td>${esc(it.DisplayName||'')}</td><td>${esc(it.Description||'')}</td></tr>`).join('')
+    : `<tr><td colspan="3" class="empty-state">No scheme items configured.</td></tr>`;
+  html += `</tbody></table>`;
+  document.getElementById('schemeMContent').innerHTML = html;
+  document.getElementById('schemeModal').style.display = 'flex';
+}
+function closeSchemeModal() { document.getElementById('schemeModal').style.display = 'none'; }
+
+// ── TAB SWITCHING (top tabs) ───────────────────────────────────────────────────
+document.getElementById('topTabBar').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  S.leftTab = btn.dataset.tab;
+  document.querySelectorAll('#topTabBar .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLeft();
+});
+
+// ── TOOLBAR ACTIONS ────────────────────────────────────────────────────────────
+function setShowInactive(val) {
+  S.showInactive = val;
+  document.getElementById('btnHide').style.display = val ? '' : 'none';
+  document.getElementById('btnShow').style.display = val ? 'none' : '';
+  renderLeft();
+}
+function onSearch(val) { S.searchTerm = val.trim(); renderLeft(); }
+function roAlert() {}
+
+function copySource(c) {
+  const source = c.FromPropertyDefinition ?? c.SourcePropertyDefinition;
+  if (typeof source === 'string') return source;
+  return source?.DispName || source?.DisplayName || source?.Name || c.DisplayName || c.Name || '';
+}
+
+function copyTarget(c) {
+  const target = c.ToPropertyDefinition ?? c.TargetPropertyDefinition;
+  if (typeof target === 'string') return target;
+  return target?.DispName || target?.DisplayName || target?.Name || '';
+}
+
+function enforceReadOnlyUI() {
+  const hiddenLabels = new Set([
+    'Add', 'Remove', 'Move up', 'Move down',
+    'Save grid state', 'Reset grid state',
+    'Copy list', 'Paste list', 'Browse',
+    'Fjern', 'Flyt op', 'Flyt ned',
+    'Gem grid-tilstand', 'Nulstil grid-tilstand'
+  ]);
+  document.querySelectorAll('button').forEach((btn) => {
+    const txt = (btn.textContent || '').trim();
+    if (hiddenLabels.has(txt)) {
+      btn.style.display = 'none';
+      btn.title = 'Viewer er skrivebeskyttet';
+    }
+  });
+}
+
+// ── SPLITTER ───────────────────────────────────────────────────────────────────
+const splEl = document.getElementById('splitter');
+let drag=false, dragX=0, dragW=0;
+splEl.addEventListener('mousedown', e => { drag=true; dragX=e.clientX; dragW=document.getElementById('leftPanel').offsetWidth; document.body.style.cssText+=';cursor:col-resize;user-select:none'; });
+document.addEventListener('mousemove', e => { if(!drag) return; const w=Math.max(160,Math.min(550,dragW+e.clientX-dragX)); document.getElementById('leftPanel').style.width=w+'px'; });
+document.addEventListener('mouseup', () => { if(drag){drag=false;document.body.style.cursor='';document.body.style.userSelect='';} });
+
+// ── KEYBOARD ───────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => { if(e.key==='Escape') { closeModal(); closeSchemeModal(); } });
+
+// ── HELPERS ────────────────────────────────────────────────────────────────────
+function frow(label, valueHtml) {
+  return `<div class="frow"><span class="flbl">${esc(label)}</span><span class="fval">${valueHtml}</span></div>`;
+}
+function cb(val) { return `<input type="checkbox" ${val?'checked':''} style="pointer-events:none">`; }
+function esc(s) {
+  return window.NTIShared.html.escape(s);
+}
+</script>
+</body>
+</html>

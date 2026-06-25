@@ -1,0 +1,206 @@
+{
+  "language": {
+    "label": "Språk"
+  },
+  "home": {
+    "title": "NTI Workflow",
+    "intro": "Interna verktyg för Vault-konfiguration och lifecycle-analys.",
+    "workflowViewer": {
+      "title": "Workflow Viewer",
+      "description": "Ladda upp Excel-utdata från NTI Vault Dump Config och visualisera transitions, roller och state permissions.",
+      "open": "Öppna Workflow Viewer"
+    },
+    "lifecycleCompare": {
+      "title": "Lifecycle Compare",
+      "description": "Jämför två Vault lifecycle-exporter och hitta skillnader.",
+      "comingSoon": "Kommer snart"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Analysverktyg för Vault-konfiguration.",
+      "comingSoon": "Kommer snart"
+    },
+    "vaultConfigViewer": {
+      "title": "NTI for Vault Config",
+      "description": "Browse containers, processors, jobs and settings in an NTI for Vault Job JSON configuration.",
+      "open": "Open Vault Config Viewer"
+    }
+  },
+  "nav": {
+    "backHome": "Tillbaka till startsidan"
+  },
+  "upload": {
+    "chooseFile": "Välj Excel-fil",
+    "dropTitle": "Dra Excel-filen hit",
+    "dropSubtitle": "eller klicka för att välja Excel-utdatafilen från",
+    "dropSubtitleStrong": "NTI Vault Dump Config",
+    "supportedTypes": "Filtyp som stöds: .xlsx",
+    "requiredSheet": "Filen måste innehålla bladet",
+    "optionalSheet": "Om bladet",
+    "optionalSheetSuffix": "finns kan state permissions också visas.",
+    "ariaLabel": "Ladda upp Excel-utdatafil från NTI Vault Dump Config",
+    "status": {
+      "chooseOrDrop": "Välj eller dra Excel-utdatafilen från NTI Vault Dump Config.",
+      "uploading": "Laddar upp {filename}...",
+      "success": "Laddade {count} transitions från {filename}{warnings}.",
+      "warningsSuffix": " ({count} varningar)"
+    },
+    "error": {
+      "invalidFileType": "Endast .xlsx-filer stöds.",
+      "emptyFile": "Filen är tom. Välj en giltig Vault Excel-export.",
+      "fileTooLarge": "Filen är för stor. Maximal filstorlek är 25 MB.",
+      "noFile": "Ingen giltig fil mottogs.",
+      "oneFileOnly": "Välj eller dra en Excel-fil i taget.",
+      "failed": "Uppladdningen misslyckades. Kontrollera att filen är en giltig Vault Excel-export.",
+      "requiredSheetMissing": "Excel-filen saknar bladet LifeCycleDefinitionTransitions.",
+      "parseFailed": "Filen kunde inte tolkas.",
+      "noFileReceived": "Ingen fil mottogs.",
+      "unexpected": "Ett oväntat fel inträffade."
+    },
+    "warningsTitle": "Importvarningar"
+  },
+  "viewer": {
+    "title": "Workflow Viewer",
+    "pageTitle": "LifeCycle transition flow",
+    "permissionsIntro": "State permissions kan visas för den valda rollen.",
+    "diagramAria": "LifeCycle transition-diagram"
+  },
+  "legend": {
+    "allowGreen": "Grön",
+    "allow": "Allow",
+    "denyRed": "Röd streckad",
+    "deny": "Deny",
+    "unspecifiedGray": "Grå",
+    "unspecified": "saknad info / ospecificerad",
+    "customJobsOrange": "Orange markering",
+    "customJobs": "Custom JobTypes"
+  },
+  "controls": {
+    "lifecycle": "LifeCycleDefinition",
+    "focusState": "Fokus-state",
+    "view": "Vy",
+    "layout": "Layout",
+    "role": "Roll"
+  },
+  "filters": {
+    "showAllow": "Visa Allow",
+    "showDeny": "Visa Deny",
+    "showUnspecified": "Visa ospecificerad",
+    "showCustomJobs": "Visa Custom JobTypes",
+    "showStatePermissions": "Visa state permissions",
+    "hideUnrelatedStates": "Dölj orelaterade states"
+  },
+  "direction": {
+    "all": "Alla transitions",
+    "from": "Från valt state",
+    "to": "Till valt state",
+    "connected": "Till/från valt state",
+    "textAll": "alla transitions",
+    "textFrom": "från {state}",
+    "textTo": "till {state}",
+    "textConnected": "till/från {state}"
+  },
+  "layout": {
+    "auto": "Auto",
+    "normal": "Normal",
+    "compact": "Kompakt",
+    "large": "Stor"
+  },
+  "toolbar": {
+    "zoomIn": "Zooma in",
+    "zoomOut": "Zooma ut",
+    "zoomReset": "Återställ vy",
+    "focusSelected": "Visa endast valt state",
+    "focusRestore": "Visa föregående vy",
+    "exportHtml": "Exportera HTML"
+  },
+  "details": {
+    "placeholder": "Klicka på ett state, en transition eller en jobbmarkering för att se detaljer.",
+    "state": "State",
+    "transition": "Transition",
+    "type": "Typ",
+    "fromState": "Från state",
+    "toState": "Till state",
+    "role": "Vald roll",
+    "result": "Resultat",
+    "customJobs": "Custom JobTypes",
+    "noCustomJobs": "Inga Custom JobTypes.",
+    "excelRow": "Excel-rad",
+    "security": "Security",
+    "lifecycle": "LifecycleDefinition",
+    "incoming": "Inkommande transitions",
+    "outgoing": "Utgående transitions",
+    "none": "Ingen",
+    "notFound": "Transition hittades inte.",
+    "statePermissions": "State permissions"
+  },
+  "permission": {
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "download": "Download",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "Ospecificerad",
+    "missing": "?"
+  },
+  "table": {
+    "transitionsTitle": "Transitions för vald roll",
+    "permissionsTitle": "State permissions – fullständiga detaljer",
+    "permissionsNote": "Detta avsnitt visar alla roller och alla fyra behörighetstyper för vald LifeCycleDefinition.",
+    "permissionsMissing": "betyder saknad info.",
+    "id": "Id",
+    "fromState": "Från state",
+    "toState": "Till state",
+    "result": "Resultat",
+    "customJobs": "Custom JobTypes",
+    "security": "Security",
+    "state": "State",
+    "role": "Roll"
+  },
+  "summary": {
+    "showing": "Visar",
+    "hidden": "Dold",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "ospecificerad",
+    "customJob": "Custom Job",
+    "customJobs": "Custom Jobs",
+    "statePermissionsHidden": "State permissions: dolda",
+    "statePermissionsRole": "State permissions: för vald roll",
+    "largeLifecycleHint": "Stor lifecycle: Startar med \"Till/från valt state\" för bättre översikt. Välj \"Alla transitions\" för komplett graf."
+  },
+  "export": {
+    "exporting": "Exporterar HTML...",
+    "success": "Exporterade {filename}.",
+    "failed": "Exporten misslyckades.",
+    "sourceLabel": "Källa",
+    "exportedLabel": "Exporterad",
+    "unknownFile": "Okänd fil"
+  },
+  "common": {
+    "unknown": "Okänd",
+    "equals": "="
+  },
+  "vault": {
+    "languageLabel": "Language",
+    "backHome": "Back to home",
+    "loadConfig": "Load Config",
+    "dropTitle": "Drop NTI for Vault Job Config.json here",
+    "dropSubtitle": "or click Load Config above",
+    "topContainers": "Job processor containers",
+    "topDeactivate": "Deactivate job processors",
+    "topFilepaths": "File paths to exclude during job clean up",
+    "hideInactive": "Hide inactive",
+    "showAll": "Show all",
+    "findNext": "Find next",
+    "statusReady": "Ready - load a config file to begin.",
+    "errorJsonOnly": "Only .json files are supported.",
+    "errorEmptyArray": "The configuration file contains an empty array.",
+    "errorInvalidFormat": "The JSON could be read, but the configuration format is invalid.",
+    "errorMissingContainers": "The JSON could be read, but does not contain JobProcessor.JobProcessorContainers.",
+    "errorParsePrefix": "Could not parse JSON:\n",
+    "statusLoaded": "Loaded",
+    "containersCountSuffix": "containers"
+  }
+}

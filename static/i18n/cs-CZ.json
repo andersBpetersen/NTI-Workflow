@@ -1,0 +1,206 @@
+{
+  "language": {
+    "label": "Language"
+  },
+  "home": {
+    "title": "NTI Workflow",
+    "intro": "Internal tools for Vault configuration and lifecycle analysis.",
+    "workflowViewer": {
+      "title": "Workflow Viewer",
+      "description": "Upload Excel output from NTI Vault Dump Config and visualize lifecycle transitions, roles, and state permissions.",
+      "open": "Open Workflow Viewer"
+    },
+    "lifecycleCompare": {
+      "title": "Lifecycle Compare",
+      "description": "Compare two Vault lifecycle exports and find differences.",
+      "comingSoon": "Coming soon"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Analysis tools for Vault configuration.",
+      "comingSoon": "Coming soon"
+    },
+    "vaultConfigViewer": {
+      "title": "NTI for Vault Config",
+      "description": "Browse containers, processors, jobs and settings in an NTI for Vault Job JSON configuration.",
+      "open": "Open Vault Config Viewer"
+    }
+  },
+  "nav": {
+    "backHome": "Back to home"
+  },
+  "upload": {
+    "chooseFile": "Choose Excel file",
+    "dropTitle": "Drag the Excel file here",
+    "dropSubtitle": "or click to select the Excel output file from",
+    "dropSubtitleStrong": "NTI Vault Dump Config",
+    "supportedTypes": "Supported file type: .xlsx",
+    "requiredSheet": "The file must contain the sheet",
+    "optionalSheet": "If the sheet",
+    "optionalSheetSuffix": "exists, state permissions can also be displayed.",
+    "ariaLabel": "Upload Excel output file from NTI Vault Dump Config",
+    "status": {
+      "chooseOrDrop": "Choose or drag the Excel output file from NTI Vault Dump Config.",
+      "uploading": "Uploading {filename}...",
+      "success": "Loaded {count} transitions from {filename}{warnings}.",
+      "warningsSuffix": " ({count} warnings)"
+    },
+    "error": {
+      "invalidFileType": "Only .xlsx files are supported.",
+      "emptyFile": "The file is empty. Choose a valid Vault Excel export.",
+      "fileTooLarge": "The file is too large. Maximum file size is 25 MB.",
+      "noFile": "No valid file was received.",
+      "oneFileOnly": "Choose or drag one Excel file at a time.",
+      "failed": "Upload failed. Check that the file is a valid Vault Excel export.",
+      "requiredSheetMissing": "The Excel file is missing the LifeCycleDefinitionTransitions sheet.",
+      "parseFailed": "The file could not be parsed.",
+      "noFileReceived": "No file received.",
+      "unexpected": "An unexpected error occurred."
+    },
+    "warningsTitle": "Import warnings"
+  },
+  "viewer": {
+    "title": "Workflow Viewer",
+    "pageTitle": "LifeCycle transition flow",
+    "permissionsIntro": "State permissions can be shown for the selected role.",
+    "diagramAria": "LifeCycle transition diagram"
+  },
+  "legend": {
+    "allowGreen": "Green",
+    "allow": "Allow",
+    "denyRed": "Red dashed",
+    "deny": "Deny",
+    "unspecifiedGray": "Gray",
+    "unspecified": "missing info / unspecified",
+    "customJobsOrange": "Orange marker",
+    "customJobs": "Custom JobTypes"
+  },
+  "controls": {
+    "lifecycle": "LifeCycleDefinition",
+    "focusState": "Focus state",
+    "view": "View",
+    "layout": "Layout",
+    "role": "Role"
+  },
+  "filters": {
+    "showAllow": "Show Allow",
+    "showDeny": "Show Deny",
+    "showUnspecified": "Show unspecified",
+    "showCustomJobs": "Show Custom JobTypes",
+    "showStatePermissions": "Show state permissions",
+    "hideUnrelatedStates": "Hide unrelated states"
+  },
+  "direction": {
+    "all": "All transitions",
+    "from": "From selected state",
+    "to": "To selected state",
+    "connected": "To/from selected state",
+    "textAll": "all transitions",
+    "textFrom": "from {state}",
+    "textTo": "to {state}",
+    "textConnected": "to/from {state}"
+  },
+  "layout": {
+    "auto": "Auto",
+    "normal": "Normal",
+    "compact": "Compact",
+    "large": "Large"
+  },
+  "toolbar": {
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "zoomReset": "Reset view",
+    "focusSelected": "Show selected state only",
+    "focusRestore": "Show previous view",
+    "exportHtml": "Export HTML"
+  },
+  "details": {
+    "placeholder": "Click a state, transition, or job marker to view details.",
+    "state": "State",
+    "transition": "Transition",
+    "type": "Type",
+    "fromState": "From state",
+    "toState": "To state",
+    "role": "Selected role",
+    "result": "Result",
+    "customJobs": "Custom JobTypes",
+    "noCustomJobs": "No Custom JobTypes.",
+    "excelRow": "Excel row",
+    "security": "Security",
+    "lifecycle": "LifecycleDefinition",
+    "incoming": "Incoming transitions",
+    "outgoing": "Outgoing transitions",
+    "none": "None",
+    "notFound": "Transition not found.",
+    "statePermissions": "State permissions"
+  },
+  "permission": {
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "download": "Download",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "Unspecified",
+    "missing": "?"
+  },
+  "table": {
+    "transitionsTitle": "Transitions for selected role",
+    "permissionsTitle": "State permissions – full details",
+    "permissionsNote": "This section shows all roles and all four permission types for the selected LifeCycleDefinition.",
+    "permissionsMissing": "means missing info.",
+    "id": "Id",
+    "fromState": "From state",
+    "toState": "To state",
+    "result": "Result",
+    "customJobs": "Custom JobTypes",
+    "security": "Security",
+    "state": "State",
+    "role": "Role"
+  },
+  "summary": {
+    "showing": "Showing",
+    "hidden": "Hidden",
+    "allow": "Allow",
+    "deny": "Deny",
+    "unspecified": "nespecifikov?no",
+    "customJob": "Custom Job",
+    "customJobs": "Custom Jobs",
+    "statePermissionsHidden": "State permissions: hidden",
+    "statePermissionsRole": "State permissions: for selected role",
+    "largeLifecycleHint": "Large lifecycle: Starting with \"To/from selected state\" for a better overview. Select \"All transitions\" for the complete graph."
+  },
+  "export": {
+    "exporting": "Exporting HTML...",
+    "success": "Exported {filename}.",
+    "failed": "Export failed.",
+    "sourceLabel": "Source",
+    "exportedLabel": "Exported",
+    "unknownFile": "Unknown file"
+  },
+  "common": {
+    "unknown": "Unknown",
+    "equals": "="
+  },
+  "vault": {
+    "languageLabel": "Language",
+    "backHome": "Back to home",
+    "loadConfig": "Load Config",
+    "dropTitle": "Drop NTI for Vault Job Config.json here",
+    "dropSubtitle": "or click Load Config above",
+    "topContainers": "Job processor containers",
+    "topDeactivate": "Deactivate job processors",
+    "topFilepaths": "File paths to exclude during job clean up",
+    "hideInactive": "Hide inactive",
+    "showAll": "Show all",
+    "findNext": "Find next",
+    "statusReady": "Ready - load a config file to begin.",
+    "errorJsonOnly": "Only .json files are supported.",
+    "errorEmptyArray": "The configuration file contains an empty array.",
+    "errorInvalidFormat": "The JSON could be read, but the configuration format is invalid.",
+    "errorMissingContainers": "The JSON could be read, but does not contain JobProcessor.JobProcessorContainers.",
+    "errorParsePrefix": "Could not parse JSON:\n",
+    "statusLoaded": "Loaded",
+    "containersCountSuffix": "containers"
+  }
+}

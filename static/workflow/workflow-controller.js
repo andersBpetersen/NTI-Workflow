@@ -1,13 +1,10 @@
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
+const EXCEL_EXTENSIONS = [".xlsx"];
 
 let currentWorkflowPayload = null;
 let currentUploadedFileName = "";
 let uploadInProgress = false;
 
-const homeRoot = document.getElementById("home-root");
-const workflowShell = document.getElementById("workflow-shell");
-const openWorkflowBtn = document.getElementById("open-workflow-btn");
-const backHomeBtn = document.getElementById("back-home-btn");
 const fileInput = document.getElementById("file-input");
 const statusMessage = document.getElementById("status-message");
 const emptyState = document.getElementById("empty-state");
@@ -15,18 +12,15 @@ const viewerRoot = document.getElementById("viewer-root");
 const importWarnings = document.getElementById("importWarnings");
 const exportHtmlBtn = document.getElementById("export-html-btn");
 const excelDropZone = document.getElementById("excel-drop-zone");
-const vaultConfigLink = document.querySelector('a[href="/vault-config/"]');
+const backHomeLink = document.getElementById("back-home-link");
+const vaultConfigLink = document.getElementById("open-vault-config-link");
+const versionChip = document.getElementById("app-version");
 
 function escapeHtml(text) {
-  return String(text)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+  return window.NTIShared.html.escape(text);
 }
 
-function renderImportWarnings(warnings) {
-  if (!importWarnings) return;
+function renderImportWarnings(warnings) {  if (!importWarnings) return;
   if (!warnings || warnings.length === 0) {
     importWarnings.classList.add("hidden");
     importWarnings.innerHTML = "";
@@ -58,61 +52,35 @@ function clearWorkflowData() {
 }
 
 function setStatus(message, type = "idle") {
+  if (!statusMessage) return;
   statusMessage.textContent = message;
   statusMessage.className = "status-msg" + (type !== "idle" ? " " + type : "");
 }
 
-function showHome() {
-  homeRoot.classList.remove("hidden");
-  workflowShell.classList.add("hidden");
-}
-
-function showWorkflow() {
-  homeRoot.classList.add("hidden");
-  workflowShell.classList.remove("hidden");
-}
-
 function resetInitialUiState() {
-  if (homeRoot) homeRoot.classList.remove("hidden");
-  if (workflowShell) workflowShell.classList.add("hidden");
   if (emptyState) emptyState.classList.remove("hidden");
   if (viewerRoot) viewerRoot.classList.add("hidden");
   clearImportWarnings();
   clearWorkflowData();
-  if (statusMessage) {
-    setStatus(t("upload.status.chooseOrDrop"));
-  }
+  setStatus(t("upload.status.chooseOrDrop"));
 }
 
 function isSupportedExcelFile(file) {
-  if (!file || typeof file.name !== "string") {
-    return false;
-  }
-
-  return file.name.toLowerCase().endsWith(".xlsx");
+  return window.NTIShared.files.hasExtension(file, EXCEL_EXTENSIONS);
 }
 
 function validateFileBeforeUpload(file) {
-  if (!isSupportedExcelFile(file)) {
-    return t("upload.error.invalidFileType");
-  }
-  if (file.size === 0) {
-    return t("upload.error.emptyFile");
-  }
-  if (file.size > MAX_UPLOAD_BYTES) {
+  if (!isSupportedExcelFile(file)) return t("upload.error.invalidFileType");
+  if (!file || file.size === 0) return t("upload.error.emptyFile");
+  if (!window.NTIShared.files.validateSize(file, MAX_UPLOAD_BYTES)) {
     return t("upload.error.fileTooLarge");
   }
   return null;
 }
-
 function formatApiError(payload) {
-  if (typeof window.translateApiError === "function") {
-    return translateApiError(payload);
-  }
+  if (typeof window.translateApiError === "function") return translateApiError(payload);
   const detail = payload?.detail;
-  if (typeof detail === "string" && detail.trim()) {
-    return detail;
-  }
+  if (typeof detail === "string" && detail.trim()) return detail;
   return t("upload.error.failed");
 }
 
@@ -128,14 +96,12 @@ function handleSelectedFiles(files) {
     clearWorkflowData();
     return;
   }
-
   if (files.length !== 1) {
     setStatus(t("upload.error.oneFileOnly"), "error");
     clearImportWarnings();
     clearWorkflowData();
     return;
   }
-
   uploadFile(files[0]);
 }
 
@@ -147,7 +113,6 @@ function parseDownloadFilename(contentDisposition) {
 
 async function exportWorkflowHtml() {
   if (!currentWorkflowPayload) return;
-
   const viewerContext =
     typeof window.getWorkflowViewerContext === "function"
       ? window.getWorkflowViewerContext()
@@ -156,9 +121,7 @@ async function exportWorkflowHtml() {
     viewerContext?.selectedLifeCycle ||
     currentWorkflowPayload.lifecycleDefinitions?.[0] ||
     "";
-
   setStatus(t("export.exporting"), "loading");
-
   try {
     const response = await fetch("/api/export/html", {
       method: "POST",
@@ -170,16 +133,12 @@ async function exportWorkflowHtml() {
         viewerContext,
       }),
     });
-
     if (!response.ok) {
       const payload = await response.json();
       throw new Error(formatApiError(payload));
     }
-
     const blob = await response.blob();
-    const filename = parseDownloadFilename(
-      response.headers.get("Content-Disposition"),
-    );
+    const filename = parseDownloadFilename(response.headers.get("Content-Disposition"));
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -194,50 +153,35 @@ async function exportWorkflowHtml() {
 
 async function uploadFile(file) {
   if (uploadInProgress) return;
-
   const validationError = validateFileBeforeUpload(file);
   if (validationError) {
     setStatus(validationError, "error");
     clearImportWarnings();
     clearWorkflowData();
-    fileInput.value = "";
+    if (fileInput) fileInput.value = "";
     excelDropZone?.classList.remove("uploading");
     return;
   }
-
   uploadInProgress = true;
   clearImportWarnings();
   clearWorkflowData();
   excelDropZone?.classList.add("uploading");
   setStatus(t("upload.status.uploading", { filename: file.name }), "loading");
-
   const formData = new FormData();
   formData.append("file", file);
-
   try {
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch("/api/upload", { method: "POST", body: formData });
     const payload = await response.json();
-
-    if (!response.ok) {
-      throw new Error(formatApiError(payload));
-    }
-
-    emptyState.classList.add("hidden");
-    viewerRoot.classList.remove("hidden");
+    if (!response.ok) throw new Error(formatApiError(payload));
+    emptyState?.classList.add("hidden");
+    viewerRoot?.classList.remove("hidden");
     currentWorkflowPayload = payload;
     currentUploadedFileName = file.name;
     setExportEnabled(true);
     initWorkflowViewer(payload);
     renderImportWarnings(payload.meta?.warnings || []);
-
     const warnings = payload.meta?.warnings?.length ?? 0;
-    const warningText =
-      warnings > 0
-        ? t("upload.status.warningsSuffix", { count: warnings })
-        : "";
+    const warningText = warnings > 0 ? t("upload.status.warningsSuffix", { count: warnings }) : "";
     setStatus(
       t("upload.status.success", {
         count: payload.meta.transitionCount,
@@ -247,88 +191,63 @@ async function uploadFile(file) {
       "success",
     );
   } catch (error) {
-    setStatus(error.message, "error");
+    setStatus(error.message || t("upload.error.unexpected"), "error");
     clearImportWarnings();
     clearWorkflowData();
-    emptyState.classList.remove("hidden");
-    viewerRoot.classList.add("hidden");
+    emptyState?.classList.remove("hidden");
+    viewerRoot?.classList.add("hidden");
   } finally {
-    fileInput.value = "";
+    if (fileInput) fileInput.value = "";
     excelDropZone?.classList.remove("uploading");
     setDropZoneActive(false);
     uploadInProgress = false;
   }
 }
 
-openWorkflowBtn.addEventListener("click", () => {
-  showWorkflow();
-});
-
-backHomeBtn.addEventListener("click", () => {
-  showHome();
-});
-
-["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
-  document.addEventListener(eventName, (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-  });
-});
-
-if (excelDropZone) {
-  excelDropZone.addEventListener("dragenter", () => {
-    setDropZoneActive(true);
-  });
-
-  excelDropZone.addEventListener("dragover", () => {
-    setDropZoneActive(true);
-  });
-
-  excelDropZone.addEventListener("dragleave", (event) => {
-    if (!excelDropZone.contains(event.relatedTarget)) {
-      setDropZoneActive(false);
-    }
-  });
-
-  excelDropZone.addEventListener("drop", (event) => {
-    setDropZoneActive(false);
-    handleSelectedFiles(event.dataTransfer?.files);
-  });
-
-  excelDropZone.addEventListener("click", () => {
-    fileInput.click();
-  });
-
-  excelDropZone.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      fileInput.click();
-    }
-  });
+function syncLocaleLinks() {
+  if (typeof getCurrentLocale !== "function") return;
+  const locale = getCurrentLocale() || "en-GB";
+  if (backHomeLink) backHomeLink.href = `/?lang=${encodeURIComponent(locale)}`;
+  if (vaultConfigLink) vaultConfigLink.href = `/vault-config/?lang=${encodeURIComponent(locale)}`;
 }
 
-fileInput.addEventListener("change", (event) => {
-  handleSelectedFiles(event.target.files);
-});
-
-if (exportHtmlBtn) {
-  exportHtmlBtn.addEventListener("click", exportWorkflowHtml);
+async function loadVersion() {
+  if (!versionChip) return;
+  try {
+    const response = await fetch("/api/version");
+    if (!response.ok) return;
+    const payload = await response.json();
+    if (payload?.version) versionChip.textContent = `v${payload.version}`;
+  } catch (_error) {
+    // No-op: badge stays hidden when unavailable.
+  }
 }
 
-async function bootstrapApp() {
+function bindUploadUi() {
+  window.NTIShared.files.preventDocumentDrop();
+  if (excelDropZone) {
+    window.NTIShared.files.bindDropZone({
+      element: excelDropZone,
+      dragOverClass: "drag-over",
+      clickInput: fileInput,
+      onFiles: (files) => handleSelectedFiles(files),
+    });
+  }
+  fileInput?.addEventListener("change", (event) => {
+    handleSelectedFiles(event.target.files);
+  });
+  exportHtmlBtn?.addEventListener("click", exportWorkflowHtml);
+}
+async function bootstrapWorkflowPage() {
   await initI18n();
   bindLocaleSelect();
-  syncVaultConfigLocaleLink();
-  window.addEventListener("nti:locale-changed", syncVaultConfigLocaleLink);
+  syncLocaleLinks();
+  window.addEventListener("nti:locale-changed", syncLocaleLinks);
+  bindUploadUi();
   resetInitialUiState();
+  await loadVersion();
 }
 
-bootstrapApp();
-
-function syncVaultConfigLocaleLink() {
-  if (!vaultConfigLink || typeof getCurrentLocale !== "function") return;
-  const locale = getCurrentLocale() || "en-GB";
-  vaultConfigLink.href = `/vault-config/?lang=${encodeURIComponent(locale)}`;
-}
+bootstrapWorkflowPage();
 
 window.isSupportedExcelFile = isSupportedExcelFile;
