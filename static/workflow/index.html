@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/static/shared/ui/forms.css">
   <link rel="stylesheet" href="/static/shared/ui/buttons.css">
   <link rel="stylesheet" href="/static/shared/ui/feedback.css">
+  <link rel="stylesheet" href="/static/shared/ui/file-dropzone.css">
   <link rel="stylesheet" href="/static/app-shell.css">
   <link rel="stylesheet" href="/static/viewer.css">
 </head>
@@ -35,29 +36,29 @@
     <span id="status-message" class="status-msg" data-i18n="upload.status.chooseOrDrop">Choose or drag the Excel output file from NTI Vault Dump Config.</span>
   </div>
 
-  <div id="empty-state">
+  <div id="empty-state" class="nti-file-dropzone-host">
     <div
       id="excel-drop-zone"
-      class="excel-drop-zone nti-drop-zone"
+      class="nti-file-dropzone nti-drop-zone"
       role="button"
       tabindex="0"
       data-i18n-aria-label="upload.ariaLabel"
       aria-label="Upload Excel output file from NTI Vault Dump Config"
     >
-      <div class="drop-zone-icon" aria-hidden="true">⇩</div>
+      <div class="nti-file-dropzone-icon" aria-hidden="true">⇩</div>
 
-      <h2 data-i18n="upload.dropTitle">Drag the Excel file here</h2>
+      <h2 class="nti-file-dropzone-title" data-i18n="upload.dropTitle">Drag the Excel file here</h2>
 
-      <p>
+      <p class="nti-file-dropzone-description">
         <span data-i18n="upload.dropSubtitle">or click to select the Excel output file from</span>
         <strong data-i18n="upload.dropSubtitleStrong">NTI Vault Dump Config</strong>.
       </p>
 
-      <p class="drop-zone-file-info" data-i18n="upload.supportedTypes">
+      <p class="nti-file-dropzone-meta" data-i18n="upload.supportedTypes">
         Supported file type: .xlsx
       </p>
 
-      <p class="drop-zone-requirements">
+      <p class="nti-file-dropzone-requirements">
         <span data-i18n="upload.requiredSheet">The file must contain the sheet</span>
         <strong>LifeCycleDefinitionTransitions</strong>.
         <span data-i18n="upload.optionalSheet">If the sheet</span>

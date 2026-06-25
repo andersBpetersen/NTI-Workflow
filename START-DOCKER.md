@@ -6,7 +6,7 @@
 
 ## Hurtig start (drift fra Docker Hub)
 
-Image-tag i `.env.example`: `tickjf/nti-workflow:0.7.0`
+Image-tag i `.env.example`: `tickjf/nti-workflow:0.7.1`
 
 1. Udpak denne zip til en mappe, fx `C:\NTI Workflow`
 2. Åbn PowerShell i mappen

@@ -23,7 +23,7 @@
     "vaultConfigViewer": {
       "title": "NTI for Vault Config",
       "description": "Gennemse containere, processorer, jobs og indstillinger i en NTI for Vault Job JSON-konfiguration.",
-      "open": "?bn Vault Config Viewer"
+      "open": "Åbn Vault Config Viewer"
     }
   },
   "nav": {
@@ -185,22 +185,24 @@
   "vault": {
     "languageLabel": "Sprog",
     "backHome": "Tilbage til forsiden",
-    "loadConfig": "Indl?s konfiguration",
-    "dropTitle": "Tr?k en NTI for Vault Job JSON-fil hertil",
-    "dropSubtitle": "eller klik p? Indl?s konfiguration ovenfor",
+    "loadConfig": "Indlæs konfiguration",
+    "dropTitle": "Træk en NTI for Vault Job JSON-fil hertil",
+    "dropSubtitle": "eller klik for at vælge en konfigurationsfil",
+    "supportedTypes": "Understøttet filtype: .json",
+    "ariaLabel": "Upload NTI for Vault Job JSON-konfiguration",
     "topContainers": "Jobprocessor-containere",
     "topDeactivate": "Deaktiver jobprocessorer",
     "topFilepaths": "Filstier der udelades ved joboprydning",
     "hideInactive": "Skjul inaktive",
     "showAll": "Vis alle",
-    "findNext": "Find n?ste",
-    "statusReady": "Klar - indl?s en konfigurationsfil for at begynde.",
-    "errorJsonOnly": "Kun .json-filer underst?ttes.",
+    "findNext": "Find næste",
+    "statusReady": "Klar - indlæs en konfigurationsfil for at begynde.",
+    "errorJsonOnly": "Kun .json-filer understøttes.",
     "errorEmptyArray": "Konfigurationsfilen indeholder et tomt array.",
-    "errorInvalidFormat": "JSON-filen kunne l?ses, men konfigurationen har et ugyldigt format.",
-    "errorMissingContainers": "JSON-filen kunne l?ses, men indeholder ikke JobProcessor.JobProcessorContainers.",
-    "errorParsePrefix": "JSON-filen kunne ikke l?ses:\n",
-    "statusLoaded": "Indl?st",
+    "errorInvalidFormat": "JSON-filen kunne læses, men konfigurationen har et ugyldigt format.",
+    "errorMissingContainers": "JSON-filen kunne læses, men indeholder ikke JobProcessor.JobProcessorContainers.",
+    "errorParsePrefix": "JSON-filen kunne ikke læses:\n",
+    "statusLoaded": "Indlæst",
     "containersCountSuffix": "containere"
   }
 }

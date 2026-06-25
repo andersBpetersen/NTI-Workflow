@@ -86,7 +86,7 @@ function formatApiError(payload) {
 
 function setDropZoneActive(active) {
   if (!excelDropZone) return;
-  excelDropZone.classList.toggle("drag-over", active);
+  excelDropZone.classList.toggle("is-drag-over", active);
 }
 
 function handleSelectedFiles(files) {
@@ -228,7 +228,7 @@ function bindUploadUi() {
   if (excelDropZone) {
     window.NTIShared.files.bindDropZone({
       element: excelDropZone,
-      dragOverClass: "drag-over",
+      dragOverClass: "is-drag-over",
       clickInput: fileInput,
       onFiles: (files) => handleSelectedFiles(files),
     });

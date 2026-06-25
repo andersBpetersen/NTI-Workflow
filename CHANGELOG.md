@@ -2,6 +2,15 @@
 
 Alle bemærkelsesværdige ændringer i dette projekt dokumenteres i denne fil.
 
+## [0.7.1] - 2026-06-25
+
+### Fixed
+
+- Rettet beskadigede danske tegn i app shell og Vault Config Viewer.
+- Sikret UTF-8-kodning for aktive locale-, HTML- og JavaScript-filer.
+- Tilføjet regressionstest for danske specialtegn.
+- Ensrettet uploadområderne i Workflow Viewer og Vault Config Viewer.
+
 ## [0.7.0] - 2026-06-25
 
 ### Added

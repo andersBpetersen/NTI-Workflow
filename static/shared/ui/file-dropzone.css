@@ -1,0 +1,107 @@
+/* Shared file upload dropzone — used by Workflow and Vault Config viewers */
+
+.nti-file-dropzone-host {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 20px;
+}
+
+.nti-file-dropzone,
+.nti-drop-zone {
+  width: min(760px, calc(100% - 40px));
+  min-height: 220px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  text-align: center;
+  border: 2px dashed #94a3b8;
+  border-radius: 14px;
+  background: var(--nti-color-surface, #fff);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.nti-file-dropzone:hover,
+.nti-drop-zone:hover,
+.nti-file-dropzone:focus-visible,
+.nti-drop-zone:focus-visible,
+.nti-file-dropzone.is-drag-over,
+.nti-drop-zone.is-drag-over,
+.nti-file-dropzone.drag-over,
+.nti-drop-zone.drag-over {
+  border-color: var(--nti-color-primary, #2563eb);
+  background: #eff6ff;
+  outline: none;
+}
+
+.nti-file-dropzone.is-drag-over,
+.nti-drop-zone.is-drag-over,
+.nti-file-dropzone.drag-over,
+.nti-drop-zone.drag-over {
+  background: #dbeafe;
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.16);
+  transform: scale(1.01);
+}
+
+.nti-file-dropzone:focus-visible,
+.nti-drop-zone:focus-visible {
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.nti-file-dropzone.uploading,
+.nti-drop-zone.uploading {
+  cursor: progress;
+  opacity: 0.8;
+}
+
+.nti-file-dropzone-icon {
+  font-size: 44px;
+  line-height: 1;
+  color: var(--nti-color-primary, #2563eb);
+  margin-bottom: 12px;
+}
+
+.nti-file-dropzone-title {
+  margin: 0 0 12px;
+  font-size: 24px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.nti-file-dropzone-description {
+  margin: 8px 0;
+  line-height: 1.5;
+  color: inherit;
+}
+
+.nti-file-dropzone-meta {
+  margin: 8px 0;
+  color: #475569;
+}
+
+.nti-file-dropzone-requirements {
+  max-width: 620px;
+  margin: 12px auto 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .nti-file-dropzone,
+  .nti-drop-zone {
+    width: calc(100% - 24px);
+    padding: 32px 20px;
+    min-height: 180px;
+  }
+
+  .nti-file-dropzone-title {
+    font-size: 20px;
+  }
+}

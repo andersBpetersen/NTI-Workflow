@@ -20,6 +20,7 @@ SHARED_CSS = [
     "shared/ui/forms.css",
     "shared/ui/feedback.css",
 ]
+DROPZONE_CSS = "shared/ui/file-dropzone.css"
 SHARED_JS = [
     "shared/utils/html.js",
     "shared/utils/files.js",
@@ -60,7 +61,7 @@ def test_homepage_loads_shared_assets(client: TestClient) -> None:
 
 def test_workflow_page_loads_shared_assets(client: TestClient) -> None:
     html = client.get("/workflow/").text
-    for relative_path in SHARED_CSS + SHARED_JS:
+    for relative_path in SHARED_CSS + SHARED_JS + [DROPZONE_CSS]:
         assert f"/static/{relative_path}" in html
 
 
@@ -68,6 +69,7 @@ def test_vault_config_page_loads_shared_assets(client: TestClient) -> None:
     html = client.get("/vault-config/").text
     assert "/static/shared/utils/html.js" in html
     assert "/static/shared/utils/files.js" in html
+    assert f"/static/{DROPZONE_CSS}" in html
     assert "window.NTIShared.files.bindDropZone" in html
 
 
@@ -81,14 +83,15 @@ def test_workflow_page_still_contains_upload_markup(client: TestClient) -> None:
     html = client.get("/workflow/").text
     assert 'id="file-input"' in html
     assert 'accept=".xlsx' in html
-    assert 'class="excel-drop-zone nti-drop-zone"' in html
+    assert 'class="nti-file-dropzone nti-drop-zone"' in html
 
 
 def test_vault_config_page_still_contains_json_accept_and_readfile(client: TestClient) -> None:
     html = client.get("/vault-config/").text
     assert 'accept=".json' in html
     assert "function readFile(file)" in html
-    assert 'hasExtension(file, [".json"])' in html
+    assert 'class="nti-file-dropzone"' in html
+    assert "nti-file-dropzone-icon" in html
 
 
 def test_workflow_uses_shared_file_validation_helpers() -> None:

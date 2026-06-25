@@ -186,8 +186,8 @@
     "languageLabel": "Idioma",
     "backHome": "Voltar ao in?cio",
     "loadConfig": "Carregar configura??o",
-    "dropTitle": "Arraste o arquivo JSON do NTI for Vault Job aqui",
-    "dropSubtitle": "ou clique em Carregar configura??o acima",
+    "dropTitle": "Drag an NTI for Vault Job JSON file here",
+    "dropSubtitle": "or click to select a configuration file",
     "topContainers": "Cont?ineres de processador de job",
     "topDeactivate": "Desativar processadores de job",
     "topFilepaths": "Caminhos exclu?dos na limpeza de jobs",
@@ -201,6 +201,8 @@
     "errorMissingContainers": "O JSON foi lido, mas n?o cont?m JobProcessor.JobProcessorContainers.",
     "errorParsePrefix": "N?o foi poss?vel ler o JSON:\n",
     "statusLoaded": "Carregado",
-    "containersCountSuffix": "cont?ineres"
+    "containersCountSuffix": "cont?ineres",
+    "supportedTypes": "Supported file type: .json",
+    "ariaLabel": "Upload NTI for Vault Job configuration JSON file"
   }
 }

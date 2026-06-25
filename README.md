@@ -1,6 +1,6 @@
 # NTI Workflow
 
-**Aktuel version: 0.7.0**
+**Aktuel version: 0.7.1**
 
 Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. Visualiserer lifecycle transitions fra Vault Excel-eksport. Ingen database og ingen login.
 
@@ -29,6 +29,8 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 - Tydelig visning af import-advarsler efter upload
 - Enkel zoom på diagrammet (ind/ud/nulstil)
 - Eksport til standalone HTML (offline til undervisning/review)
+
+**v0.7.1** – Rettet beskadigede danske tegn (æ/ø/å) i app shell og Vault Config locale-tekster.
 
 **v0.7.0** – Modulær arkitektur: app shell, Workflow og Vault Config som separate sider; fælles i18n og shared frontend; backend opdelt i routes/models/services uden API-brud.
 
@@ -96,6 +98,8 @@ Se **[DEPLOY.md](DEPLOY.md)** for komplet guide til IT/drift (Docker, firewall, 
 
 Se **[PUBLISH.md](PUBLISH.md)** for build, tag og push til Docker registry ([tickjf/nti-workflow](https://hub.docker.com/r/tickjf/nti-workflow/)).
 
+Se **[docs/release-notes-0.7.1.md](docs/release-notes-0.7.1.md)** for release 0.7.1.
+
 Se **[docs/release-notes-0.7.0.md](docs/release-notes-0.7.0.md)** for release 0.7.0.
 
 Se **[CHANGELOG.md](CHANGELOG.md)** for versionshistorik.
@@ -151,8 +155,8 @@ docker compose logs -f
 
 ```powershell
 cd "C:\GitHub\NTI Workflow"
-docker build -t tickjf/nti-workflow:0.7.0 .
-docker run --rm -p 8000:8000 tickjf/nti-workflow:0.7.0
+docker build -t tickjf/nti-workflow:0.7.1 .
+docker run --rm -p 8000:8000 tickjf/nti-workflow:0.7.1
 ```
 
 Kør i baggrunden med genstart:
@@ -215,7 +219,7 @@ Returnerer `{"status":"ok"}`.
 Returnerer den centrale applikationsversion:
 
 ```json
-{"version":"0.7.0"}
+{"version":"0.7.1"}
 ```
 
 ### `POST /api/upload`

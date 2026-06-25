@@ -1,4 +1,4 @@
-"""Release 0.7.0 version and contract verification tests."""
+"""Release 0.7.1 version and contract verification tests."""
 
 from __future__ import annotations
 
@@ -40,30 +40,30 @@ def client() -> TestClient:
 
 
 def test_app_version_constant() -> None:
-    assert APP_VERSION == "0.7.0"
+    assert APP_VERSION == "0.7.1"
 
 
 def test_api_version_endpoint(client: TestClient) -> None:
     response = client.get("/api/version")
     assert response.status_code == 200
-    assert response.json() == {"version": "0.7.0"}
+    assert response.json() == {"version": "0.7.1"}
 
 
 def test_openapi_info_version(client: TestClient) -> None:
     openapi = client.get("/openapi.json").json()
-    assert openapi["info"]["version"] == "0.7.0"
+    assert openapi["info"]["version"] == "0.7.1"
 
 
 def test_homepage_fetches_version(client: TestClient) -> None:
     html = client.get("/").text
     assert 'id="app-version"' in html
     assert "/api/version" in (ROOT / "static" / "app-shell.js").read_text(encoding="utf-8")
-    assert client.get("/api/version").json()["version"] == "0.7.0"
+    assert client.get("/api/version").json()["version"] == "0.7.1"
 
 
 def test_env_example_image_tag() -> None:
     text = ENV_EXAMPLE.read_text(encoding="utf-8")
-    assert "tickjf/nti-workflow:0.7.0" in text
+    assert "tickjf/nti-workflow:0.7.1" in text
     assert "0.6.6" not in text
 
 
@@ -73,7 +73,7 @@ def test_active_deploy_docs_reference_current_version(doc_path: Path) -> None:
     if doc_path.name == "START-DOCKER.md":
         # Uses compose + .env.example; no hardcoded tag required
         return
-    assert "0.7.0" in text or "NTI_WORKFLOW_IMAGE" in text
+    assert "0.7.1" in text or "NTI_WORKFLOW_IMAGE" in text
     assert "0.6.6" not in text
 
 
@@ -98,8 +98,8 @@ def test_openapi_contract_paths_unchanged_except_version(client: TestClient) -> 
     contract = json.loads(OPENAPI_CONTRACT.read_text(encoding="utf-8"))
     live = client.get("/openapi.json").json()
 
-    assert contract["info"]["version"] == "0.7.0"
-    assert live["info"]["version"] == "0.7.0"
+    assert contract["info"]["version"] == "0.7.1"
+    assert live["info"]["version"] == "0.7.1"
 
     for path in RELEVANT_OPENAPI_PATHS:
         assert path in contract["paths"]

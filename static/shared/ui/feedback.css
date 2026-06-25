@@ -23,33 +23,3 @@
   color: var(--nti-color-muted);
   text-align: center;
 }
-
-.nti-drop-zone {
-  border: 2px dashed #94a3b8;
-  border-radius: 14px;
-  background: var(--nti-color-surface);
-  cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
-}
-
-.nti-drop-zone:hover,
-.nti-drop-zone:focus-visible,
-.nti-drop-zone.drag-over {
-  border-color: var(--nti-color-primary);
-  background: #eff6ff;
-  outline: none;
-}
-
-.nti-drop-zone.drag-over {
-  background: #dbeafe;
-  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.16);
-}
-
-.nti-drop-zone.uploading {
-  cursor: progress;
-  opacity: 0.8;
-}

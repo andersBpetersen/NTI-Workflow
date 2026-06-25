@@ -4,7 +4,7 @@
 #empty-state.hidden{display:none!important}
 .upload-bar{padding:14px 32px;background:#fff;border-bottom:1px solid #ddd;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .upload-bar h1{margin:0;font-size:20px;flex:1}
-#empty-state{padding:48px 32px;color:var(--muted);text-align:center}
+#empty-state{padding:0;color:var(--muted)}
 header.viewer-header{padding:24px 32px;background:#fff;border-bottom:1px solid #ddd}
 main.viewer-main{padding:24px 32px 44px}
 header.viewer-header h1{margin:0 0 8px;font-size:26px}
@@ -107,14 +107,6 @@ td.none{background:#f3f4f6;color:#6b7280}
 .tableWrap{overflow:auto;max-height:620px;border:1px solid #ddd}
 .permCell{font-weight:700}
 .note{font-size:13px;color:var(--muted);margin:8px 0 12px}
-.excel-drop-zone{width:min(760px,calc(100% - 40px));margin:46px auto;padding:48px 32px;text-align:center}
-.excel-drop-zone:focus-visible{box-shadow:0 0 0 4px rgba(37,99,235,.12)}
-.excel-drop-zone.drag-over{transform:scale(1.01)}
-.drop-zone-icon{font-size:44px;line-height:1;color:#2563eb;margin-bottom:12px}
-.excel-drop-zone h2{margin:0 0 12px;font-size:24px}
-.excel-drop-zone p{margin:8px 0;line-height:1.5}
-.drop-zone-file-info{color:#475569}
-.drop-zone-requirements{max-width:620px;margin-left:auto!important;margin-right:auto!important;color:#64748b;font-size:14px}
 .layout-hint{color:var(--muted);font-size:13px}
 svg.density-dense .edge.allow{stroke-width:3.5}
 svg.density-dense .edge.deny{stroke-width:2.2}

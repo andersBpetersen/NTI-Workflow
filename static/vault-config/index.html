@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>NTI for Vault Job Viewer</title>
+<link rel="stylesheet" href="/static/shared/ui/tokens.css">
+<link rel="stylesheet" href="/static/shared/ui/file-dropzone.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size:12px;background:#ececec;color:#1a1a1a;height:100vh;display:flex;flex-direction:column;overflow:hidden}
@@ -15,12 +17,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size:12px;background:#e
 .locale-control{display:flex;align-items:center;gap:6px;font-size:11px}
 .locale-control select{font-size:11px;padding:2px 6px;border:1px solid #777;border-radius:2px;background:#fff;color:#111}
 
-#loadScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
-.drop-zone{border:2px dashed #aaa;border-radius:8px;padding:40px 60px;text-align:center;color:#666;cursor:pointer;transition:all .2s;background:white}
-.drop-zone:hover,.drop-zone.drag-over{border-color:#3498db;background:#f0f8ff;color:#3498db}
-.drop-zone .dz-icon{font-size:36px;margin-bottom:10px}
-.drop-zone p{font-size:13px;margin-bottom:4px}
-
+#loadScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px}
 #app{flex:1;display:none;flex-direction:column;overflow:hidden}
 
 .tab-bar{display:flex;background:#d8d8d8;border-bottom:1px solid #b0b0b0;flex-shrink:0;padding:2px 4px 0}
@@ -134,11 +131,19 @@ input[type=text],select,textarea{font-size:12px;font-family:inherit}
   <label class="btn-load">Indlæs konfiguration<input type="file" id="fileInput" accept=".json" style="display:none"></label>
 </div>
 
-<div id="loadScreen">
-  <div class="drop-zone" id="dropZone">
-    <div class="dz-icon">📂</div>
-    <p><strong>Træk en NTI for Vault Job JSON-fil hertil</strong></p>
-    <p style="font-size:11px;color:#999;margin-top:6px">eller klik på <strong>Indlæs konfiguration</strong> ovenfor</p>
+<div id="loadScreen" class="nti-file-dropzone-host">
+  <div
+    id="dropZone"
+    class="nti-file-dropzone"
+    role="button"
+    tabindex="0"
+    data-i18n-aria-label="vault.ariaLabel"
+    aria-label="Upload NTI for Vault Job configuration JSON file"
+  >
+    <div class="nti-file-dropzone-icon" aria-hidden="true">⇩</div>
+    <h2 class="nti-file-dropzone-title" data-i18n="vault.dropTitle">Drag an NTI for Vault Job JSON file here</h2>
+    <p class="nti-file-dropzone-description" data-i18n="vault.dropSubtitle">or click to select a configuration file</p>
+    <p class="nti-file-dropzone-meta" data-i18n="vault.supportedTypes">Supported file type: .json</p>
   </div>
 </div>
 
@@ -257,11 +262,12 @@ const S = {
 
 function applyVaultLocaleTexts() {
   const currentLocale = typeof window.getCurrentLocale === "function" ? window.getCurrentLocale() : "en-GB";
+  if (typeof window.applyTranslations === "function") {
+    window.applyTranslations();
+  }
   document.getElementById("localeLabel").textContent = vt("languageLabel", "Language");
   document.getElementById("back-home-link").textContent = vt("backHome", "Back to home");
   document.querySelector(".btn-load").childNodes[0].nodeValue = vt("loadConfig", "Load Config");
-  document.querySelector("#dropZone strong").textContent = vt("dropTitle", "Drop NTI for Vault Job Config.json here");
-  document.querySelector("#dropZone p:nth-of-type(2)").textContent = vt("dropSubtitle", "or click Load Config above");
   const topTabs = document.querySelectorAll("#topTabBar .tab-btn");
   if (topTabs[0]) topTabs[0].textContent = vt("topContainers", "Job processor containers");
   if (topTabs[1]) topTabs[1].textContent = vt("topDeactivate", "Deactivate job processors");
@@ -301,7 +307,7 @@ function bindVaultFileUi() {
   });
   window.NTIShared.files.bindDropZone({
     element: dropZone,
-    dragOverClass: "drag-over",
+    dragOverClass: "is-drag-over",
     clickInput: fileInput,
     onFiles: (files) => {
       if (files && files[0]) readFile(files[0]);
