@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from app.export_html import (
+from app.services.workflow.export_html import (
     build_export_filename,
     build_standalone_html,
     embed_json,

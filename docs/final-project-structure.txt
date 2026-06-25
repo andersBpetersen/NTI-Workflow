@@ -1,0 +1,80 @@
+NTI Workflow/  # root
+  app/  # runtime
+    __init__.py
+    main.py
+    core/
+      __init__.py
+      settings.py
+      version.py
+    models/
+      __init__.py
+      workflow.py
+    routes/
+      __init__.py
+      pages.py
+      system.py
+      workflow_api.py
+    services/
+      __init__.py
+      workflow/
+        __init__.py
+        export_html.py
+        export_service.py
+        parser.py
+        upload.py
+  static/  # runtime
+    index.html
+    app-shell.js
+    app-shell.css
+    i18n.js
+    viewer.js
+    viewer.css
+    i18n/
+      cs-CZ.json, da-DK.json, de-DE.json, en-GB.json, es-ES.json
+      fi-FI.json, fr-FR.json, it-IT.json, nl-NL.json, no-NO.json
+      pl-PL.json, pt-BR.json, sv-SE.json
+    shared/
+      ui/  # tokens, buttons, forms, feedback
+      utils/  # html, files, dom
+    workflow/
+      index.html
+      workflow-controller.js
+    vault-config/
+      index.html
+      vault-config.css
+  samples/  # fixtures
+    sample-lifecycle.xlsx
+    fixture-vault-job-config.json
+  scripts/  # runtime helpers
+    create_sample_excel.py
+    publish-docker.ps1
+  tests/  # tests
+    test_api.py
+    test_backend_structure.py
+    test_cleanup_phase6.py
+    test_export_html.py
+    test_i18n_locales.py
+    test_parser.py
+    test_routes_split.py
+    test_shared_frontend.py
+    test_vault_config.py
+  docs/  # docs
+    architecture.md
+    backend-architecture.md
+    i18n.md
+    shared-frontend.md
+    openapi-contract.json
+    refactor-phase-*.md
+    refactor-history/phase-5/
+    final-project-structure.txt
+  Dockerfile  # deployment
+  docker-compose.yml
+  docker-compose.prod.yml
+  .dockerignore
+  .env.example
+  requirements.txt
+  requirements-dev.txt
+  pytest.ini
+  README.md, DEPLOY.md, PUBLISH.md, START-DOCKER.md
+
+Excluded from tree: .git, .venv, __pycache__, .pytest_cache, review-export/, *.zip, _xlam*

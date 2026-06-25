@@ -88,6 +88,8 @@ Se **[docs/i18n.md](docs/i18n.md)** for i18n-registry, fallback, normalisering o
 
 Se **[docs/shared-frontend.md](docs/shared-frontend.md)** for shared CSS/JS utilities og modulgrænser.
 
+Se **[docs/architecture.md](docs/architecture.md)** for samlet arkitektur (moduler, API-flow, grænser).
+
 Se **[docs/backend-architecture.md](docs/backend-architecture.md)** for backend-moduler, routers og services.
 
 Installér [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) og sørg for at Docker kører.
@@ -264,18 +266,28 @@ Tredjepartslicenser: se [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ```
 app/
-  main.py          # FastAPI endpoints
-  parser.py        # Excel parsing (openpyxl)
-  export_html.py   # Standalone HTML export
+  main.py                    # FastAPI app, routers, static mount
+  core/                      # version, settings
+  routes/                    # pages, system, workflow_api
+  models/                    # Pydantic API-modeller
+  services/workflow/         # parser, export, upload
 static/
-  index.html       # Upload UI
-  viewer.js        # VBA-kompatibel SVG-viewer
-  viewer.css
-  app.js           # Upload-logik
+  index.html                 # App shell (forside)
+  app-shell.js / .css
+  workflow/                  # Workflow Viewer
+  vault-config/              # Vault Config Viewer
+  shared/                    # Delt UI + utilities
+  i18n.js + i18n/*.json      # Oversættelser
+  viewer.js / viewer.css     # Workflow-diagram
+samples/
+  sample-lifecycle.xlsx      # Test/workflow fixture
 scripts/
   create_sample_excel.py
 tests/
-  test_parser.py
+docs/
+  architecture.md            # Samlet arkitektur
 Dockerfile
 requirements.txt
 ```
+
+Se [docs/architecture.md](docs/architecture.md) og [docs/final-project-structure.txt](docs/final-project-structure.txt) for detaljer.

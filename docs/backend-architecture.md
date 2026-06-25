@@ -41,12 +41,7 @@ Routere inkluderes i `main.py` **før** static mount, så side-routes og API ikk
 - **Route**: modtager HTTP-input, kalder service, returnerer `Response` / `HTTPException`
 - **Service**: validering, parsing, HTML-generering — kender ikke FastAPI request-objekter (undtagen `UploadFile` i upload-laget for minimal ændring)
 
-## Compatibility shims
-
-Eksisterende imports bevares:
-
-- `app/parser.py` → re-eksporterer `app.services.workflow.parser`
-- `app/export_html.py` → re-eksporterer `app.services.workflow.export_html`
+Importer services direkte, fx `from app.services.workflow.parser import parse_transitions_excel`.
 
 ## Core
 
@@ -75,4 +70,5 @@ Undgå at lægge forretningslogik tilbage i `main.py`.
 
 - [i18n](i18n.md)
 - [Shared frontend](shared-frontend.md)
+- [Arkitektur (samlet)](architecture.md)
 - [Fase 5 slutrapport](refactor-phase-5-backend-report.md)

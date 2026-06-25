@@ -9,11 +9,10 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.parser import parse_result_to_dict, parse_transitions_excel
+from app.services.workflow.parser import parse_result_to_dict, parse_transitions_excel
 
 SAMPLE_FILE = Path(__file__).resolve().parent.parent / "samples" / "sample-lifecycle.xlsx"
-OPENAPI_BEFORE = Path(__file__).resolve().parent.parent / "docs" / "openapi-before-phase-5.json"
-OPENAPI_AFTER = Path(__file__).resolve().parent.parent / "docs" / "openapi-after-phase-5.json"
+OPENAPI_CONTRACT = Path(__file__).resolve().parent.parent / "docs" / "openapi-contract.json"
 
 RELEVANT_OPENAPI_PATHS = {
     "/health",
@@ -103,33 +102,23 @@ def test_parser_output_structure_unchanged() -> None:
     assert "lifecycleDefinitions" in payload
 
 
-def test_openapi_relevant_paths_match_baseline(client: TestClient) -> None:
-    if not OPENAPI_BEFORE.exists():
-        pytest.skip("openapi-before-phase-5.json not found")
+def test_openapi_relevant_paths_match_contract(client: TestClient) -> None:
+    if not OPENAPI_CONTRACT.exists():
+        pytest.skip("openapi-contract.json not found")
 
-    before = json.loads(OPENAPI_BEFORE.read_text(encoding="utf-8"))
-    after = client.get("/openapi.json").json()
+    contract = json.loads(OPENAPI_CONTRACT.read_text(encoding="utf-8"))
+    live = client.get("/openapi.json").json()
 
     for path in RELEVANT_OPENAPI_PATHS:
-        assert path in before["paths"]
-        assert path in after["paths"]
-        for method in before["paths"][path]:
-            assert method in after["paths"][path]
-            before_op = before["paths"][path][method]
-            after_op = after["paths"][path][method]
-            assert before_op.get("parameters") == after_op.get("parameters")
-            assert before_op.get("requestBody") == after_op.get("requestBody")
-            for status, before_resp in before_op.get("responses", {}).items():
-                after_resp = after_op.get("responses", {}).get(status)
-                assert after_resp is not None
-                assert before_resp.get("content") == after_resp.get("content")
-
-
-def test_openapi_after_snapshot_saved(client: TestClient) -> None:
-    """Persist post-refactor OpenAPI for documentation comparison."""
-    if OPENAPI_AFTER.exists():
-        return
-    OPENAPI_AFTER.write_text(
-        json.dumps(client.get("/openapi.json").json(), indent=2, ensure_ascii=False),
-        encoding="utf-8",
-    )
+        assert path in contract["paths"]
+        assert path in live["paths"]
+        for method in contract["paths"][path]:
+            assert method in live["paths"][path]
+            contract_op = contract["paths"][path][method]
+            live_op = live["paths"][path][method]
+            assert contract_op.get("parameters") == live_op.get("parameters")
+            assert contract_op.get("requestBody") == live_op.get("requestBody")
+            for status, contract_resp in contract_op.get("responses", {}).items():
+                live_resp = live_op.get("responses", {}).get(status)
+                assert live_resp is not None
+                assert contract_resp.get("content") == live_resp.get("content")

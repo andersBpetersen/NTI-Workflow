@@ -6,7 +6,11 @@ from pathlib import Path
 import pytest
 from openpyxl import Workbook
 
-from app.parser import TransitionParseError, parse_result_to_dict, parse_transitions_excel
+from app.services.workflow.parser import (
+    TransitionParseError,
+    parse_result_to_dict,
+    parse_transitions_excel,
+)
 
 SAMPLE_FILE = Path(__file__).resolve().parent.parent / "samples" / "sample-lifecycle.xlsx"
 
