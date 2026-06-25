@@ -88,6 +88,8 @@ Se **[docs/i18n.md](docs/i18n.md)** for i18n-registry, fallback, normalisering o
 
 Se **[docs/shared-frontend.md](docs/shared-frontend.md)** for shared CSS/JS utilities og modulgrænser.
 
+Se **[docs/backend-architecture.md](docs/backend-architecture.md)** for backend-moduler, routers og services.
+
 Installér [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) og sørg for at Docker kører.
 
 ### Lokal udvikling (build fra kildekode)
