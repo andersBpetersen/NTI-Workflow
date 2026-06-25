@@ -1,6 +1,16 @@
 # NTI Workflow
 
-Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. Visualiserer lifecycle transitions fra Vault Excel-eksport. Ingen database og ingen login i første version.
+**Aktuel version: 0.7.0**
+
+Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. Visualiserer lifecycle transitions fra Vault Excel-eksport. Ingen database og ingen login.
+
+## Moduler
+
+| Modul | Route | Beskrivelse |
+|-------|-------|-------------|
+| App shell | `/` | Forside, sprogvalg, navigation |
+| Workflow Viewer | `/workflow/` | Excel-upload, diagram, HTML-eksport |
+| Vault Config Viewer | `/vault-config/` | NTI for Vault Job JSON (lokalt i browseren) |
 
 ## Funktioner
 
@@ -19,6 +29,8 @@ Intern webservice der erstatter Excel VBA add-in'et `NTI_Workflow_Ver_1.xlam`. V
 - Tydelig visning af import-advarsler efter upload
 - Enkel zoom på diagrammet (ind/ud/nulstil)
 - Eksport til standalone HTML (offline til undervisning/review)
+
+**v0.7.0** – Modulær arkitektur: app shell, Workflow og Vault Config som separate sider; fælles i18n og shared frontend; backend opdelt i routes/models/services uden API-brud.
 
 **v0.6.4** – Samlet UI-opdatering med drag-and-drop, forenklede state permissions, forbedret kontrollayout og ombrudte state-navne.
 
@@ -84,6 +96,10 @@ Se **[DEPLOY.md](DEPLOY.md)** for komplet guide til IT/drift (Docker, firewall, 
 
 Se **[PUBLISH.md](PUBLISH.md)** for build, tag og push til Docker registry ([tickjf/nti-workflow](https://hub.docker.com/r/tickjf/nti-workflow/)).
 
+Se **[docs/release-notes-0.7.0.md](docs/release-notes-0.7.0.md)** for release 0.7.0.
+
+Se **[CHANGELOG.md](CHANGELOG.md)** for versionshistorik.
+
 Se **[docs/i18n.md](docs/i18n.md)** for i18n-registry, fallback, normalisering og locale-validering.
 
 Se **[docs/shared-frontend.md](docs/shared-frontend.md)** for shared CSS/JS utilities og modulgrænser.
@@ -91,6 +107,8 @@ Se **[docs/shared-frontend.md](docs/shared-frontend.md)** for shared CSS/JS util
 Se **[docs/architecture.md](docs/architecture.md)** for samlet arkitektur (moduler, API-flow, grænser).
 
 Se **[docs/backend-architecture.md](docs/backend-architecture.md)** for backend-moduler, routers og services.
+
+Se **[docs/openapi-contract.json](docs/openapi-contract.json)** for canonical API-schema.
 
 Installér [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) og sørg for at Docker kører.
 
@@ -133,8 +151,8 @@ docker compose logs -f
 
 ```powershell
 cd "C:\GitHub\NTI Workflow"
-docker build -t nti-workflow .
-docker run --rm -p 8000:8000 --name nti-workflow nti-workflow
+docker build -t tickjf/nti-workflow:0.7.0 .
+docker run --rm -p 8000:8000 tickjf/nti-workflow:0.7.0
 ```
 
 Kør i baggrunden med genstart:
@@ -197,7 +215,7 @@ Returnerer `{"status":"ok"}`.
 Returnerer den centrale applikationsversion:
 
 ```json
-{"version":"0.6.6"}
+{"version":"0.7.0"}
 ```
 
 ### `POST /api/upload`
@@ -255,7 +273,7 @@ Returnerer en selvstændig `.html`-fil som download. Filen kan åbnes offline i 
 ```powershell
 pip install -r requirements-dev.txt
 python scripts\create_sample_excel.py
-pytest
+pytest -q
 ```
 
 Testfil: `samples/sample-lifecycle.xlsx`

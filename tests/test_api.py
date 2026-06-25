@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
+from app.core.version import APP_VERSION
 from app.main import MAX_UPLOAD_BYTES, app
 
 SAMPLE_FILE = Path(__file__).resolve().parent.parent / "samples" / "sample-lifecycle.xlsx"
@@ -32,7 +33,7 @@ def test_health(client: TestClient) -> None:
 def test_app_version(client: TestClient) -> None:
     response = client.get("/openapi.json")
     assert response.status_code == 200
-    assert response.json()["info"]["version"] == "0.6.6"
+    assert response.json()["info"]["version"] == APP_VERSION
 
 
 def test_upload_sample_excel(client: TestClient) -> None:
