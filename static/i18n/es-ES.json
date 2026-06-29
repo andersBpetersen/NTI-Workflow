@@ -24,6 +24,11 @@
       "title": "Vault Config Tools",
       "description": "Herramientas de análisis para la configuración de Vault.",
       "comingSoon": "Próximamente"
+    },
+    "vaultClientViewer": {
+      "title": "NTI for Vault Client",
+      "description": "Explore ajustes, módulos y funciones de cliente en una configuración JSON de NTI for Vault Client.",
+      "open": "Abrir Vault Client Viewer"
     }
   },
   "nav": {
@@ -224,5 +229,58 @@
     "unknownConfigName": "Configuración desconocida",
     "readonlyViewerTitle": "El visor es de solo lectura",
     "uploadIntro": "Elija o arrastre un archivo de configuración JSON de NTI for Vault Job."
+  },
+  "vaultClient": {
+    "title": "NTI for Vault Client Viewer",
+    "open": "Abrir Vault Client Viewer",
+    "description": "Explore ajustes, módulos y funciones de cliente en una configuración JSON de NTI for Vault Client.",
+    "loadConfig": "Cargar configuración de cliente",
+    "uploadIntro": "Elija o arrastre un archivo de configuración JSON de NTI for Vault Client.",
+    "dropTitle": "Arrastre aquí un archivo JSON de NTI for Vault Client",
+    "dropSubtitle": "o haga clic para seleccionar un archivo de configuración",
+    "supportedTypes": "Tipo de archivo admitido: .json",
+    "ariaLabel": "Cargar configuración JSON de NTI for Vault Client",
+    "filterPlaceholder": "Buscar módulo...",
+    "emptyModule": "Seleccione un módulo para ver los detalles.",
+    "invalidJson": "El archivo seleccionado no es JSON válido.",
+    "errorJsonOnly": "Solo se admiten archivos .json.",
+    "statusLoaded": "Cargado: {name} — {count} módulos",
+    "tableKey": "Clave",
+    "tableValue": "Valor",
+    "arrayItems": "{count} elementos",
+    "tabs": {
+      "modules": "Módulos"
+    },
+    "detail": {
+      "object": "Objeto",
+      "array": "Lista",
+      "string": "Texto",
+      "number": "Número",
+      "boolean": "Booleano",
+      "null": "Null",
+      "keys": "claves",
+      "items": "elementos",
+      "noFilterResults": "Ningún módulo coincide con el filtro.",
+      "nestedValue": "Valor anidado",
+      "rawJson": "JSON sin formato",
+      "summary": "Resumen",
+      "settings": "Ajustes",
+      "actions": "Acciones",
+      "restrictions": "Restricciones",
+      "tabs": "Pestañas",
+      "commands": "Comandos",
+      "showRawJson": "Mostrar JSON sin formato",
+      "yes": "Sí",
+      "no": "No",
+      "name": "Nombre",
+      "displayName": "Nombre para mostrar",
+      "description": "Descripción",
+      "active": "Activo",
+      "checked": "Seleccionado",
+      "id": "Id",
+      "itemsCount": "Elementos",
+      "tabsCount": "Pestañas",
+      "entityClassesCount": "Clases de entidad"
+    }
   }
 }

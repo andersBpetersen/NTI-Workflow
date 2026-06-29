@@ -24,6 +24,11 @@
       "title": "Vault Config Tools",
       "description": "Analyseværktøjer til Vault-konfiguration.",
       "comingSoon": "Kommer senere"
+    },
+    "vaultClientViewer": {
+      "title": "NTI for Vault Client",
+      "description": "Gennemse indstillinger, moduler og klientfunktioner i en NTI for Vault Client JSON-konfiguration.",
+      "open": "Åbn Vault Client Viewer"
     }
   },
   "nav": {
@@ -224,5 +229,58 @@
     "unknownConfigName": "Ukendt konfiguration",
     "readonlyViewerTitle": "Viewer er skrivebeskyttet",
     "uploadIntro": "Vælg eller træk en NTI for Vault Job JSON-konfigurationsfil."
+  },
+  "vaultClient": {
+    "title": "NTI for Vault Client Viewer",
+    "open": "Åbn Vault Client Viewer",
+    "description": "Gennemse indstillinger, moduler og klientfunktioner i en NTI for Vault Client JSON-konfiguration.",
+    "loadConfig": "Indlæs Client Config",
+    "uploadIntro": "Vælg eller træk en NTI for Vault Client JSON-konfigurationsfil.",
+    "dropTitle": "Træk en NTI for Vault Client JSON-fil hertil",
+    "dropSubtitle": "eller klik for at vælge en konfigurationsfil",
+    "supportedTypes": "Understøttet filtype: .json",
+    "ariaLabel": "Upload NTI for Vault Client JSON-konfiguration",
+    "filterPlaceholder": "Find modul...",
+    "emptyModule": "Vælg et modul for at se detaljer.",
+    "invalidJson": "Den valgte fil er ikke gyldig JSON.",
+    "errorJsonOnly": "Kun .json-filer understøttes.",
+    "statusLoaded": "Indlæst: {name} — {count} moduler",
+    "tableKey": "Nøgle",
+    "tableValue": "Værdi",
+    "arrayItems": "{count} elementer",
+    "tabs": {
+      "modules": "Moduler"
+    },
+    "detail": {
+      "object": "Objekt",
+      "array": "Liste",
+      "string": "Tekst",
+      "number": "Tal",
+      "boolean": "Sand/falsk",
+      "null": "Null",
+      "keys": "nøgler",
+      "items": "elementer",
+      "noFilterResults": "Ingen moduler matcher filteret.",
+      "nestedValue": "Underliggende værdi",
+      "rawJson": "Rå JSON",
+      "summary": "Oversigt",
+      "settings": "Indstillinger",
+      "actions": "Handlinger",
+      "restrictions": "Restriktioner",
+      "tabs": "Tabs",
+      "commands": "Kommandoer",
+      "showRawJson": "Vis rå JSON",
+      "yes": "Ja",
+      "no": "Nej",
+      "name": "Navn",
+      "displayName": "Visningsnavn",
+      "description": "Beskrivelse",
+      "active": "Aktiv",
+      "checked": "Valgt",
+      "id": "Id",
+      "itemsCount": "Antal elementer",
+      "tabsCount": "Antal tabs",
+      "entityClassesCount": "Antal entity classes"
+    }
   }
 }

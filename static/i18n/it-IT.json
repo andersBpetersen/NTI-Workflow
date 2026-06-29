@@ -24,6 +24,11 @@
       "title": "Vault Config Tools",
       "description": "Strumenti di analisi per la configurazione Vault.",
       "comingSoon": "Prossimamente"
+    },
+    "vaultClientViewer": {
+      "title": "NTI for Vault Client",
+      "description": "Esplora impostazioni, moduli e funzioni client in una configurazione JSON NTI for Vault Client.",
+      "open": "Apri Vault Client Viewer"
     }
   },
   "nav": {
@@ -224,5 +229,58 @@
     "unknownConfigName": "Unknown configuration",
     "readonlyViewerTitle": "Viewer is read-only",
     "uploadIntro": "Scegli o trascina un file di configurazione JSON NTI for Vault Job."
+  },
+  "vaultClient": {
+    "title": "NTI for Vault Client Viewer",
+    "open": "Apri Vault Client Viewer",
+    "description": "Esplora impostazioni, moduli e funzioni client in una configurazione JSON NTI for Vault Client.",
+    "loadConfig": "Carica configurazione client",
+    "uploadIntro": "Scegli o trascina un file di configurazione JSON NTI for Vault Client.",
+    "dropTitle": "Trascina qui un file JSON NTI for Vault Client",
+    "dropSubtitle": "oppure fai clic per selezionare un file di configurazione",
+    "supportedTypes": "Tipo di file supportato: .json",
+    "ariaLabel": "Carica configurazione JSON NTI for Vault Client",
+    "filterPlaceholder": "Trova modulo...",
+    "emptyModule": "Seleziona un modulo per vedere i dettagli.",
+    "invalidJson": "Il file selezionato non è JSON valido.",
+    "errorJsonOnly": "Sono supportati solo file .json.",
+    "statusLoaded": "Caricato: {name} — {count} moduli",
+    "tableKey": "Chiave",
+    "tableValue": "Valore",
+    "arrayItems": "{count} elementi",
+    "tabs": {
+      "modules": "Moduli"
+    },
+    "detail": {
+      "object": "Oggetto",
+      "array": "Elenco",
+      "string": "Testo",
+      "number": "Numero",
+      "boolean": "Booleano",
+      "null": "Null",
+      "keys": "chiavi",
+      "items": "elementi",
+      "noFilterResults": "Nessun modulo corrisponde al filtro.",
+      "nestedValue": "Valore annidato",
+      "rawJson": "JSON grezzo",
+      "summary": "Riepilogo",
+      "settings": "Impostazioni",
+      "actions": "Azioni",
+      "restrictions": "Restrizioni",
+      "tabs": "Schede",
+      "commands": "Comandi",
+      "showRawJson": "Mostra JSON grezzo",
+      "yes": "Sì",
+      "no": "No",
+      "name": "Nome",
+      "displayName": "Nome visualizzato",
+      "description": "Descrizione",
+      "active": "Attivo",
+      "checked": "Selezionato",
+      "id": "Id",
+      "itemsCount": "Elementi",
+      "tabsCount": "Schede",
+      "entityClassesCount": "Classi entità"
+    }
   }
 }

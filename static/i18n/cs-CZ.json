@@ -24,6 +24,11 @@
       "title": "Vault Config Tools",
       "description": "Analytické nástroje pro konfiguraci Vault.",
       "comingSoon": "Již brzy"
+    },
+    "vaultClientViewer": {
+      "title": "NTI for Vault Client",
+      "description": "Browse settings, modules and client features in an NTI for Vault Client JSON configuration.",
+      "open": "Open Vault Client Viewer"
     }
   },
   "nav": {
@@ -224,5 +229,58 @@
     "unknownConfigName": "Unknown configuration",
     "readonlyViewerTitle": "Viewer is read-only",
     "uploadIntro": "Vyberte nebo přetáhněte konfigurační soubor JSON NTI for Vault Job."
+  },
+  "vaultClient": {
+    "title": "NTI for Vault Client Viewer",
+    "open": "Open Vault Client Viewer",
+    "description": "Browse settings, modules and client features in an NTI for Vault Client JSON configuration.",
+    "loadConfig": "Load Client Config",
+    "uploadIntro": "Choose or drag an NTI for Vault Client JSON configuration file.",
+    "dropTitle": "Drag an NTI for Vault Client JSON file here",
+    "dropSubtitle": "or click to select a configuration file",
+    "supportedTypes": "Supported file type: .json",
+    "ariaLabel": "Upload NTI for Vault Client JSON configuration file",
+    "filterPlaceholder": "Find module...",
+    "emptyModule": "Select a module to see details.",
+    "invalidJson": "The selected file is not valid JSON.",
+    "errorJsonOnly": "Only .json files are supported.",
+    "statusLoaded": "Loaded: {name} — {count} modules",
+    "tableKey": "Key",
+    "tableValue": "Value",
+    "arrayItems": "{count} items",
+    "tabs": {
+      "modules": "Modules"
+    },
+    "detail": {
+      "object": "Object",
+      "array": "Array",
+      "string": "String",
+      "number": "Number",
+      "boolean": "Boolean",
+      "null": "Null",
+      "keys": "Keys",
+      "items": "Items",
+      "noFilterResults": "No modules match the filter.",
+      "nestedValue": "Nested value",
+      "rawJson": "Surové JSON",
+      "summary": "Přehled",
+      "settings": "Nastavení",
+      "actions": "Akce",
+      "restrictions": "Omezení",
+      "tabs": "Záložky",
+      "commands": "Příkazy",
+      "showRawJson": "Zobrazit surové JSON",
+      "yes": "Ano",
+      "no": "Ne",
+      "name": "Název",
+      "displayName": "Zobrazovaný název",
+      "description": "Popis",
+      "active": "Aktivní",
+      "checked": "Vybráno",
+      "id": "Id",
+      "itemsCount": "Položky",
+      "tabsCount": "Záložky",
+      "entityClassesCount": "Třídy entit"
+    }
   }
 }

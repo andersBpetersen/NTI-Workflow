@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NTI for Vault Client Viewer</title>
+  <link rel="stylesheet" href="/static/shared/ui/tokens.css">
+  <link rel="stylesheet" href="/static/shared/ui/forms.css">
+  <link rel="stylesheet" href="/static/shared/ui/buttons.css">
+  <link rel="stylesheet" href="/static/shared/ui/feedback.css">
+  <link rel="stylesheet" href="/static/shared/ui/file-dropzone.css?v=20250629">
+  <link rel="stylesheet" href="/static/shared/ui/upload-shell.css?v=20250629">
+  <link rel="stylesheet" href="/static/vault-client/vault-client.css">
+</head>
+<body class="nti-upload-shell">
+  <header class="app-topbar">
+    <a id="back-home-link" class="back-link" href="/" data-i18n="nav.backHome">Back to home</a>
+    <span class="app-brand" data-i18n="vaultClient.title">NTI for Vault Client Viewer</span>
+    <div class="topbar-right">
+      <span id="vc-version" class="version-chip"></span>
+      <label class="locale-control">
+        <span data-i18n="language.label">Language</span>
+        <select id="localeSelect" data-i18n-aria-label="language.label" aria-label="Language"></select>
+      </label>
+    </div>
+  </header>
+
+  <div id="vc-error-banner" class="vault-client-error-banner" hidden></div>
+
+  <div id="vc-load-screen">
+    <div class="upload-bar">
+      <div class="upload-bar-heading">
+        <h1 data-i18n="vaultClient.title">NTI for Vault Client Viewer</h1>
+        <p class="upload-bar-intro" data-i18n="vaultClient.uploadIntro">Choose or drag an NTI for Vault Client JSON configuration file.</p>
+      </div>
+      <label class="upload-button">
+        <span data-i18n="vaultClient.loadConfig">Load Client Config</span>
+        <input id="vc-file-input" type="file" accept=".json,application/json">
+      </label>
+    </div>
+
+    <div class="nti-file-dropzone-host">
+      <div
+        id="vc-drop-zone"
+        class="nti-file-dropzone"
+        role="button"
+        tabindex="0"
+        data-i18n-aria-label="vaultClient.ariaLabel"
+        aria-label="Upload NTI for Vault Client JSON configuration file"
+      >
+        <div class="nti-file-dropzone-icon" aria-hidden="true">⇩</div>
+        <h2 class="nti-file-dropzone-title" data-i18n="vaultClient.dropTitle">Drag an NTI for Vault Client JSON file here</h2>
+        <p class="nti-file-dropzone-description" data-i18n="vaultClient.dropSubtitle">or click to select a configuration file</p>
+        <p class="nti-file-dropzone-meta" data-i18n="vaultClient.supportedTypes">Supported file type: .json</p>
+      </div>
+    </div>
+  </div>
+
+  <section id="vc-app" class="vault-client-viewer-shell">
+    <div class="vault-client-tabs">
+      <button type="button" class="vault-client-tab is-active" data-i18n="vaultClient.tabs.modules">Modules</button>
+    </div>
+
+    <div class="vault-client-layout">
+      <aside class="vault-client-sidebar">
+        <div class="vault-client-sidebar-toolbar">
+          <input
+            id="vc-filter-input"
+            class="vault-client-filter"
+            type="search"
+            data-i18n-placeholder="vaultClient.filterPlaceholder"
+            placeholder="Find module..."
+          >
+        </div>
+        <div id="vc-module-list" class="vault-client-module-list" role="listbox" aria-label="Modules"></div>
+        <p id="vc-filter-empty" class="vault-client-filter-empty" hidden data-i18n="vaultClient.detail.noFilterResults">No modules match the filter.</p>
+      </aside>
+
+      <main class="vault-client-detail">
+        <header id="vc-detail-header" class="vault-client-detail-header is-hidden">
+          <h2 id="vc-detail-title"></h2>
+          <p id="vc-detail-subtitle"></p>
+        </header>
+        <div id="vc-detail-body" class="vault-client-detail-body">
+          <p id="vc-detail-empty" class="vault-client-detail-empty" data-i18n="vaultClient.emptyModule">Select a module to see details.</p>
+        </div>
+      </main>
+    </div>
+
+    <footer id="vc-status-bar" class="vault-client-statusbar"></footer>
+  </section>
+
+  <script src="/static/shared/utils/html.js"></script>
+  <script src="/static/shared/utils/files.js"></script>
+  <script src="/static/i18n.js"></script>
+  <script src="/static/vault-client/vault-client.js"></script>
+</body>
+</html>

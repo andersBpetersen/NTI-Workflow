@@ -1,0 +1,1244 @@
+[
+  {
+    "Version": "1.0.0-sample",
+    "JobQueuer": {
+      "JobQueuerMenuContainers": [
+        {
+          "JobQueuers": [
+            {
+              "ShowJobQueuedInformation": false,
+              "ShowJobQueuedInformationOnlyIfCriteriasNotMet": true,
+              "ConditionsNotMetMessage": null,
+              "Jobs": [
+                {
+                  "Priority": 100,
+                  "ConditionLists": [
+                    {
+                      "Conditions": [
+                        {
+                          "Value": null,
+                          "PropertyDefinition": {
+                            "DfltVal": null,
+                            "EntClassAssocArray": [
+                              {
+                                "EntClassId": "FILE",
+                                "MapDirection": 3
+                              }
+                            ],
+                            "Id": 30,
+                            "Typ": 0,
+                            "DispName": "File Extension",
+                            "SysName": "Extension",
+                            "IsAct": true,
+                            "IsBasicSrch": true,
+                            "IsSys": true,
+                            "UsageCount": 0
+                          },
+                          "ValidationCondition": 3,
+                          "Name": null,
+                          "DisplayName": null,
+                          "Description": null,
+                          "Id": null,
+                          "IsActive": true,
+                          "IsChecked": false
+                        }
+                      ],
+                      "ListValidation": 0,
+                      "Name": "Type: File",
+                      "DisplayName": "Type: File",
+                      "Description": "Entity is of type file.",
+                      "Id": "00000000-0000-0000-0000-000000000001",
+                      "IsActive": true,
+                      "IsChecked": false
+                    }
+                  ],
+                  "Parameters": [
+                    {
+                      "Value": "1",
+                      "Name": "JobProcessorKey",
+                      "DisplayName": "JobProcessorKey",
+                      "Description": null,
+                      "Id": "00000000-0000-0000-0000-000000000001",
+                      "IsActive": true,
+                      "IsChecked": false
+                    }
+                  ],
+                  "Icon": null,
+                  "Name": "PreProcessFile",
+                  "DisplayName": "PreProcessFile",
+                  "Description": "Preprocess file.",
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "IsActive": true,
+                  "IsChecked": true
+                }
+              ],
+              "UserJobParameters": [],
+              "EnableForVaultGroups": false,
+              "VaultGroups": [],
+              "ToolTip": null,
+              "MultiSelect": true,
+              "Icon": null,
+              "Name": "JobQueuerBase",
+              "DisplayName": "Rev Number",
+              "Description": "Queue jobs for all kind of entities",
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "IsActive": true,
+              "IsChecked": true
+            },
+            {
+              "ShowJobQueuedInformation": false,
+              "ShowJobQueuedInformationOnlyIfCriteriasNotMet": true,
+              "ConditionsNotMetMessage": null,
+              "Jobs": [
+                {
+                  "Priority": 100,
+                  "ConditionLists": [
+                    {
+                      "Conditions": [
+                        {
+                          "Value": "Inventor",
+                          "PropertyDefinition": {
+                            "DfltVal": null,
+                            "EntClassAssocArray": [
+                              {
+                                "EntClassId": "FILE",
+                                "MapDirection": 3
+                              },
+                              {
+                                "EntClassId": "ITEM",
+                                "MapDirection": 3
+                              }
+                            ],
+                            "Id": 24,
+                            "Typ": 0,
+                            "DispName": "Provider",
+                            "SysName": "Provider",
+                            "IsAct": true,
+                            "IsBasicSrch": true,
+                            "IsSys": true,
+                            "UsageCount": 0
+                          },
+                          "ValidationCondition": 0,
+                          "Name": null,
+                          "DisplayName": null,
+                          "Description": null,
+                          "Id": null,
+                          "IsActive": true,
+                          "IsChecked": false
+                        }
+                      ],
+                      "ListValidation": 0,
+                      "Name": "Provider: Inventor",
+                      "DisplayName": "Provider: Inventor",
+                      "Description": "Provider is 'inventor'.",
+                      "Id": "00000000-0000-0000-0000-000000000001",
+                      "IsActive": true,
+                      "IsChecked": false
+                    }
+                  ],
+                  "Parameters": [
+                    {
+                      "Value": "1",
+                      "Name": "JobProcessorKey",
+                      "DisplayName": "JobProcessorKey",
+                      "Description": null,
+                      "Id": "00000000-0000-0000-0000-000000000001",
+                      "IsActive": true,
+                      "IsChecked": false
+                    }
+                  ],
+                  "Icon": null,
+                  "Name": "RuniLogicRule",
+                  "DisplayName": "RuniLogicRule",
+                  "Description": "Run iLogic rule.",
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "IsActive": true,
+                  "IsChecked": false
+                }
+              ],
+              "UserJobParameters": [],
+              "EnableForVaultGroups": false,
+              "VaultGroups": [],
+              "ToolTip": null,
+              "MultiSelect": true,
+              "Icon": null,
+              "Name": "JobQueuerBase",
+              "DisplayName": "Change TitleBlock",
+              "Description": "Queue jobs for all kind of entities",
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "IsActive": true,
+              "IsChecked": true
+            }
+          ],
+          "EntityClasses": [
+            {
+              "ClassId": "FILE",
+              "InternalId": null,
+              "ClassIdChecked": true
+            },
+            {
+              "ClassId": "FLDR",
+              "InternalId": null,
+              "ClassIdChecked": false
+            },
+            {
+              "ClassId": "CO",
+              "InternalId": null,
+              "ClassIdChecked": false
+            }
+          ],
+          "DeployAsPulldownMenu": false,
+          "Toolbars": [],
+          "Name": "Test",
+          "DisplayName": "RuniLogicRule",
+          "Description": "RuniLogicRule",
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": false,
+          "IsChecked": false
+        },
+        {
+          "JobQueuers": [
+            {
+              "ShowJobQueuedInformation": false,
+              "ShowJobQueuedInformationOnlyIfCriteriasNotMet": true,
+              "ConditionsNotMetMessage": null,
+              "Jobs": [
+                {
+                  "Priority": 100,
+                  "ConditionLists": [
+                    {
+                      "Conditions": [
+                        {
+                          "Value": "iam",
+                          "PropertyDefinition": {
+                            "DfltVal": null,
+                            "EntClassAssocArray": [
+                              {
+                                "EntClassId": "FILE",
+                                "MapDirection": 3
+                              }
+                            ],
+                            "Id": 30,
+                            "Typ": 0,
+                            "DispName": "File Extension",
+                            "SysName": "Extension",
+                            "IsAct": true,
+                            "IsBasicSrch": true,
+                            "IsSys": true,
+                            "UsageCount": 0
+                          },
+                          "ValidationCondition": 0,
+                          "Name": null,
+                          "DisplayName": null,
+                          "Description": null,
+                          "Id": null,
+                          "IsActive": true,
+                          "IsChecked": false
+                        }
+                      ],
+                      "ListValidation": 0,
+                      "Name": "Type: Inventor Assembly",
+                      "DisplayName": "Type: Inventor Assembly",
+                      "Description": "File is inventor assembly.",
+                      "Id": "00000000-0000-0000-0000-000000000001",
+                      "IsActive": true,
+                      "IsChecked": false
+                    }
+                  ],
+                  "Parameters": [],
+                  "Icon": null,
+                  "Name": "VaultToOrder",
+                  "DisplayName": "VaultToOrder",
+                  "Description": "Vault to order",
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "IsActive": true,
+                  "IsChecked": true
+                }
+              ],
+              "UserJobParameters": [],
+              "EnableForVaultGroups": false,
+              "VaultGroups": [],
+              "ToolTip": null,
+              "MultiSelect": true,
+              "Icon": null,
+              "Name": "JobQueuerBase",
+              "DisplayName": "VaultToOrder",
+              "Description": "Queue jobs for all kind of entities",
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "IsActive": true,
+              "IsChecked": true
+            }
+          ],
+          "EntityClasses": [
+            {
+              "ClassId": "FILE",
+              "InternalId": null,
+              "ClassIdChecked": false
+            },
+            {
+              "ClassId": "FLDR",
+              "InternalId": null,
+              "ClassIdChecked": false
+            },
+            {
+              "ClassId": "CO",
+              "InternalId": null,
+              "ClassIdChecked": false
+            }
+          ],
+          "DeployAsPulldownMenu": false,
+          "Toolbars": [],
+          "Name": "VaultToOrder",
+          "DisplayName": "VaultToOrder",
+          "Description": null,
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": true,
+          "IsChecked": false
+        },
+        {
+          "JobQueuers": [
+            {
+              "ShowJobQueuedInformation": false,
+              "ShowJobQueuedInformationOnlyIfCriteriasNotMet": true,
+              "ConditionsNotMetMessage": null,
+              "Jobs": [
+                {
+                  "Priority": 100,
+                  "ConditionLists": [
+                    {
+                      "Conditions": [
+                        {
+                          "Value": "ipt",
+                          "PropertyDefinition": {
+                            "DfltVal": null,
+                            "EntClassAssocArray": [
+                              {
+                                "EntClassId": "FILE",
+                                "MapDirection": 3
+                              }
+                            ],
+                            "Id": 30,
+                            "Typ": 0,
+                            "DispName": "File Extension",
+                            "SysName": "Extension",
+                            "IsAct": true,
+                            "IsBasicSrch": true,
+                            "IsSys": true,
+                            "UsageCount": 0
+                          },
+                          "ValidationCondition": 0,
+                          "Name": null,
+                          "DisplayName": null,
+                          "Description": null,
+                          "Id": null,
+                          "IsActive": true,
+                          "IsChecked": false
+                        },
+                        {
+                          "Value": "iam",
+                          "PropertyDefinition": {
+                            "DfltVal": null,
+                            "EntClassAssocArray": [
+                              {
+                                "EntClassId": "FILE",
+                                "MapDirection": 3
+                              }
+                            ],
+                            "Id": 30,
+                            "Typ": 0,
+                            "DispName": "File Extension",
+                            "SysName": "Extension",
+                            "IsAct": true,
+                            "IsBasicSrch": true,
+                            "IsSys": true,
+                            "UsageCount": 0
+                          },
+                          "ValidationCondition": 0,
+                          "Name": null,
+                          "DisplayName": null,
+                          "Description": null,
+                          "Id": null,
+                          "IsActive": true,
+                          "IsChecked": false
+                        }
+                      ],
+                      "ListValidation": 1,
+                      "Name": "Type: Inventor Model",
+                      "DisplayName": "Type: Inventor Model",
+                      "Description": "File is inventor model.",
+                      "Id": "00000000-0000-0000-0000-000000000001",
+                      "IsActive": true,
+                      "IsChecked": false
+                    }
+                  ],
+                  "Parameters": [],
+                  "Icon": null,
+                  "Name": "Inventor.Create.stp",
+                  "DisplayName": "Inventor.Create.stp",
+                  "Description": "Create step of inventor model.",
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "IsActive": true,
+                  "IsChecked": true
+                }
+              ],
+              "UserJobParameters": [],
+              "EnableForVaultGroups": true,
+              "VaultGroups": [
+                {
+                  "Group": {
+                    "Id": 8,
+                    "Name": "Administrators",
+                    "EmailDL": "",
+                    "CreateUserId": 2,
+                    "CreateDate": "2016-02-25T09:54:32.417",
+                    "IsAct": true,
+                    "IsSys": false,
+                    "Auth": 0
+                  },
+                  "Name": "Administrators",
+                  "DisplayName": "Administrators",
+                  "Description": null,
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "IsActive": true,
+                  "IsChecked": true
+                }
+              ],
+              "ToolTip": null,
+              "MultiSelect": true,
+              "Icon": null,
+              "Name": "JobQueuerBase",
+              "DisplayName": "Standard job queuer",
+              "Description": "Queue jobs for all kind of entities",
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "IsActive": true,
+              "IsChecked": true
+            }
+          ],
+          "EntityClasses": [
+            {
+              "ClassId": "FILE",
+              "InternalId": null,
+              "ClassIdChecked": false
+            },
+            {
+              "ClassId": "FLDR",
+              "InternalId": null,
+              "ClassIdChecked": false
+            },
+            {
+              "ClassId": "CO",
+              "InternalId": null,
+              "ClassIdChecked": false
+            }
+          ],
+          "DeployAsPulldownMenu": true,
+          "Toolbars": [
+            {
+              "Name": "Advanced",
+              "DisplayName": "Advanced",
+              "Description": "Advanced toolbar",
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "IsActive": true,
+              "IsChecked": true
+            }
+          ],
+          "Name": "Create Step",
+          "DisplayName": "Create Step",
+          "Description": null,
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": true,
+          "IsChecked": false
+        }
+      ]
+    },
+    "UsesFilter": {
+      "UsesFilterMenuContainers": [
+        {
+          "UsesFilters": [
+            {
+              "ConditionLists": [],
+              "JobQueuerMenuContainers": [],
+              "DesignRepresentationCollectorMenuContainers": [],
+              "ValidateAttachmentState": false,
+              "ValidateAttachmentRevision": false,
+              "SourcePersistentIdPropertyDefinition": {
+                "DfltVal": null,
+                "EntClassAssocArray": [
+                  {
+                    "EntClassId": "FILE",
+                    "MapDirection": 1
+                  },
+                  {
+                    "EntClassId": "ITEM",
+                    "MapDirection": 1
+                  }
+                ],
+                "Id": 140,
+                "Typ": 0,
+                "DispName": "SourcePersistendID",
+                "SysName": "00000000-0000-0000-0000-000000000001",
+                "IsAct": true,
+                "IsBasicSrch": true,
+                "IsSys": false,
+                "UsageCount": 0
+              },
+              "IncludeDesignRepresentations": true,
+              "IncludeFirstLevelOnly": false,
+              "IsCustom": false,
+              "Name": "UsesFilterItem",
+              "DisplayName": "UsesFilterItem",
+              "Description": "Uses filter for displaying files used by a item",
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "IsActive": true,
+              "IsChecked": true
+            }
+          ],
+          "EntityClasses": [
+            {
+              "ClassId": "FILE",
+              "InternalId": null,
+              "ClassIdChecked": false
+            },
+            {
+              "ClassId": "ITEM",
+              "InternalId": null,
+              "ClassIdChecked": true
+            }
+          ],
+          "DeployAsPulldownMenu": true,
+          "Toolbars": [],
+          "Name": "PDF",
+          "DisplayName": "PDF Item",
+          "Description": "Item",
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": true,
+          "IsChecked": false
+        },
+        {
+          "UsesFilters": [
+            {
+              "ConditionLists": [
+                {
+                  "Conditions": [
+                    {
+                      "Value": "ipt",
+                      "PropertyDefinition": {
+                        "DfltVal": null,
+                        "EntClassAssocArray": [
+                          {
+                            "EntClassId": "FILE",
+                            "MapDirection": 3
+                          }
+                        ],
+                        "Id": 30,
+                        "Typ": 0,
+                        "DispName": "File Extension",
+                        "SysName": "Extension",
+                        "IsAct": true,
+                        "IsBasicSrch": true,
+                        "IsSys": true,
+                        "UsageCount": 0
+                      },
+                      "ValidationCondition": 0,
+                      "Name": null,
+                      "DisplayName": null,
+                      "Description": null,
+                      "Id": null,
+                      "IsActive": true,
+                      "IsChecked": false
+                    },
+                    {
+                      "Value": "iam",
+                      "PropertyDefinition": {
+                        "DfltVal": null,
+                        "EntClassAssocArray": [
+                          {
+                            "EntClassId": "FILE",
+                            "MapDirection": 3
+                          }
+                        ],
+                        "Id": 30,
+                        "Typ": 0,
+                        "DispName": "File Extension",
+                        "SysName": "Extension",
+                        "IsAct": true,
+                        "IsBasicSrch": true,
+                        "IsSys": true,
+                        "UsageCount": 0
+                      },
+                      "ValidationCondition": 0,
+                      "Name": null,
+                      "DisplayName": null,
+                      "Description": null,
+                      "Id": null,
+                      "IsActive": true,
+                      "IsChecked": false
+                    },
+                    {
+                      "Value": "ipn",
+                      "PropertyDefinition": {
+                        "DfltVal": null,
+                        "EntClassAssocArray": [
+                          {
+                            "EntClassId": "FILE",
+                            "MapDirection": 3
+                          }
+                        ],
+                        "Id": 30,
+                        "Typ": 0,
+                        "DispName": "File Extension",
+                        "SysName": "Extension",
+                        "IsAct": true,
+                        "IsBasicSrch": true,
+                        "IsSys": true,
+                        "UsageCount": 0
+                      },
+                      "ValidationCondition": 0,
+                      "Name": null,
+                      "DisplayName": null,
+                      "Description": null,
+                      "Id": null,
+                      "IsActive": true,
+                      "IsChecked": false
+                    }
+                  ],
+                  "ListValidation": 1,
+                  "Name": "Type: Inventor",
+                  "DisplayName": "Type: Inventor",
+                  "Description": "File is inventor document. and pdf",
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "IsActive": true,
+                  "IsChecked": true
+                }
+              ],
+              "JobQueuerMenuContainers": [],
+              "DesignRepresentationCollectorMenuContainers": [],
+              "ValidateAttachmentState": false,
+              "ValidateAttachmentRevision": false,
+              "SourcePersistentIdPropertyDefinition": {
+                "DfltVal": null,
+                "EntClassAssocArray": [
+                  {
+                    "EntClassId": "FILE",
+                    "MapDirection": 1
+                  },
+                  {
+                    "EntClassId": "ITEM",
+                    "MapDirection": 1
+                  }
+                ],
+                "Id": 140,
+                "Typ": 0,
+                "DispName": "SourcePersistendID",
+                "SysName": "00000000-0000-0000-0000-000000000001",
+                "IsAct": true,
+                "IsBasicSrch": true,
+                "IsSys": false,
+                "UsageCount": 0
+              },
+              "IncludeDesignRepresentations": true,
+              "IncludeFirstLevelOnly": false,
+              "IsCustom": false,
+              "Name": "UsesFilterFile",
+              "DisplayName": "UsesFilterFile",
+              "Description": "Uses filter for displaying files used by a file",
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "IsActive": true,
+              "IsChecked": true
+            }
+          ],
+          "EntityClasses": [
+            {
+              "ClassId": "FILE",
+              "InternalId": null,
+              "ClassIdChecked": true
+            },
+            {
+              "ClassId": "ITEM",
+              "InternalId": null,
+              "ClassIdChecked": false
+            }
+          ],
+          "DeployAsPulldownMenu": true,
+          "Toolbars": [],
+          "Name": "PDF File",
+          "DisplayName": "File",
+          "Description": "File",
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": true,
+          "IsChecked": false
+        }
+      ]
+    },
+    "DesignRepresentation": {
+      "DesignRepresentationCollectorMenuContainers": []
+    },
+    "WorkFolder": {
+      "WorkFolderSynchronizations": []
+    },
+    "General": {
+      "Advanced": {
+        "ImpersonationUser": {
+          "VaultUser": {
+            "User": {
+              "Id": 2,
+              "Name": "Administrator",
+              "Email": "",
+              "CreateUserId": 0,
+              "CreateDate": "2016-02-24T10:53:33.133",
+              "IsAct": true,
+              "ExpDate": "0001-01-01T00:00:00",
+              "IsSys": true,
+              "Auth": 1
+            },
+            "Password": null,
+            "Name": "Administrator",
+            "DisplayName": "Administrator",
+            "Description": null,
+            "Id": "00000000-0000-0000-0000-000000000001",
+            "IsActive": true,
+            "IsChecked": false
+          }
+        }
+      },
+      "EnableJobQueueManager": false,
+      "EnableUsesWhereUsed": false,
+      "EnableWorkFolderManager": false,
+      "EnableFoldersReplication": false,
+      "EnableItemBomManager": false,
+      "ValidateDesignRepresentationStateOnDesignRepresentationTab": false,
+      "ValidateDesignRepresentationRevisionOnDesignRepresentationTab": false,
+      "SourcePersistentIdPropertyDefinitionOnDesignRepresentationTab": null,
+      "DesignRepresentationTabDesignRepresentationsConditionLists": [],
+      "ValidateDesignRepresentationStateInDesignRepresentationWindow": false,
+      "ValidateDesignRepresentationRevisionInDesignRepresentationWindow": false,
+      "SourcePersistentIdPropertyDefinitionDesignRepresentationWindow": null,
+      "EnableDesignRepresentationManager": false,
+      "EnableQuickNewFileDialog": false,
+      "EnableQuickNewFolderDialog": false,
+      "QuickNewTemplatesFolder": null,
+      "QuickNewFilePartNumberProperty": null,
+      "EnableAttachFromDisc": false,
+      "EnableAttachFromDiscSaveOldFileNameToPropertyDefinition": null,
+      "EnableAttachFromDiscSaveOldFileNamePathToPropertyDefinition": null,
+      "EnableAttachFromDiscCategory": null,
+      "EnableAttachFromDiscNumberingScheme": null,
+      "EnableCombinedItemFileDataCard": true,
+      "WindowsComputerGroups": [],
+      "WindowsUserGroups": []
+    },
+    "QuickProject": {
+      "QuickProjectMenuContainers": []
+    },
+    "QuickNew": {
+      "QuickNewMenuContainers": []
+    },
+    "DataCard": {
+      "DataCards": [
+        {
+          "Tabs": [
+            {
+              "Icon": null,
+              "ConditionLists": [],
+              "Columns": [
+                {
+                  "Icon": null,
+                  "ListBindings": [],
+                  "ConditionLists": [],
+                  "Width": 400,
+                  "DataCardProperties": [
+                    {
+                      "MultiRow": false,
+                      "PropertyDefinition": {
+                        "DfltVal": null,
+                        "EntClassAssocArray": [
+                          {
+                            "EntClassId": "FILE",
+                            "MapDirection": 3
+                          }
+                        ],
+                        "Id": 10,
+                        "Typ": 0,
+                        "DispName": "File Name",
+                        "SysName": "ClientFileName",
+                        "IsAct": true,
+                        "IsBasicSrch": true,
+                        "IsSys": true,
+                        "UsageCount": 0
+                      },
+                      "UpdateWordDocument": false,
+                      "UpdateExcelDocument": false,
+                      "IsMandatory": false,
+                      "DisplayName": null,
+                      "ReadOnly": true,
+                      "ReadOnlyCheckboxEnabled": false,
+                      "InputValidationRule": 5,
+                      "Name": "VaultTexBox",
+                      "Description": null,
+                      "Id": null,
+                      "IsActive": true,
+                      "IsChecked": false
+                    }
+                  ],
+                  "Name": "GroupBox",
+                  "DisplayName": "System",
+                  "Description": null,
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "IsActive": true,
+                  "IsChecked": false
+                },
+                {
+                  "Icon": null,
+                  "ListBindings": [],
+                  "ConditionLists": [],
+                  "Width": 400,
+                  "DataCardProperties": [
+                    {
+                      "MultiRow": false,
+                      "PropertyDefinition": {
+                        "DfltVal": null,
+                        "EntClassAssocArray": [
+                          {
+                            "EntClassId": "FILE",
+                            "MapDirection": 1
+                          },
+                          {
+                            "EntClassId": "ITEM",
+                            "MapDirection": 1
+                          }
+                        ],
+                        "Id": 46,
+                        "Typ": 0,
+                        "DispName": "Part Number",
+                        "SysName": "PartNumber",
+                        "IsAct": true,
+                        "IsBasicSrch": true,
+                        "IsSys": false,
+                        "UsageCount": 0
+                      },
+                      "UpdateWordDocument": false,
+                      "UpdateExcelDocument": false,
+                      "IsMandatory": false,
+                      "DisplayName": null,
+                      "ReadOnly": false,
+                      "ReadOnlyCheckboxEnabled": true,
+                      "InputValidationRule": 5,
+                      "Name": "VaultTexBox",
+                      "Description": null,
+                      "Id": null,
+                      "IsActive": true,
+                      "IsChecked": false
+                    },
+                    {
+                      "MultiRow": false,
+                      "PropertyDefinition": {
+                        "DfltVal": null,
+                        "EntClassAssocArray": [
+                          {
+                            "EntClassId": "FILE",
+                            "MapDirection": 1
+                          }
+                        ],
+                        "Id": 31,
+                        "Typ": 0,
+                        "DispName": "Author",
+                        "SysName": "Author",
+                        "IsAct": true,
+                        "IsBasicSrch": true,
+                        "IsSys": false,
+                        "UsageCount": 0
+                      },
+                      "UpdateWordDocument": false,
+                      "UpdateExcelDocument": false,
+                      "IsMandatory": false,
+                      "DisplayName": null,
+                      "ReadOnly": false,
+                      "ReadOnlyCheckboxEnabled": true,
+                      "InputValidationRule": 5,
+                      "Name": "VaultTexBox",
+                      "Description": null,
+                      "Id": null,
+                      "IsActive": true,
+                      "IsChecked": false
+                    },
+                    {
+                      "PropertyDefinition": {
+                        "DfltVal": null,
+                        "EntClassAssocArray": [
+                          {
+                            "EntClassId": "FILE",
+                            "MapDirection": 1
+                          }
+                        ],
+                        "Id": 43,
+                        "Typ": 3,
+                        "DispName": "Date File Created",
+                        "SysName": "CreationDate",
+                        "IsAct": true,
+                        "IsBasicSrch": false,
+                        "IsSys": false,
+                        "UsageCount": 0
+                      },
+                      "UpdateWordDocument": false,
+                      "UpdateExcelDocument": false,
+                      "IsMandatory": false,
+                      "DisplayName": null,
+                      "ReadOnly": true,
+                      "ReadOnlyCheckboxEnabled": true,
+                      "InputValidationRule": 2,
+                      "Name": "VaultDatePicker",
+                      "Description": null,
+                      "Id": null,
+                      "IsActive": true,
+                      "IsChecked": false
+                    }
+                  ],
+                  "Name": "GroupBox",
+                  "DisplayName": "User",
+                  "Description": null,
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "IsActive": true,
+                  "IsChecked": false
+                },
+                {
+                  "Icon": null,
+                  "ListBindings": [],
+                  "ConditionLists": [],
+                  "Width": 400,
+                  "DataCardProperties": [
+                    {
+                      "PropertyDefinition": {
+                        "DfltVal": null,
+                        "EntClassAssocArray": [
+                          {
+                            "EntClassId": "FILE",
+                            "MapDirection": 1
+                          }
+                        ],
+                        "Id": 146,
+                        "Typ": 2,
+                        "DispName": "Spare part",
+                        "SysName": "00000000-0000-0000-0000-000000000001",
+                        "IsAct": true,
+                        "IsBasicSrch": false,
+                        "IsSys": false,
+                        "UsageCount": 0
+                      },
+                      "UpdateWordDocument": false,
+                      "UpdateExcelDocument": false,
+                      "IsMandatory": false,
+                      "DisplayName": null,
+                      "ReadOnly": false,
+                      "ReadOnlyCheckboxEnabled": true,
+                      "InputValidationRule": 3,
+                      "Name": "VaultCheckBox",
+                      "Description": null,
+                      "Id": null,
+                      "IsActive": true,
+                      "IsChecked": false
+                    },
+                    {
+                      "PropertyDefinition": {
+                        "DfltVal": null,
+                        "EntClassAssocArray": [
+                          {
+                            "EntClassId": "FILE",
+                            "MapDirection": 1
+                          }
+                        ],
+                        "Id": 147,
+                        "Typ": 2,
+                        "DispName": "Wear part",
+                        "SysName": "00000000-0000-0000-0000-000000000001",
+                        "IsAct": true,
+                        "IsBasicSrch": false,
+                        "IsSys": false,
+                        "UsageCount": 0
+                      },
+                      "UpdateWordDocument": false,
+                      "UpdateExcelDocument": false,
+                      "IsMandatory": false,
+                      "DisplayName": null,
+                      "ReadOnly": false,
+                      "ReadOnlyCheckboxEnabled": true,
+                      "InputValidationRule": 3,
+                      "Name": "VaultCheckBox",
+                      "Description": null,
+                      "Id": null,
+                      "IsActive": true,
+                      "IsChecked": false
+                    }
+                  ],
+                  "Name": "GroupBox",
+                  "DisplayName": "Boolean",
+                  "Description": null,
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "IsActive": true,
+                  "IsChecked": false
+                }
+              ],
+              "Name": "TabControlTab",
+              "DisplayName": "Properties",
+              "Description": null,
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "IsActive": true,
+              "IsChecked": false
+            }
+          ],
+          "EntityClasses": [
+            {
+              "ClassId": "FILE",
+              "InternalId": null,
+              "ClassIdChecked": true
+            },
+            {
+              "ClassId": "FLDR",
+              "InternalId": null,
+              "ClassIdChecked": false
+            },
+            {
+              "ClassId": "CO",
+              "InternalId": null,
+              "ClassIdChecked": false
+            }
+          ],
+          "Name": "AKEA",
+          "DisplayName": "AKEA",
+          "Description": null,
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": true,
+          "IsChecked": false
+        }
+      ],
+      "Name": "DataCard",
+      "DisplayName": "DataCard",
+      "Description": null,
+      "Id": "00000000-0000-0000-0000-000000000001",
+      "IsActive": true,
+      "IsChecked": false
+    },
+    "LifeCycleChangeBehavior": {
+      "LifeCycleChangeActions": [
+        {
+          "ItemFileSyncronizationConfiguration": {
+            "ItemFileLinkTypeOptionConfiguration": {
+              "IncludeAttachments": false,
+              "ItemFileLinkTypeOptions": [
+                {
+                  "IsChecked": true,
+                  "ItemFileLinkTypeOption": 1
+                },
+                {
+                  "IsChecked": false,
+                  "ItemFileLinkTypeOption": 16
+                },
+                {
+                  "IsChecked": false,
+                  "ItemFileLinkTypeOption": 2
+                }
+              ],
+              "Name": "ItemFileLinkTypeOptionConfiguration",
+              "DisplayName": "ItemFileLinkTypeOptionConfiguration",
+              "Description": null,
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "IsActive": true,
+              "IsChecked": false
+            },
+            "ItemFileSyncronizations": [],
+            "ConditionLists": []
+          },
+          "RestrictionCondition": {
+            "ItemAndPrimaryFileRevisionMustMatch": true,
+            "ItemAndPrimaryFileRevisionMustMatchAllowItemsWherePropertyIsMissing": false,
+            "ItemAndPrimaryFileRevisionMustMatchReadFileRevisionPropertyFromItem": false,
+            "ItemAndPrimaryFileRevisionMustMatchRestrictionMessage": "Item and primary file revison differs / Filens revision er forskellig fra ITEM",
+            "PrimaryFileRevisionPropertyDefinition": {
+              "DfltVal": null,
+              "EntClassAssocArray": [
+                {
+                  "EntClassId": "FILE",
+                  "MapDirection": 1
+                },
+                {
+                  "EntClassId": "ITEM",
+                  "MapDirection": 1
+                }
+              ],
+              "Id": 34,
+              "Typ": 0,
+              "DispName": "Rev Number",
+              "SysName": "RevNumber",
+              "IsAct": true,
+              "IsBasicSrch": true,
+              "IsSys": false,
+              "UsageCount": 0
+            },
+            "BlockItemsWithTurnedOfRows": false,
+            "BlockItemsWithTurnedOfRowsRestrictionMessage": "Item has turned off rows in the bom",
+            "BlockItemsWithPhantomAssemblyRows": false,
+            "BlockItemsWithPhantomAssemblyRowsRestrictionMessage": "Item has rows pointing to phantom assembly",
+            "BlockIfDirectOrDecendingJobsInQueue": false,
+            "BlockIfDirectOrDecendingJobsInQueueRestrictionMessage": "Current entity has direct jobs and/or has jobs that decends from it in job queue",
+            "BlockPersonThatDidLastLifeCycleStateChange": false,
+            "BlockPersonThatDidLastLifeCycleStateChangeSkipStateNames": [],
+            "BlockPersonThatDidLastLifeCycleStateChangeRestrictionMessage": "Same user that made last life cycle state change is not allowed to change state",
+            "ValidateDrawingIsSavedAfterModel": true,
+            "DrawingIsSavedAfterModelAllowedTimeSpanInSeconds": 30,
+            "DrawingIsSavedAfterModelUseCheckedInDate": false,
+            "DrawingIsSavedAfterModelRestrictionMessage": "Drawing is saved before the model",
+            "RestrictionToStateNames": [
+              {
+                "Name": "Scheduled for Release",
+                "DisplayName": "Scheduled for Release",
+                "Description": null,
+                "Id": "00000000-0000-0000-0000-000000000001",
+                "IsActive": true,
+                "IsChecked": true
+              }
+            ],
+            "RestrictionConditionLists": []
+          },
+          "ItemAssociatedFileConfiguration": {
+            "ItemFileLinkTypeOptionConfiguration": {
+              "IncludeAttachments": false,
+              "ItemFileLinkTypeOptions": [
+                {
+                  "IsChecked": true,
+                  "ItemFileLinkTypeOption": 1
+                },
+                {
+                  "IsChecked": false,
+                  "ItemFileLinkTypeOption": 16
+                },
+                {
+                  "IsChecked": false,
+                  "ItemFileLinkTypeOption": 2
+                }
+              ],
+              "Name": "ItemFileLinkTypeOptionConfiguration",
+              "DisplayName": "ItemFileLinkTypeOptionConfiguration",
+              "Description": null,
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "IsActive": true,
+              "IsChecked": false
+            },
+            "CopyProperties": [],
+            "SetProperties": [],
+            "Name": null,
+            "DisplayName": null,
+            "Description": null,
+            "Id": null,
+            "IsActive": true,
+            "IsChecked": false
+          },
+          "Jobs": [],
+          "PreConditionLists": [],
+          "PostConditionLists": [],
+          "CopyProperties": [],
+          "SetProperties": [],
+          "Name": "LifeCycleChangeActionItem",
+          "DisplayName": "LifeCycleChangeActionItem",
+          "Description": "Configure actions to take when a item changes state",
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": true,
+          "IsChecked": true
+        }
+      ]
+    },
+    "AssignItemToFileBehavior": {
+      "AssignItemToFileActions": [
+        {
+          "AssignItemToFileRestrictionCondition": {
+            "RestrictAssignItemToFile": false,
+            "AssignItemToFileRestrictionMessage": "File not assignable due to restrictions",
+            "AssignItemToFileRestrictionConditionLists": [],
+            "RestrictWhenModelAndDrawingIsNotOneToOne": true,
+            "RestrictWhenModelAndDrawingIsNotOneToOneMessage": "File not assignable when model and drawing is not one to one"
+          },
+          "Name": "AssignItemToFileAction",
+          "DisplayName": "AssignItemToFileAction",
+          "Description": "Configure actions to take when a item is assigned to a file",
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": true,
+          "IsChecked": false
+        }
+      ]
+    },
+    "Extension": {
+      "Extensions": [
+        {
+          "DrawingListTemplates": [],
+          "CreateDrawingListCommandName": "Create Drawing List",
+          "Name": "NTI for Vault Extension - Drawing list export",
+          "DisplayName": "NTI for Vault Extension - Drawing list export",
+          "Description": "NTI for Vault Extension - Drawing list export",
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": false,
+          "IsChecked": false
+        },
+        {
+          "AllowedTimeSpanSeconds": 30,
+          "UseCheckedInDate": false,
+          "AffectedDrawingsTabName": "Affected Drawings",
+          "ContainedDrawingsTabName": "Contained Drawings",
+          "MainDrawingsTabName": "Drawings",
+          "Name": "NTI for Vault Extension - Drawing list tab",
+          "DisplayName": "NTI for Vault Extension - Drawing list tab",
+          "Description": "NTI for Vault Extension - Drawing list tab",
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": true,
+          "IsChecked": false
+        },
+        {
+          "UseSmtp": false,
+          "UseGraph": false,
+          "EmailServerSmtp": {
+            "ServerName": null,
+            "Port": 0,
+            "ServerUserName": null,
+            "ServerPassword": null,
+            "UseSsl": false,
+            "FromEmail": null,
+            "ToEmail": null
+          },
+          "EmailServerGraph": {
+            "EmailForTest": null,
+            "Email": null,
+            "Tenant": null,
+            "ClientId": null,
+            "ClientSecret": null
+          },
+          "EmailNotifications": [],
+          "Name": "NTI for Vault Extension - Email notification",
+          "DisplayName": "NTI for Vault Extension - Email notification",
+          "Description": "NTI for Vault Extension - Email notification",
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "IsActive": true,
+          "IsChecked": false
+        }
+      ]
+    },
+    "CommandsConfiguration": {
+      "VaultExplorerHiddenCommands": [],
+      "Name": null,
+      "DisplayName": null,
+      "Description": null,
+      "Id": null,
+      "IsActive": true,
+      "IsChecked": false
+    },
+    "FolderToFolderFileSynchronization": {
+      "FolderToFolderPropertySynchronizationMenuContainers": [],
+      "FolderToFilePropertySynchronizationMenuContainers": []
+    },
+    "NumberReserve": {
+      "NumberReserveMainMenus": []
+    },
+    "Name": "Sample Vault Client Config",
+    "DisplayName": "Sample Vault Client",
+    "Description": "Anonymized sample configuration for tests",
+    "Id": "00000000-0000-0000-0000-000000000001",
+    "IsActive": true,
+    "IsChecked": false
+  }
+]

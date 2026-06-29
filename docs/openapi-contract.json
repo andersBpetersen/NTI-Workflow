@@ -70,6 +70,22 @@
         }
       }
     },
+    "/vault-client/": {
+      "get": {
+        "summary": "Vault Client Viewer",
+        "operationId": "vault_client_viewer_vault_client__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health",

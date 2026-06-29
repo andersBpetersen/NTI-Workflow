@@ -24,6 +24,11 @@
       "title": "Vault Config Tools",
       "description": "Narzędzia analityczne do konfiguracji Vault.",
       "comingSoon": "Wkrótce"
+    },
+    "vaultClientViewer": {
+      "title": "NTI for Vault Client",
+      "description": "Przeglądaj ustawienia, moduły i funkcje klienta w konfiguracji JSON NTI for Vault Client.",
+      "open": "Otwórz Vault Client Viewer"
     }
   },
   "nav": {
@@ -224,5 +229,58 @@
     "unknownConfigName": "Unknown configuration",
     "readonlyViewerTitle": "Viewer is read-only",
     "uploadIntro": "Wybierz lub przeciągnij plik konfiguracyjny JSON NTI for Vault Job."
+  },
+  "vaultClient": {
+    "title": "NTI for Vault Client Viewer",
+    "open": "Otwórz Vault Client Viewer",
+    "description": "Przeglądaj ustawienia, moduły i funkcje klienta w konfiguracji JSON NTI for Vault Client.",
+    "loadConfig": "Wczytaj konfigurację klienta",
+    "uploadIntro": "Wybierz lub przeciągnij plik konfiguracyjny JSON NTI for Vault Client.",
+    "dropTitle": "Przeciągnij tutaj plik JSON NTI for Vault Client",
+    "dropSubtitle": "lub kliknij, aby wybrać plik konfiguracyjny",
+    "supportedTypes": "Obsługiwany typ pliku: .json",
+    "ariaLabel": "Prześlij konfigurację JSON NTI for Vault Client",
+    "filterPlaceholder": "Znajdź moduł...",
+    "emptyModule": "Wybierz moduł, aby zobaczyć szczegóły.",
+    "invalidJson": "Wybrany plik nie jest prawidłowym JSON.",
+    "errorJsonOnly": "Obsługiwane są tylko pliki .json.",
+    "statusLoaded": "Wczytano: {name} — {count} modułów",
+    "tableKey": "Klucz",
+    "tableValue": "Wartość",
+    "arrayItems": "{count} elementów",
+    "tabs": {
+      "modules": "Moduły"
+    },
+    "detail": {
+      "object": "Obiekt",
+      "array": "Lista",
+      "string": "Tekst",
+      "number": "Liczba",
+      "boolean": "Wartość logiczna",
+      "null": "Null",
+      "keys": "klucze",
+      "items": "elementy",
+      "noFilterResults": "Żaden moduł nie pasuje do filtra.",
+      "nestedValue": "Wartość zagnieżdżona",
+      "rawJson": "Surowy JSON",
+      "summary": "Podsumowanie",
+      "settings": "Ustawienia",
+      "actions": "Akcje",
+      "restrictions": "Ograniczenia",
+      "tabs": "Zakładki",
+      "commands": "Polecenia",
+      "showRawJson": "Pokaż surowy JSON",
+      "yes": "Tak",
+      "no": "Nie",
+      "name": "Nazwa",
+      "displayName": "Nazwa wyświetlana",
+      "description": "Opis",
+      "active": "Aktywny",
+      "checked": "Zaznaczony",
+      "id": "Id",
+      "itemsCount": "Elementy",
+      "tabsCount": "Zakładki",
+      "entityClassesCount": "Klasy encji"
+    }
   }
 }

@@ -33,3 +33,11 @@ async def vault_config_viewer() -> FileResponse:
         STATIC_DIR / "vault-config" / "index.html",
         headers=NO_CACHE_HEADERS,
     )
+
+
+@router.get("/vault-client/")
+async def vault_client_viewer() -> FileResponse:
+    return FileResponse(
+        STATIC_DIR / "vault-client" / "index.html",
+        headers=NO_CACHE_HEADERS,
+    )

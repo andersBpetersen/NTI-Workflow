@@ -1,5 +1,6 @@
 const workflowLink = document.getElementById("open-workflow-link");
 const vaultConfigLink = document.getElementById("open-vault-config-link");
+const vaultClientLink = document.getElementById("open-vault-client-link");
 const versionChip = document.getElementById("app-version");
 
 function syncModuleLinks() {
@@ -10,6 +11,9 @@ function syncModuleLinks() {
   }
   if (vaultConfigLink) {
     vaultConfigLink.href = `/vault-config/?lang=${encodeURIComponent(locale)}`;
+  }
+  if (vaultClientLink) {
+    vaultClientLink.href = `/vault-client/?lang=${encodeURIComponent(locale)}`;
   }
 }
 
