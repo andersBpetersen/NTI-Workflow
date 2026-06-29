@@ -4,26 +4,26 @@
   },
   "home": {
     "title": "NTI Workflow",
-    "intro": "Sisäiset työkalut Vault-konfiguraatioon ja lifecycle-analyysiin.",
+    "intro": "Sisäiset työkalut Vault-konfiguraatioon ja elinkaarianalyysiin.",
     "workflowViewer": {
       "title": "Workflow Viewer",
-      "description": "Lataa Excel-tuloste NTI Vault Dump Config -ohjelmasta ja visualisoi transitions, roolit ja state permissions.",
+      "description": "Lataa NTI Vault Dump Configin Excel-tuloste ja visualisoi elinkaarisiirtymät, roolit ja tilojen käyttöoikeudet.",
       "open": "Avaa Workflow Viewer"
     },
     "lifecycleCompare": {
       "title": "Lifecycle Compare",
-      "description": "Vertaa kahta Vault lifecycle -vientiä ja löydä erot.",
-      "comingSoon": "Tulossa pian"
+      "description": "Vertaa kahta Vault-elinkaarivientiä ja etsi erot.",
+      "comingSoon": "Tulossa myöhemmin"
+    },
+    "vaultConfigViewer": {
+      "title": "NTI for Vault Config",
+      "description": "Selaa kontteja, prosessoreita, töitä ja asetuksia NTI for Vault Job JSON -konfiguraatiossa.",
+      "open": "Avaa Vault Config Viewer"
     },
     "vaultConfigTools": {
       "title": "Vault Config Tools",
       "description": "Analyysityökalut Vault-konfiguraatioon.",
-      "comingSoon": "Tulossa pian"
-    },
-    "vaultConfigViewer": {
-      "title": "NTI for Vault Config",
-      "description": "Browse containers, processors, jobs and settings in an NTI for Vault Job JSON configuration.",
-      "open": "Open Vault Config Viewer"
+      "comingSoon": "Tulossa myöhemmin"
     }
   },
   "nav": {
@@ -32,7 +32,7 @@
   "upload": {
     "chooseFile": "Valitse Excel-tiedosto",
     "dropTitle": "Vedä Excel-tiedosto tähän",
-    "dropSubtitle": "tai napsauta valitaksesi Excel-tulostetiedoston ohjelmasta",
+    "dropSubtitle": "tai napsauta valitaksesi Excel-tulostiedoston kohteesta",
     "dropSubtitleStrong": "NTI Vault Dump Config",
     "supportedTypes": "Tuettu tiedostotyyppi: .xlsx",
     "requiredSheet": "Tiedoston on sisällettävä taulukko",
@@ -185,9 +185,9 @@
   "vault": {
     "languageLabel": "Language",
     "backHome": "Back to home",
-    "loadConfig": "Load Config",
-    "dropTitle": "Drag an NTI for Vault Job JSON file here",
-    "dropSubtitle": "or click to select a configuration file",
+    "loadConfig": "Lataa konfiguraatio",
+    "dropTitle": "Vedä NTI for Vault Job JSON -tiedosto tähän",
+    "dropSubtitle": "tai napsauta valitaksesi konfiguraatiotiedoston",
     "topContainers": "Job processor containers",
     "topDeactivate": "Deactivate job processors",
     "topFilepaths": "File paths to exclude during job clean up",
@@ -200,9 +200,28 @@
     "errorInvalidFormat": "The JSON could be read, but the configuration format is invalid.",
     "errorMissingContainers": "The JSON could be read, but does not contain JobProcessor.JobProcessorContainers.",
     "errorParsePrefix": "Could not parse JSON:\n",
-    "statusLoaded": "Loaded",
-    "containersCountSuffix": "containers",
-    "supportedTypes": "Supported file type: .json",
-    "ariaLabel": "Upload NTI for Vault Job configuration JSON file"
+    "statusLoaded": "Loaded: {name} — {count} containers",
+    "supportedTypes": "Tuettu tiedostotyyppi: .json",
+    "ariaLabel": "Lähetä NTI for Vault Job JSON -konfiguraatiotiedosto",
+    "searchPlaceholder": "Find...",
+    "tableName": "Name",
+    "tableDescription": "Description",
+    "tableActive": "Active",
+    "tableJobProcessorKey": "Job processor key",
+    "tableRunOnlyViaJobProcessorKey": "Run only via job processor key",
+    "tablePriority": "Priority",
+    "emptyChooseContainer": "Choose a container.",
+    "emptyChooseJobProcessor": "Choose a jobprocessor to see details.",
+    "emptyNoContainers": "No containers.",
+    "emptyNoProcessors": "No job processors configured.",
+    "emptyNoFilePaths": "No file paths configured.",
+    "emptyNoDeactivateConfig": "No deactivation configuration found.",
+    "statusVersionPrefix": "Version:",
+    "modalClose": "Close",
+    "modalConditions": "Conditions",
+    "modalParameters": "Parameters",
+    "modalJob": "Job",
+    "unknownConfigName": "Unknown configuration",
+    "readonlyViewerTitle": "Viewer is read-only"
   }
 }

@@ -4,26 +4,26 @@
   },
   "home": {
     "title": "NTI Workflow",
-    "intro": "Outils internes pour la configuration Vault et l'analyse de lifecycle.",
+    "intro": "Outils internes pour la configuration Vault et l’analyse du cycle de vie.",
     "workflowViewer": {
       "title": "Workflow Viewer",
-      "description": "Téléchargez la sortie Excel de NTI Vault Dump Config et visualisez les transitions, rôles et state permissions.",
+      "description": "Importez la sortie Excel de NTI Vault Dump Config et visualisez les transitions de cycle de vie, les rôles et les autorisations d’état.",
       "open": "Ouvrir Workflow Viewer"
     },
     "lifecycleCompare": {
       "title": "Lifecycle Compare",
-      "description": "Comparez deux exportations de lifecycle Vault et trouvez les différences.",
-      "comingSoon": "Bientôt disponible"
-    },
-    "vaultConfigTools": {
-      "title": "Vault Config Tools",
-      "description": "Outils d'analyse pour la configuration Vault.",
+      "description": "Comparez deux exports de cycle de vie Vault et trouvez les différences.",
       "comingSoon": "Bientôt disponible"
     },
     "vaultConfigViewer": {
       "title": "NTI for Vault Config",
-      "description": "Browse containers, processors, jobs and settings in an NTI for Vault Job JSON configuration.",
-      "open": "Open Vault Config Viewer"
+      "description": "Parcourez les conteneurs, processeurs, jobs et paramètres dans une configuration JSON NTI for Vault Job.",
+      "open": "Ouvrir Vault Config Viewer"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Outils d’analyse pour la configuration Vault.",
+      "comingSoon": "Bientôt disponible"
     }
   },
   "nav": {
@@ -32,7 +32,7 @@
   "upload": {
     "chooseFile": "Choisir un fichier Excel",
     "dropTitle": "Glissez le fichier Excel ici",
-    "dropSubtitle": "ou cliquez pour sélectionner le fichier de sortie Excel de",
+    "dropSubtitle": "ou cliquez pour sélectionner le fichier de sortie Excel depuis",
     "dropSubtitleStrong": "NTI Vault Dump Config",
     "supportedTypes": "Type de fichier pris en charge : .xlsx",
     "requiredSheet": "Le fichier doit contenir la feuille",
@@ -185,9 +185,9 @@
   "vault": {
     "languageLabel": "Language",
     "backHome": "Back to home",
-    "loadConfig": "Load Config",
-    "dropTitle": "Drag an NTI for Vault Job JSON file here",
-    "dropSubtitle": "or click to select a configuration file",
+    "loadConfig": "Charger la configuration",
+    "dropTitle": "Glissez un fichier JSON NTI for Vault Job ici",
+    "dropSubtitle": "ou cliquez pour sélectionner un fichier de configuration",
     "topContainers": "Job processor containers",
     "topDeactivate": "Deactivate job processors",
     "topFilepaths": "File paths to exclude during job clean up",
@@ -200,9 +200,28 @@
     "errorInvalidFormat": "The JSON could be read, but the configuration format is invalid.",
     "errorMissingContainers": "The JSON could be read, but does not contain JobProcessor.JobProcessorContainers.",
     "errorParsePrefix": "Could not parse JSON:\n",
-    "statusLoaded": "Loaded",
-    "containersCountSuffix": "containers",
-    "supportedTypes": "Supported file type: .json",
-    "ariaLabel": "Upload NTI for Vault Job configuration JSON file"
+    "statusLoaded": "Loaded: {name} — {count} containers",
+    "supportedTypes": "Type de fichier pris en charge : .json",
+    "ariaLabel": "Importer un fichier JSON de configuration NTI for Vault Job",
+    "searchPlaceholder": "Find...",
+    "tableName": "Name",
+    "tableDescription": "Description",
+    "tableActive": "Active",
+    "tableJobProcessorKey": "Job processor key",
+    "tableRunOnlyViaJobProcessorKey": "Run only via job processor key",
+    "tablePriority": "Priority",
+    "emptyChooseContainer": "Choose a container.",
+    "emptyChooseJobProcessor": "Choose a jobprocessor to see details.",
+    "emptyNoContainers": "No containers.",
+    "emptyNoProcessors": "No job processors configured.",
+    "emptyNoFilePaths": "No file paths configured.",
+    "emptyNoDeactivateConfig": "No deactivation configuration found.",
+    "statusVersionPrefix": "Version:",
+    "modalClose": "Close",
+    "modalConditions": "Conditions",
+    "modalParameters": "Parameters",
+    "modalJob": "Job",
+    "unknownConfigName": "Unknown configuration",
+    "readonlyViewerTitle": "Viewer is read-only"
   }
 }

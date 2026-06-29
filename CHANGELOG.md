@@ -2,6 +2,13 @@
 
 Alle bemærkelsesværdige ændringer i dette projekt dokumenteres i denne fil.
 
+## [0.7.2] - 2026-06-29
+
+### Fixed
+- Færdiggjort i18n i NTI for Vault Config Viewer efter JSON-indlæsning.
+- Oversat tabs, knapper, søgefelt, tabelheaders, statuslinje og tomme tilstande i Vault Config Viewer.
+- Sikret at tekniske jobnavne, processor keys og brugerdata ikke oversættes.
+
 ## [0.7.1] - 2026-06-25
 
 ### Fixed

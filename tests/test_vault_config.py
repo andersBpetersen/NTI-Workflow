@@ -15,7 +15,7 @@ def test_vault_config_page_is_available(client: TestClient) -> None:
     response = client.get("/vault-config/")
     assert response.status_code == 200
     assert "NTI for Vault Job Viewer" in response.text
-    assert "Indlæs konfiguration" in response.text
+    assert 'data-i18n="vault.loadConfig"' in response.text
     assert 'accept=".json' in response.text
     assert "id=\"topbar\"" in response.text
     assert "id=\"splitView\"" in response.text

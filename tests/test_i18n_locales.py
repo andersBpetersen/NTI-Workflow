@@ -127,16 +127,19 @@ def test_locale_select_is_not_hardcoded_in_multiple_html_files() -> None:
     index_html = (STATIC / "index.html").read_text(encoding="utf-8")
     workflow_html = (STATIC / "workflow" / "index.html").read_text(encoding="utf-8")
     vault_html = (STATIC / "vault-config" / "index.html").read_text(encoding="utf-8")
-    assert '<select id="localeSelect" aria-label="Language"></select>' in index_html
-    assert '<select id="localeSelect" aria-label="Language"></select>' in workflow_html
-    assert '<select id="localeSelect" aria-label="Language"></select>' in vault_html
+    assert 'id="localeSelect"' in index_html
+    assert 'data-i18n-aria-label="language.label"' in index_html
+    assert 'id="localeSelect"' in workflow_html
+    assert 'data-i18n-aria-label="language.label"' in workflow_html
+    assert 'id="localeSelect"' in vault_html
+    assert 'data-i18n-aria-label="language.label"' in vault_html
 
 
 def test_portuguese_requirements_and_workflow_technical_terms() -> None:
     payload = json.loads((I18N_DIR / "pt-BR.json").read_text(encoding="utf-8"))
     assert payload["language"]["label"] == "Idioma"
     assert payload["nav"]["backHome"] == "Voltar ao início"
-    assert payload["upload"]["chooseFile"] == "Selecionar arquivo Excel"
+    assert payload["upload"]["chooseFile"] == "Escolher arquivo Excel"
     script = (STATIC / "i18n.js").read_text(encoding="utf-8")
     assert "Português (Brasil)" in script
     assert ">Brasil<" not in (STATIC / "index.html").read_text(encoding="utf-8")
@@ -148,8 +151,8 @@ def test_portuguese_requirements_and_workflow_technical_terms() -> None:
 def test_vault_config_uses_shared_i18n_runtime_and_not_local_registry() -> None:
     vault_html = (STATIC / "vault-config" / "index.html").read_text(encoding="utf-8")
     assert '<script src="/static/i18n.js"></script>' in vault_html
-    assert "function vt(key, fallback = \"\")" in vault_html
-    assert "window.addEventListener(\"nti:locale-changed\", applyVaultLocaleTexts);" in vault_html
+    assert "function vt(key, params = {})" in vault_html
+    assert "window.addEventListener(\"nti:locale-changed\", onVaultLocaleChanged);" in vault_html
     assert "const VAULT_TEXT" not in vault_html
 
 

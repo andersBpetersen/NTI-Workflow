@@ -7,7 +7,7 @@
     "intro": "Interne verktøy for Vault-konfigurasjon og lifecycle-analyse.",
     "workflowViewer": {
       "title": "Workflow Viewer",
-      "description": "Last opp Excel-utdata fra NTI Vault Dump Config og visualiser transitions, roller og state permissions.",
+      "description": "Last opp Excel-utdata fra NTI Vault Dump Config og visualiser lifecycle-overganger, roller og state-tillatelser.",
       "open": "Åpne Workflow Viewer"
     },
     "lifecycleCompare": {
@@ -15,15 +15,15 @@
       "description": "Sammenlign to Vault lifecycle-eksporter og finn forskjeller.",
       "comingSoon": "Kommer snart"
     },
+    "vaultConfigViewer": {
+      "title": "NTI for Vault Config",
+      "description": "Bla gjennom containere, prosessorer, jobs og innstillinger i en NTI for Vault Job JSON-konfigurasjon.",
+      "open": "Åpne Vault Config Viewer"
+    },
     "vaultConfigTools": {
       "title": "Vault Config Tools",
       "description": "Analyseverktøy for Vault-konfigurasjon.",
       "comingSoon": "Kommer snart"
-    },
-    "vaultConfigViewer": {
-      "title": "NTI for Vault Config",
-      "description": "Browse containers, processors, jobs and settings in an NTI for Vault Job JSON configuration.",
-      "open": "Open Vault Config Viewer"
     }
   },
   "nav": {
@@ -185,9 +185,9 @@
   "vault": {
     "languageLabel": "Language",
     "backHome": "Back to home",
-    "loadConfig": "Load Config",
-    "dropTitle": "Drag an NTI for Vault Job JSON file here",
-    "dropSubtitle": "or click to select a configuration file",
+    "loadConfig": "Last inn konfigurasjon",
+    "dropTitle": "Dra en NTI for Vault Job JSON-fil hit",
+    "dropSubtitle": "eller klikk for å velge en konfigurasjonsfil",
     "topContainers": "Job processor containers",
     "topDeactivate": "Deactivate job processors",
     "topFilepaths": "File paths to exclude during job clean up",
@@ -200,9 +200,28 @@
     "errorInvalidFormat": "The JSON could be read, but the configuration format is invalid.",
     "errorMissingContainers": "The JSON could be read, but does not contain JobProcessor.JobProcessorContainers.",
     "errorParsePrefix": "Could not parse JSON:\n",
-    "statusLoaded": "Loaded",
-    "containersCountSuffix": "containers",
-    "supportedTypes": "Supported file type: .json",
-    "ariaLabel": "Upload NTI for Vault Job configuration JSON file"
+    "statusLoaded": "Loaded: {name} — {count} containers",
+    "supportedTypes": "Støttet filtype: .json",
+    "ariaLabel": "Last opp NTI for Vault Job JSON-konfigurasjon",
+    "searchPlaceholder": "Find...",
+    "tableName": "Name",
+    "tableDescription": "Description",
+    "tableActive": "Active",
+    "tableJobProcessorKey": "Job processor key",
+    "tableRunOnlyViaJobProcessorKey": "Run only via job processor key",
+    "tablePriority": "Priority",
+    "emptyChooseContainer": "Choose a container.",
+    "emptyChooseJobProcessor": "Choose a jobprocessor to see details.",
+    "emptyNoContainers": "No containers.",
+    "emptyNoProcessors": "No job processors configured.",
+    "emptyNoFilePaths": "No file paths configured.",
+    "emptyNoDeactivateConfig": "No deactivation configuration found.",
+    "statusVersionPrefix": "Version:",
+    "modalClose": "Close",
+    "modalConditions": "Conditions",
+    "modalParameters": "Parameters",
+    "modalJob": "Job",
+    "unknownConfigName": "Unknown configuration",
+    "readonlyViewerTitle": "Viewer is read-only"
   }
 }

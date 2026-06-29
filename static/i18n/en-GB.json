@@ -7,7 +7,7 @@
     "intro": "Internal tools for Vault configuration and lifecycle analysis.",
     "workflowViewer": {
       "title": "Workflow Viewer",
-      "description": "Upload Excel output from NTI Vault Dump Config and visualize lifecycle transitions, roles, and state permissions.",
+      "description": "Upload Excel output from NTI Vault Dump Config and visualize lifecycle transitions, roles and state permissions.",
       "open": "Open Workflow Viewer"
     },
     "lifecycleCompare": {
@@ -15,15 +15,15 @@
       "description": "Compare two Vault lifecycle exports and find differences.",
       "comingSoon": "Coming soon"
     },
-    "vaultConfigTools": {
-      "title": "Vault Config Tools",
-      "description": "Analysis tools for Vault configuration.",
-      "comingSoon": "Coming soon"
-    },
     "vaultConfigViewer": {
       "title": "NTI for Vault Config",
       "description": "Browse containers, processors, jobs and settings in an NTI for Vault Job JSON configuration.",
       "open": "Open Vault Config Viewer"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Analysis tools for Vault configuration.",
+      "comingSoon": "Coming soon"
     }
   },
   "nav": {
@@ -196,13 +196,32 @@
     "hideInactive": "Hide inactive",
     "showAll": "Show all",
     "findNext": "Find next",
+    "searchPlaceholder": "Find...",
+    "tableName": "Name",
+    "tableDescription": "Description",
+    "tableActive": "Active",
+    "tableJobProcessorKey": "Job processor key",
+    "tableRunOnlyViaJobProcessorKey": "Run only via job processor key",
+    "tablePriority": "Priority",
+    "emptyChooseContainer": "Choose a container.",
+    "emptyChooseJobProcessor": "Choose a jobprocessor to see details.",
+    "emptyNoContainers": "No containers.",
+    "emptyNoProcessors": "No job processors configured.",
+    "emptyNoFilePaths": "No file paths configured.",
+    "emptyNoDeactivateConfig": "No deactivation configuration found.",
     "statusReady": "Ready - load a config file to begin.",
+    "statusLoaded": "Loaded: {name} — {count} containers",
+    "statusVersionPrefix": "Version:",
+    "modalClose": "Close",
+    "modalConditions": "Conditions",
+    "modalParameters": "Parameters",
+    "modalJob": "Job",
     "errorJsonOnly": "Only .json files are supported.",
     "errorEmptyArray": "The configuration file contains an empty array.",
     "errorInvalidFormat": "The JSON could be read, but the configuration format is invalid.",
     "errorMissingContainers": "The JSON could be read, but does not contain JobProcessor.JobProcessorContainers.",
     "errorParsePrefix": "Could not parse JSON:\n",
-    "statusLoaded": "Loaded",
-    "containersCountSuffix": "containers"
+    "unknownConfigName": "Unknown configuration",
+    "readonlyViewerTitle": "Viewer is read-only"
   }
 }

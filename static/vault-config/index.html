@@ -121,14 +121,14 @@ input[type=text],select,textarea{font-size:12px;font-family:inherit}
 <body>
 
 <div id="topbar">
-  <a id="back-home-link" class="back-home" href="/">← Tilbage til forsiden</a>
+  <a id="back-home-link" class="back-home" href="/" data-i18n="nav.backHome">Back to home</a>
   <h1>NTI for Vault Job Viewer</h1>
   <span id="versionDisplay" class="version"></span>
   <label class="locale-control">
-    <span id="localeLabel">Language</span>
-    <select id="localeSelect" aria-label="Language"></select>
+    <span data-i18n="language.label">Language</span>
+    <select id="localeSelect" data-i18n-aria-label="language.label" aria-label="Language"></select>
   </label>
-  <label class="btn-load">Indlæs konfiguration<input type="file" id="fileInput" accept=".json" style="display:none"></label>
+  <label class="btn-load"><span id="loadConfigLabel" data-i18n="vault.loadConfig">Load Config</span><input type="file" id="fileInput" accept=".json" style="display:none"></label>
 </div>
 
 <div id="loadScreen" class="nti-file-dropzone-host">
@@ -149,27 +149,27 @@ input[type=text],select,textarea{font-size:12px;font-family:inherit}
 
 <div id="app">
   <div class="tab-bar" id="topTabBar">
-    <button class="tab-btn active" data-tab="containers">Jobprocessor-containere</button>
-    <button class="tab-btn" data-tab="deactivate">Deaktiver jobprocessorer</button>
-    <button class="tab-btn" data-tab="filepaths">Filstier der udelades ved joboprydning</button>
+    <button class="tab-btn active" data-tab="containers" data-vault-i18n="topContainers"></button>
+    <button class="tab-btn" data-tab="deactivate" data-vault-i18n="topDeactivate"></button>
+    <button class="tab-btn" data-tab="filepaths" data-vault-i18n="topFilepaths"></button>
   </div>
   <div id="splitView">
     <div id="leftPanel">
       <div class="toolbar">
-        <button class="btn btn-red" onclick="roAlert()">Fjern</button>
-        <button class="btn btn-grey" onclick="roAlert()">Flyt op</button>
-        <button class="btn btn-grey" onclick="roAlert()">Flyt ned</button>
-        <button class="btn btn-grey" id="btnHide" onclick="setShowInactive(false)">Skjul inaktive</button>
-        <button class="btn btn-grey" id="btnShow" onclick="setShowInactive(true)" style="display:none">Vis alle</button>
-        <button class="btn btn-outline" onclick="roAlert()">Gem grid-tilstand</button>
-        <button class="btn btn-outline" onclick="roAlert()">Nulstil grid-tilstand</button>
+        <button class="btn btn-red vault-readonly-action" onclick="roAlert()">Remove</button>
+        <button class="btn btn-grey vault-readonly-action" onclick="roAlert()">Move up</button>
+        <button class="btn btn-grey vault-readonly-action" onclick="roAlert()">Move down</button>
+        <button class="btn btn-grey" id="btnHide" onclick="setShowInactive(false)" data-vault-i18n="hideInactive"></button>
+        <button class="btn btn-grey" id="btnShow" onclick="setShowInactive(true)" style="display:none" data-vault-i18n="showAll"></button>
+        <button class="btn btn-outline vault-readonly-action" onclick="roAlert()">Save grid state</button>
+        <button class="btn btn-outline vault-readonly-action" onclick="roAlert()">Reset grid state</button>
       </div>
       <div id="leftSearch">
-        <input type="text" id="searchInput" placeholder="Find…" oninput="onSearch(this.value)">
-        <button class="btn btn-dark" onclick="onSearch(document.getElementById('searchInput').value)">Find næste</button>
+        <input type="text" id="searchInput" data-vault-i18n-placeholder="searchPlaceholder" placeholder="" oninput="onSearch(this.value)">
+        <button class="btn btn-dark" id="findNextBtn" data-vault-i18n="findNext"></button>
       </div>
       <div class="tbl-wrap">
-        <table><thead><tr><th>Name &#9660;</th><th>Description</th></tr></thead>
+        <table><thead><tr><th id="leftHdrName" data-vault-i18n="tableName"></th><th id="leftHdrDescription" data-vault-i18n="tableDescription"></th></tr></thead>
         <tbody id="leftBody"></tbody></table>
       </div>
     </div>
@@ -179,46 +179,46 @@ input[type=text],select,textarea{font-size:12px;font-family:inherit}
     <div id="rightPanel">
       <div id="processorSection">
         <div class="toolbar">
-          <button class="btn btn-green" onclick="roAlert()">Add</button>
-          <button class="btn btn-red" onclick="roAlert()">Remove</button>
-          <button class="btn btn-grey" onclick="roAlert()">Move up</button>
-          <button class="btn btn-grey" onclick="roAlert()">Move down</button>
-          <button class="btn btn-outline" onclick="roAlert()">Save grid state</button>
-          <button class="btn btn-outline" onclick="roAlert()">Reset grid state</button>
+          <button class="btn btn-green vault-readonly-action" onclick="roAlert()">Add</button>
+          <button class="btn btn-red vault-readonly-action" onclick="roAlert()">Remove</button>
+          <button class="btn btn-grey vault-readonly-action" onclick="roAlert()">Move up</button>
+          <button class="btn btn-grey vault-readonly-action" onclick="roAlert()">Move down</button>
+          <button class="btn btn-outline vault-readonly-action" onclick="roAlert()">Save grid state</button>
+          <button class="btn btn-outline vault-readonly-action" onclick="roAlert()">Reset grid state</button>
         </div>
         <div id="procTableWrap">
           <table><thead><tr>
-            <th class="cb">Active &#9660;</th>
-            <th>Name</th>
-            <th>Job processor key &#9660;</th>
-            <th class="cb" style="min-width:60px">Run only via job processor key &#9660;</th>
-            <th>Description &#9660;</th>
+            <th class="cb" id="procHdrActive" data-vault-i18n="tableActive"></th>
+            <th id="procHdrName" data-vault-i18n="tableName"></th>
+            <th id="procHdrJobKey" data-vault-i18n="tableJobProcessorKey"></th>
+            <th class="cb" id="procHdrRunOnly" style="min-width:60px" data-vault-i18n="tableRunOnlyViaJobProcessorKey"></th>
+            <th id="procHdrDescription" data-vault-i18n="tableDescription"></th>
           </tr></thead>
           <tbody id="procBody"></tbody></table>
         </div>
       </div>
       <div id="detailSection">
         <div class="tab-bar" id="detailTabBar"></div>
-        <div id="detailContent"><div class="empty-state">Vælg en container og jobprocessor for at se detaljer.</div></div>
+        <div id="detailContent"><div class="empty-state" id="detailEmptyState"></div></div>
       </div>
     </div>
   </div>
 </div>
 
-<div id="statusBar">Klar — indlæs en konfigurationsfil for at begynde.</div>
+<div id="statusBar"></div>
 
 <div class="modal-ov" id="modal" style="display:none" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <div class="modal-hdr"><span id="modalTitle">Job</span><button class="modal-close" onclick="closeModal()">&#x2715;</button></div>
+    <div class="modal-hdr"><span id="modalTitle" data-vault-i18n="modalJob">Job</span><button class="modal-close" onclick="closeModal()">&#x2715;</button></div>
     <div class="modal-fields" id="modalFields"></div>
     <div class="modal-tabs">
       <div class="tab-bar" id="modalTabBar" style="background:#f5f5f5">
-        <button class="tab-btn active" onclick="switchModalTab('conditions',this)">Conditions</button>
-        <button class="tab-btn" onclick="switchModalTab('parameters',this)">Parameters</button>
+        <button class="tab-btn active" id="modalTabConditions" onclick="switchModalTab('conditions',this)" data-vault-i18n="modalConditions">Conditions</button>
+        <button class="tab-btn" id="modalTabParameters" onclick="switchModalTab('parameters',this)" data-vault-i18n="modalParameters">Parameters</button>
       </div>
       <div class="modal-content" id="modalContent"></div>
     </div>
-    <div class="modal-footer"><button class="btn btn-red" onclick="closeModal()">Luk</button></div>
+    <div class="modal-footer"><button class="btn btn-red" id="modalCloseBtn" onclick="closeModal()" data-vault-i18n="modalClose">Close</button></div>
   </div>
 </div>
 
@@ -227,7 +227,7 @@ input[type=text],select,textarea{font-size:12px;font-family:inherit}
     <div class="modal-hdr"><span id="schemeMTitle">Path scheme</span><button class="modal-close" onclick="closeSchemeModal()">&#x2715;</button></div>
     <div class="modal-fields" id="schemeMFields"></div>
     <div class="modal-content" id="schemeMContent"></div>
-    <div class="modal-footer"><button class="btn btn-red" onclick="closeSchemeModal()">Luk</button></div>
+    <div class="modal-footer"><button class="btn btn-red" id="schemeCloseBtn" onclick="closeSchemeModal()" data-vault-i18n="modalClose">Close</button></div>
   </div>
 </div>
 
@@ -244,47 +244,66 @@ const LL = {0:'None',1:'Error',2:'Warning',3:'Info',4:'Debug',5:'Verbose',7:'Def
 const IRT = {0:'Run all',1:'Run by name',2:'Run by trigger',3:'None'};
 const SR = {1:'kPrintCurrentSheet',2:'kPrintSheetRange',14082:'kPrintAllSheets'};
 const AP = {0:'None',1:'AP214',2:'AP203_E2',3:'AP242'};
-function vt(key, fallback = "") {
-  if (typeof window.t === "function") {
-    return window.t(`vault.${key}`);
-  }
-  return fallback || key;
-}
 
-// ── STATE ──────────────────────────────────────────────────────────────────────
 const S = {
   cfg: null, containers: [],
   selContainer: null, selProcessor: null, selProcessorIdx: -1,
   showInactive: true, searchTerm: '',
   leftTab: 'containers', detailTab: 'general', detailSubTab: 'conditions',
-  modalJob: null, cgCounter: 0
+  modalJob: null, cgCounter: 0, lastCfgName: ''
 };
+
+function vt(key, params = {}) {
+  if (typeof window.t === "function") {
+    return window.t(`vault.${key}`, params);
+  }
+  return key;
+}
+
+function applyVaultDataI18nAttributes(root = document) {
+  root.querySelectorAll("[data-vault-i18n]").forEach((element) => {
+    element.textContent = vt(element.dataset.vaultI18n);
+  });
+  root.querySelectorAll("[data-vault-i18n-placeholder]").forEach((element) => {
+    element.setAttribute("placeholder", vt(element.dataset.vaultI18nPlaceholder));
+  });
+}
+
+function updateStatusBar() {
+  const statusBar = document.getElementById("statusBar");
+  if (!statusBar) return;
+  if (!S.cfg) {
+    statusBar.textContent = vt("statusReady");
+    return;
+  }
+  statusBar.textContent = vt("statusLoaded", {
+    name: S.lastCfgName || vt("unknownConfigName"),
+    count: S.containers.length,
+  });
+}
 
 function applyVaultLocaleTexts() {
   const currentLocale = typeof window.getCurrentLocale === "function" ? window.getCurrentLocale() : "en-GB";
   if (typeof window.applyTranslations === "function") {
     window.applyTranslations();
   }
-  document.getElementById("localeLabel").textContent = vt("languageLabel", "Language");
-  document.getElementById("back-home-link").textContent = vt("backHome", "Back to home");
-  document.querySelector(".btn-load").childNodes[0].nodeValue = vt("loadConfig", "Load Config");
-  const topTabs = document.querySelectorAll("#topTabBar .tab-btn");
-  if (topTabs[0]) topTabs[0].textContent = vt("topContainers", "Job processor containers");
-  if (topTabs[1]) topTabs[1].textContent = vt("topDeactivate", "Deactivate job processors");
-  if (topTabs[2]) topTabs[2].textContent = vt("topFilepaths", "File paths to exclude during job clean up");
-  const hideBtn = document.getElementById("btnHide");
-  const showBtn = document.getElementById("btnShow");
-  if (hideBtn) hideBtn.textContent = vt("hideInactive", "Hide inactive");
-  if (showBtn) showBtn.textContent = vt("showAll", "Show all");
-  const findNextBtn = document.querySelector("#leftSearch button");
-  if (findNextBtn) findNextBtn.textContent = vt("findNext", "Find next");
-  const statusBar = document.getElementById("statusBar");
-  if (statusBar && !S.cfg) statusBar.textContent = vt("statusReady", "Ready - load a config file to begin.");
+  applyVaultDataI18nAttributes();
   document.getElementById("back-home-link").href = `/?lang=${encodeURIComponent(currentLocale)}`;
   document.documentElement.lang = currentLocale.split("-")[0];
+  updateStatusBar();
 }
 
-window.addEventListener("nti:locale-changed", applyVaultLocaleTexts);
+function onVaultLocaleChanged() {
+  applyVaultLocaleTexts();
+  if (S.cfg) {
+    renderLeft();
+    renderProc();
+    renderDetail();
+    enforceReadOnlyUI();
+  }
+}
+
+window.addEventListener("nti:locale-changed", onVaultLocaleChanged);
 
 async function bootstrapVaultPage() {
   if (typeof window.initI18n === "function") {
@@ -319,7 +338,7 @@ bootstrapVaultPage();
 
 function readFile(file) {
   if (!window.NTIShared.files.hasExtension(file, [".json"])) {
-    alert(vt("errorJsonOnly", "Only .json files are supported."));
+    alert(vt("errorJsonOnly"));
     return;
   }
   const r = new FileReader();
@@ -330,23 +349,23 @@ function readFile(file) {
       let cfg;
       if (Array.isArray(parsed)) {
         if (parsed.length === 0) {
-          throw new Error(vt("errorEmptyArray", "The configuration file contains an empty array."));
+          throw new Error(vt("errorEmptyArray"));
         }
         cfg = parsed[0];
       } else {
         cfg = parsed;
       }
       if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) {
-        throw new Error(vt("errorInvalidFormat", "The JSON could be read, but the configuration format is invalid."));
+        throw new Error(vt("errorInvalidFormat"));
       }
       const containers = cfg?.JobProcessor?.JobProcessorContainers;
       if (!Array.isArray(containers)) {
-        throw new Error(vt("errorMissingContainers", "The JSON could be read, but does not contain JobProcessor.JobProcessorContainers."));
+        throw new Error(vt("errorMissingContainers"));
       }
       console.log("Normalized config:", cfg);
       console.log("Containers:", containers);
       initConfig(cfg, file);
-    } catch(ex) { alert(vt("errorParsePrefix", "Could not parse JSON:\n") + ex.message); }
+    } catch(ex) { alert(vt("errorParsePrefix") + ex.message); }
   };
   r.readAsText(file);
 }
@@ -354,10 +373,11 @@ function readFile(file) {
 function initConfig(cfg, file) {
   S.cfg = cfg; S.containers = cfg.JobProcessor?.JobProcessorContainers || [];
   S.selContainer = null; S.selProcessor = null;
-  document.getElementById('versionDisplay').textContent = cfg.Version ? 'Version: ' + cfg.Version : '';
-  const cfgName = cfg.DisplayName || cfg.Name || cfg.Description || file?.name || 'Ukendt konfiguration';
-  document.getElementById('statusBar').textContent =
-    `${vt("statusLoaded", "Loaded")}: ${cfgName} — ${S.containers.length} ${vt("containersCountSuffix", "containers")}`;
+  S.lastCfgName = cfg.DisplayName || cfg.Name || cfg.Description || file?.name || vt("unknownConfigName");
+  document.getElementById('versionDisplay').textContent = cfg.Version
+    ? `${vt("statusVersionPrefix")} ${cfg.Version}`
+    : '';
+  updateStatusBar();
   document.getElementById('loadScreen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
   renderLeft(); renderProc(); renderDetail(); enforceReadOnlyUI();
@@ -370,12 +390,12 @@ function renderLeft() {
     const paths = S.cfg?.General?.FilePathsToExcludeFromJobsFileCleanUp || [];
     tbody.innerHTML = paths.length
       ? paths.map(p => `<tr><td colspan="2">${esc(p)}</td></tr>`).join('')
-      : `<tr><td colspan="2" class="empty-state">Ingen filstier konfigureret.</td></tr>`;
+      : `<tr><td colspan="2" class="empty-state">${esc(vt("emptyNoFilePaths"))}</td></tr>`;
     enforceReadOnlyUI();
     return;
   }
   if (S.leftTab === 'deactivate') {
-    tbody.innerHTML = `<tr><td colspan="2" class="empty-state">Ingen deaktiveringskonfiguration fundet.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="2" class="empty-state">${esc(vt("emptyNoDeactivateConfig"))}</td></tr>`;
     enforceReadOnlyUI();
     return;
   }
@@ -391,7 +411,7 @@ function renderLeft() {
       <td>${dot}${esc(c.JobName || c.Name)}</td>
       <td>${esc(c.JobDescription || c.Description || '')}</td>
     </tr>`;
-  }).join('') : `<tr><td colspan="2" class="empty-state">Ingen containere.</td></tr>`;
+  }).join('') : `<tr><td colspan="2" class="empty-state">${esc(vt("emptyNoContainers"))}</td></tr>`;
   enforceReadOnlyUI();
 }
 
@@ -405,9 +425,9 @@ function selectContainer(id) {
 // ── PROCESSOR GRID ─────────────────────────────────────────────────────────────
 function renderProc() {
   const tbody = document.getElementById('procBody');
-  if (!S.selContainer) { tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Vælg en container.</td></tr>`; enforceReadOnlyUI(); return; }
+  if (!S.selContainer) { tbody.innerHTML = `<tr><td colspan="5" class="empty-state">${esc(vt("emptyChooseContainer"))}</td></tr>`; enforceReadOnlyUI(); return; }
   const procs = S.selContainer.JobProcessors || [];
-  if (!procs.length) { tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Ingen jobprocessorer konfigureret.</td></tr>`; enforceReadOnlyUI(); return; }
+  if (!procs.length) { tbody.innerHTML = `<tr><td colspan="5" class="empty-state">${esc(vt("emptyNoProcessors"))}</td></tr>`; enforceReadOnlyUI(); return; }
   tbody.innerHTML = procs.map((p, i) => {
     const sel = S.selProcessorIdx === i ? 'sel' : '';
     const inact = !p.IsActive ? 'inact' : '';
@@ -464,7 +484,7 @@ function renderDetail() {
   const content = document.getElementById('detailContent');
   if (!S.selProcessor) {
     tabBar.innerHTML = '';
-    content.innerHTML = `<div class="empty-state">Vælg en jobprocessor for at se detaljer.</div>`;
+    content.innerHTML = `<div class="empty-state">${esc(vt("emptyChooseJobProcessor"))}</div>`;
     enforceReadOnlyUI();
     return;
   }
@@ -513,10 +533,10 @@ function renderTabContent(p, id) {
 function tabGeneral(p) {
   const sub = S.detailSubTab || 'conditions';
   return `<div class="detail-pad">
-    ${frow('Active', cb(p.IsActive))}
-    ${frow('Description', `<input type="text" value="${esc(p.Description||p.DisplayName||p.Name||'')}" readonly style="width:300px">`)}
-    ${frow('Job processor key', `<input type="text" value="${esc(p.JobKey||'')}" readonly style="width:200px">`)}
-    ${frow('Run only via job processor key', cb(p.RunOnlyOnJobKey))}
+    ${frow(vt('tableActive'), cb(p.IsActive))}
+    ${frow(vt('tableDescription'), `<input type="text" value="${esc(p.Description||p.DisplayName||p.Name||'')}" readonly style="width:300px">`)}
+    ${frow(vt('tableJobProcessorKey'), `<input type="text" value="${esc(p.JobKey||'')}" readonly style="width:200px">`)}
+    ${frow(vt('tableRunOnlyViaJobProcessorKey'), cb(p.RunOnlyOnJobKey))}
     <div style="display:flex;gap:0;margin-top:12px;margin-bottom:6px">
       <button class="btn gen-sub-btn ${sub==='conditions'?'btn-dark':'btn-outline'}" style="border-radius:2px 0 0 2px;border-right:none" onclick="switchGenSubTab('conditions',this)">Processor conditions</button>
       <button class="btn gen-sub-btn ${sub==='queuejobs'?'btn-dark':'btn-outline'}" style="border-radius:0 2px 2px 0" onclick="switchGenSubTab('queuejobs',this)">Queue jobs after job</button>
@@ -664,7 +684,7 @@ function tabExport(p) {
     <button class="btn btn-outline" onclick="roAlert()">Copy list</button>
     <button class="btn btn-outline" onclick="roAlert()">Paste list</button>
   </div>
-  <table><thead><tr><th class="cb">Active</th><th>Name</th><th>Description</th><th>Priority</th><th></th></tr></thead><tbody>`);
+  <table><thead><tr><th class="cb">${esc(vt('tableActive'))}</th><th>${esc(vt('tableName'))}</th><th>${esc(vt('tableDescription'))}</th><th>${esc(vt('tablePriority'))}</th><th></th></tr></thead><tbody>`);
   if (exportJobs.length) {
     exportJobs.forEach((j,i) => {
       h.push(`<tr class="${!j.IsActive?'inact':''}">
@@ -834,7 +854,7 @@ function jobsTable(title, jobs, openFn) {
       <button class="btn btn-outline" onclick="roAlert()">Paste list</button>
     </div>`];
   if (jobs.length) {
-    h.push(`<table><thead><tr><th class="cb">Active</th><th>Name</th><th>Description</th><th>Priority</th><th></th></tr></thead><tbody>`);
+    h.push(`<table><thead><tr><th class="cb">${esc(vt('tableActive'))}</th><th>${esc(vt('tableName'))}</th><th>${esc(vt('tableDescription'))}</th><th>${esc(vt('tablePriority'))}</th><th></th></tr></thead><tbody>`);
     jobs.forEach((j,i) => h.push(`<tr class="${!j.IsActive?'inact':''}">
       <td class="cb"><input type="checkbox" ${j.IsActive?'checked':''}></td>
       <td>${esc(j.DisplayName||j.Name||'')}</td>
@@ -863,7 +883,7 @@ function condGroup(cl) {
     </div>
     <div class="cond-rows" id="${id}">
       ${conds.length ? `<table>
-        <thead><tr><th>Property</th><th>Operator</th><th>Value</th><th class="cb">Active</th></tr></thead>
+        <thead><tr><th>Property</th><th>Operator</th><th>Value</th><th class="cb">${esc(vt('tableActive'))}</th></tr></thead>
         <tbody>${conds.map(c => {
           const prop = c.PropertyDefinition?.DispName || c.PropertyDefinition?.SysName || '';
           const op = VC[c.ValidationCondition] ?? ('op:'+c.ValidationCondition);
@@ -903,10 +923,10 @@ function showModal(job, title) {
   S.modalJob = job;
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalFields').innerHTML = `
-    <span class="fld-lbl">Name</span>       <span class="fld-val"><input value="${esc(job.DisplayName||job.Name||'')}" readonly></span>
-    <span class="fld-lbl">Description</span><span class="fld-val"><input value="${esc(job.Description||'')}" readonly></span>
-    <span class="fld-lbl">Active</span>     <span class="fld-val"><input type="checkbox" ${job.IsActive?'checked':''} style="pointer-events:none"></span>
-    <span class="fld-lbl">Priority</span>   <span class="fld-val"><input value="${job.Priority??''}" readonly style="width:80px"></span>
+    <span class="fld-lbl">${esc(vt('tableName'))}</span>       <span class="fld-val"><input value="${esc(job.DisplayName||job.Name||'')}" readonly></span>
+    <span class="fld-lbl">${esc(vt('tableDescription'))}</span><span class="fld-val"><input value="${esc(job.Description||'')}" readonly></span>
+    <span class="fld-lbl">${esc(vt('tableActive'))}</span>     <span class="fld-val"><input type="checkbox" ${job.IsActive?'checked':''} style="pointer-events:none"></span>
+    <span class="fld-lbl">${esc(vt('tablePriority'))}</span>   <span class="fld-val"><input value="${job.Priority??''}" readonly style="width:80px"></span>
     <span class="fld-lbl">Id</span>         <span class="fld-val"><input value="${esc(job.Id||'')}" readonly style="font-size:10px;color:#888"></span>`;
   document.querySelectorAll('#modalTabBar .tab-btn').forEach((b,i) => b.classList.toggle('active', i===0));
   renderModalContent('conditions');
@@ -1007,19 +1027,11 @@ function copyTarget(c) {
 }
 
 function enforceReadOnlyUI() {
-  const hiddenLabels = new Set([
-    'Add', 'Remove', 'Move up', 'Move down',
-    'Save grid state', 'Reset grid state',
-    'Copy list', 'Paste list', 'Browse',
-    'Fjern', 'Flyt op', 'Flyt ned',
-    'Gem grid-tilstand', 'Nulstil grid-tilstand'
-  ]);
-  document.querySelectorAll('button').forEach((btn) => {
-    const txt = (btn.textContent || '').trim();
-    if (hiddenLabels.has(txt)) {
-      btn.style.display = 'none';
-      btn.title = 'Viewer er skrivebeskyttet';
-    }
+  const readonlyTitle = vt("readonlyViewerTitle");
+  document.querySelectorAll(".vault-readonly-action, button[onclick='roAlert()']").forEach((btn) => {
+    if (btn.id === "btnHide" || btn.id === "btnShow") return;
+    btn.style.display = "none";
+    btn.title = readonlyTitle;
   });
 }
 

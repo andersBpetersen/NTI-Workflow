@@ -4,35 +4,35 @@
   },
   "home": {
     "title": "NTI Workflow",
-    "intro": "Ferramentas internas para configuração do Vault e análise de lifecycle.",
+    "intro": "Ferramentas internas para configuração do Vault e análise de ciclo de vida.",
     "workflowViewer": {
       "title": "Workflow Viewer",
-      "description": "Carregue a saída Excel do NTI Vault Dump Config e visualize transitions, funções e state permissions.",
+      "description": "Envie a saída Excel do NTI Vault Dump Config e visualize transições de ciclo de vida, funções e permissões de estado.",
       "open": "Abrir Workflow Viewer"
     },
     "lifecycleCompare": {
       "title": "Lifecycle Compare",
-      "description": "Compare duas exportações de lifecycle do Vault e encontre diferenças.",
+      "description": "Compare duas exportações de ciclo de vida do Vault e encontre diferenças.",
       "comingSoon": "Em breve"
+    },
+    "vaultConfigViewer": {
+      "title": "NTI for Vault Config",
+      "description": "Navegue por contêineres, processadores, jobs e configurações em uma configuração JSON do NTI for Vault Job.",
+      "open": "Abrir Vault Config Viewer"
     },
     "vaultConfigTools": {
       "title": "Vault Config Tools",
       "description": "Ferramentas de análise para configuração do Vault.",
       "comingSoon": "Em breve"
-    },
-    "vaultConfigViewer": {
-      "title": "NTI for Vault Config",
-      "description": "Navegue por cont?ineres, processadores, jobs e configura??es em um arquivo JSON do NTI for Vault Job.",
-      "open": "Abrir Vault Config Viewer"
     }
   },
   "nav": {
     "backHome": "Voltar ao início"
   },
   "upload": {
-    "chooseFile": "Selecionar arquivo Excel",
+    "chooseFile": "Escolher arquivo Excel",
     "dropTitle": "Arraste o arquivo Excel aqui",
-    "dropSubtitle": "ou clique para selecionar o arquivo Excel exportado pelo",
+    "dropSubtitle": "ou clique para selecionar o arquivo de saída Excel do",
     "dropSubtitleStrong": "NTI Vault Dump Config",
     "supportedTypes": "Tipo de arquivo suportado: .xlsx",
     "requiredSheet": "O arquivo deve conter a planilha",
@@ -184,25 +184,44 @@
   },
   "vault": {
     "languageLabel": "Idioma",
-    "backHome": "Voltar ao in?cio",
-    "loadConfig": "Carregar configura??o",
-    "dropTitle": "Drag an NTI for Vault Job JSON file here",
-    "dropSubtitle": "or click to select a configuration file",
-    "topContainers": "Cont?ineres de processador de job",
-    "topDeactivate": "Desativar processadores de job",
-    "topFilepaths": "Caminhos exclu?dos na limpeza de jobs",
+    "backHome": "Voltar ao início",
+    "loadConfig": "Carregar configuração",
+    "dropTitle": "Arraste um arquivo JSON do NTI for Vault Job aqui",
+    "dropSubtitle": "ou clique para selecionar um arquivo de configuração",
+    "topContainers": "Contêineres de processadores de jobs",
+    "topDeactivate": "Desativar processadores de jobs",
+    "topFilepaths": "Caminhos de arquivo excluídos durante a limpeza de jobs",
     "hideInactive": "Ocultar inativos",
     "showAll": "Mostrar todos",
-    "findNext": "Localizar pr?ximo",
-    "statusReady": "Pronto - carregue um arquivo de configura??o para come?ar.",
-    "errorJsonOnly": "Somente arquivos .json s?o suportados.",
-    "errorEmptyArray": "O arquivo de configura??o cont?m um array vazio.",
-    "errorInvalidFormat": "O JSON foi lido, mas o formato da configura??o ? inv?lido.",
-    "errorMissingContainers": "O JSON foi lido, mas n?o cont?m JobProcessor.JobProcessorContainers.",
-    "errorParsePrefix": "N?o foi poss?vel ler o JSON:\n",
-    "statusLoaded": "Carregado",
-    "containersCountSuffix": "cont?ineres",
-    "supportedTypes": "Supported file type: .json",
-    "ariaLabel": "Upload NTI for Vault Job configuration JSON file"
+    "findNext": "Buscar próximo",
+    "statusReady": "Pronto - carregue um arquivo de configuração para começar.",
+    "errorJsonOnly": "Somente arquivos .json são suportados.",
+    "errorEmptyArray": "O arquivo de configuração contém uma matriz vazia.",
+    "errorInvalidFormat": "O JSON pôde ser lido, mas o formato de configuração é inválido.",
+    "errorMissingContainers": "O JSON pôde ser lido, mas não contém JobProcessor.JobProcessorContainers.",
+    "errorParsePrefix": "Não foi possível analisar o JSON:\n",
+    "statusLoaded": "Carregado: {name} — {count} contêineres",
+    "supportedTypes": "Tipo de arquivo suportado: .json",
+    "ariaLabel": "Enviar arquivo JSON de configuração NTI for Vault Job",
+    "searchPlaceholder": "Buscar...",
+    "tableName": "Nome",
+    "tableDescription": "Descrição",
+    "tableActive": "Ativo",
+    "tableJobProcessorKey": "Chave do processador de jobs",
+    "tableRunOnlyViaJobProcessorKey": "Executar somente pela chave do processador de jobs",
+    "tablePriority": "Prioridade",
+    "emptyChooseContainer": "Selecione um contêiner.",
+    "emptyChooseJobProcessor": "Selecione um processador de jobs para ver os detalhes.",
+    "emptyNoContainers": "Nenhum contêiner.",
+    "emptyNoProcessors": "Nenhum processador de jobs configurado.",
+    "emptyNoFilePaths": "Nenhum caminho de arquivo configurado.",
+    "emptyNoDeactivateConfig": "Nenhuma configuração de desativação encontrada.",
+    "statusVersionPrefix": "Versão:",
+    "modalClose": "Fechar",
+    "modalConditions": "Condições",
+    "modalParameters": "Parâmetros",
+    "modalJob": "Job",
+    "unknownConfigName": "Configuração desconhecida",
+    "readonlyViewerTitle": "O visualizador é somente leitura"
   }
 }

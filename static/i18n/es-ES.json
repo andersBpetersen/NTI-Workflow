@@ -4,26 +4,26 @@
   },
   "home": {
     "title": "NTI Workflow",
-    "intro": "Herramientas internas para configuración de Vault y análisis de lifecycle.",
+    "intro": "Herramientas internas para la configuración de Vault y el análisis del ciclo de vida.",
     "workflowViewer": {
       "title": "Workflow Viewer",
-      "description": "Cargue la salida Excel de NTI Vault Dump Config y visualice transitions, roles y state permissions.",
+      "description": "Cargue la salida Excel de NTI Vault Dump Config y visualice transiciones del ciclo de vida, roles y permisos de estado.",
       "open": "Abrir Workflow Viewer"
     },
     "lifecycleCompare": {
       "title": "Lifecycle Compare",
-      "description": "Compare dos exportaciones de lifecycle de Vault y encuentre diferencias.",
-      "comingSoon": "Próximamente"
-    },
-    "vaultConfigTools": {
-      "title": "Vault Config Tools",
-      "description": "Herramientas de análisis para configuración de Vault.",
+      "description": "Compare dos exportaciones del ciclo de vida de Vault y encuentre diferencias.",
       "comingSoon": "Próximamente"
     },
     "vaultConfigViewer": {
       "title": "NTI for Vault Config",
-      "description": "Browse containers, processors, jobs and settings in an NTI for Vault Job JSON configuration.",
-      "open": "Open Vault Config Viewer"
+      "description": "Explore contenedores, procesadores, jobs y configuraciones en una configuración JSON de NTI for Vault Job.",
+      "open": "Abrir Vault Config Viewer"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Herramientas de análisis para la configuración de Vault.",
+      "comingSoon": "Próximamente"
     }
   },
   "nav": {
@@ -183,26 +183,45 @@
     "equals": "="
   },
   "vault": {
-    "languageLabel": "Language",
-    "backHome": "Back to home",
-    "loadConfig": "Load Config",
-    "dropTitle": "Drag an NTI for Vault Job JSON file here",
-    "dropSubtitle": "or click to select a configuration file",
-    "topContainers": "Job processor containers",
-    "topDeactivate": "Deactivate job processors",
-    "topFilepaths": "File paths to exclude during job clean up",
-    "hideInactive": "Hide inactive",
-    "showAll": "Show all",
-    "findNext": "Find next",
-    "statusReady": "Ready - load a config file to begin.",
-    "errorJsonOnly": "Only .json files are supported.",
-    "errorEmptyArray": "The configuration file contains an empty array.",
-    "errorInvalidFormat": "The JSON could be read, but the configuration format is invalid.",
-    "errorMissingContainers": "The JSON could be read, but does not contain JobProcessor.JobProcessorContainers.",
-    "errorParsePrefix": "Could not parse JSON:\n",
-    "statusLoaded": "Loaded",
-    "containersCountSuffix": "containers",
-    "supportedTypes": "Supported file type: .json",
-    "ariaLabel": "Upload NTI for Vault Job configuration JSON file"
+    "languageLabel": "Idioma",
+    "backHome": "Volver al inicio",
+    "loadConfig": "Cargar configuración",
+    "dropTitle": "Arrastre un archivo JSON de NTI for Vault Job aquí",
+    "dropSubtitle": "o haga clic para seleccionar un archivo de configuración",
+    "supportedTypes": "Tipo de archivo admitido: .json",
+    "ariaLabel": "Subir archivo JSON de configuración NTI for Vault Job",
+    "topContainers": "Contenedores de procesadores de trabajos",
+    "topDeactivate": "Desactivar procesadores de trabajos",
+    "topFilepaths": "Rutas de archivo excluidas durante la limpieza de trabajos",
+    "hideInactive": "Ocultar inactivos",
+    "showAll": "Mostrar todos",
+    "findNext": "Buscar siguiente",
+    "searchPlaceholder": "Buscar...",
+    "tableName": "Nombre",
+    "tableDescription": "Descripción",
+    "tableActive": "Activo",
+    "tableJobProcessorKey": "Clave del procesador de trabajos",
+    "tableRunOnlyViaJobProcessorKey": "Ejecutar solo mediante clave del procesador de trabajos",
+    "tablePriority": "Prioridad",
+    "emptyChooseContainer": "Seleccione un contenedor.",
+    "emptyChooseJobProcessor": "Seleccione un procesador de trabajos para ver los detalles.",
+    "emptyNoContainers": "No hay contenedores.",
+    "emptyNoProcessors": "No hay procesadores de trabajos configurados.",
+    "emptyNoFilePaths": "No hay rutas de archivo configuradas.",
+    "emptyNoDeactivateConfig": "No se encontró configuración de desactivación.",
+    "statusReady": "Listo: cargue un archivo de configuración para comenzar.",
+    "statusLoaded": "Cargado: {name} — {count} contenedores",
+    "statusVersionPrefix": "Versión:",
+    "modalClose": "Cerrar",
+    "modalConditions": "Condiciones",
+    "modalParameters": "Parámetros",
+    "modalJob": "Trabajo",
+    "errorJsonOnly": "Solo se admiten archivos .json.",
+    "errorEmptyArray": "El archivo de configuración contiene una matriz vacía.",
+    "errorInvalidFormat": "Se pudo leer el JSON, pero el formato de configuración no es válido.",
+    "errorMissingContainers": "Se pudo leer el JSON, pero no contiene JobProcessor.JobProcessorContainers.",
+    "errorParsePrefix": "No se pudo analizar el JSON:\n",
+    "unknownConfigName": "Configuración desconocida",
+    "readonlyViewerTitle": "El visor es de solo lectura"
   }
 }

@@ -7,27 +7,27 @@
     "intro": "Interne værktøjer til Vault-konfiguration og lifecycle-analyse.",
     "workflowViewer": {
       "title": "Workflow Viewer",
-      "description": "Upload Excel-output fra NTI Vault Dump Config og visualiser lifecycle transitions, roller og state permissions.",
+      "description": "Upload Excel-output fra NTI Vault Dump Config og visualisér lifecycle transitions, roller og state permissions.",
       "open": "Åbn Workflow Viewer"
     },
     "lifecycleCompare": {
       "title": "Lifecycle Compare",
-      "description": "Sammenlign to Vault lifecycle exports og find forskelle.",
-      "comingSoon": "Kommer senere"
-    },
-    "vaultConfigTools": {
-      "title": "Vault Config Tools",
-      "description": "Analyseværktøjer til Vault-konfiguration.",
+      "description": "Sammenlign to Vault lifecycle-eksporter og find forskelle.",
       "comingSoon": "Kommer senere"
     },
     "vaultConfigViewer": {
       "title": "NTI for Vault Config",
       "description": "Gennemse containere, processorer, jobs og indstillinger i en NTI for Vault Job JSON-konfiguration.",
       "open": "Åbn Vault Config Viewer"
+    },
+    "vaultConfigTools": {
+      "title": "Vault Config Tools",
+      "description": "Analyseværktøjer til Vault-konfiguration.",
+      "comingSoon": "Kommer senere"
     }
   },
   "nav": {
-    "backHome": "Tilbage til forside"
+    "backHome": "Tilbage til forsiden"
   },
   "upload": {
     "chooseFile": "Vælg Excel-fil",
@@ -196,13 +196,32 @@
     "hideInactive": "Skjul inaktive",
     "showAll": "Vis alle",
     "findNext": "Find næste",
+    "searchPlaceholder": "Find...",
+    "tableName": "Navn",
+    "tableDescription": "Beskrivelse",
+    "tableActive": "Aktiv",
+    "tableJobProcessorKey": "Jobprocessor-nøgle",
+    "tableRunOnlyViaJobProcessorKey": "Kør kun via jobprocessor-nøgle",
+    "tablePriority": "Prioritet",
+    "emptyChooseContainer": "Vælg en container.",
+    "emptyChooseJobProcessor": "Vælg en jobprocessor for at se detaljer.",
+    "emptyNoContainers": "Ingen containere.",
+    "emptyNoProcessors": "Ingen jobprocessorer konfigureret.",
+    "emptyNoFilePaths": "Ingen filstier konfigureret.",
+    "emptyNoDeactivateConfig": "Ingen deaktiveringskonfiguration fundet.",
     "statusReady": "Klar - indlæs en konfigurationsfil for at begynde.",
+    "statusLoaded": "Indlæst: {name} — {count} containere",
+    "statusVersionPrefix": "Version:",
+    "modalClose": "Luk",
+    "modalConditions": "Betingelser",
+    "modalParameters": "Parametre",
+    "modalJob": "Job",
     "errorJsonOnly": "Kun .json-filer understøttes.",
     "errorEmptyArray": "Konfigurationsfilen indeholder et tomt array.",
     "errorInvalidFormat": "JSON-filen kunne læses, men konfigurationen har et ugyldigt format.",
     "errorMissingContainers": "JSON-filen kunne læses, men indeholder ikke JobProcessor.JobProcessorContainers.",
     "errorParsePrefix": "JSON-filen kunne ikke læses:\n",
-    "statusLoaded": "Indlæst",
-    "containersCountSuffix": "containere"
+    "unknownConfigName": "Ukendt konfiguration",
+    "readonlyViewerTitle": "Viewer er skrivebeskyttet"
   }
 }

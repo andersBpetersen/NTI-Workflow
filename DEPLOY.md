@@ -116,8 +116,8 @@ Se **[PUBLISH.md](PUBLISH.md)** for build og push af nye versioner.
 ### Manuel metode (uden compose)
 
 ```powershell
-docker pull tickjf/nti-workflow:0.7.1
-docker run -d --restart unless-stopped -p 8000:8000 --name nti-workflow tickjf/nti-workflow:0.7.1
+docker pull tickjf/nti-workflow:0.7.2
+docker run -d --restart unless-stopped -p 8000:8000 --name nti-workflow tickjf/nti-workflow:0.7.2
 ```
 
 ---
