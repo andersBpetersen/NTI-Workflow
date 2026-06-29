@@ -9,11 +9,12 @@
   <link rel="stylesheet" href="/static/shared/ui/forms.css">
   <link rel="stylesheet" href="/static/shared/ui/buttons.css">
   <link rel="stylesheet" href="/static/shared/ui/feedback.css">
-  <link rel="stylesheet" href="/static/shared/ui/file-dropzone.css">
+  <link rel="stylesheet" href="/static/shared/ui/file-dropzone.css?v=20250629">
+  <link rel="stylesheet" href="/static/shared/ui/upload-shell.css?v=20250629">
   <link rel="stylesheet" href="/static/app-shell.css">
   <link rel="stylesheet" href="/static/viewer.css">
 </head>
-<body>
+<body class="nti-upload-shell">
   <header class="app-topbar">
     <a id="back-home-link" class="back-link" href="/" data-i18n="nav.backHome">Back to home</a>
     <span class="app-brand" data-i18n="viewer.title">Workflow Viewer</span>
@@ -28,12 +29,14 @@
   </header>
 
   <div class="upload-bar">
-    <h1 data-i18n="viewer.title">Workflow Viewer</h1>
+    <div class="upload-bar-heading">
+      <h1 data-i18n="viewer.title">Workflow Viewer</h1>
+      <p id="status-message" class="status-msg upload-bar-intro" data-i18n="upload.status.chooseOrDrop">Choose or drag the Excel output file from NTI Vault Dump Config.</p>
+    </div>
     <label class="upload-button">
       <span data-i18n="upload.chooseFile">Choose Excel file</span>
       <input id="file-input" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
     </label>
-    <span id="status-message" class="status-msg" data-i18n="upload.status.chooseOrDrop">Choose or drag the Excel output file from NTI Vault Dump Config.</span>
   </div>
 
   <div id="empty-state" class="nti-file-dropzone-host">

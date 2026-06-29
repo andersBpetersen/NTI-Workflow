@@ -4,20 +4,13 @@
 <meta charset="UTF-8">
 <title>NTI for Vault Job Viewer</title>
 <link rel="stylesheet" href="/static/shared/ui/tokens.css">
-<link rel="stylesheet" href="/static/shared/ui/file-dropzone.css">
+<link rel="stylesheet" href="/static/shared/ui/forms.css">
+<link rel="stylesheet" href="/static/shared/ui/buttons.css">
+<link rel="stylesheet" href="/static/shared/ui/feedback.css">
+<link rel="stylesheet" href="/static/shared/ui/file-dropzone.css?v=20250629">
+<link rel="stylesheet" href="/static/shared/ui/upload-shell.css?v=20250629">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size:12px;background:#ececec;color:#1a1a1a;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-
-#topbar{background:#3c3c3c;color:#f0f0f0;padding:5px 10px;display:flex;align-items:center;gap:10px;flex-shrink:0;min-height:30px}
-#topbar h1{font-size:13px;font-weight:600;flex:1}
-#topbar .version{font-size:11px;color:#999}
-.back-home{color:#f0f0f0;text-decoration:none;border:1px solid #666;padding:2px 8px;border-radius:2px;font-size:11px;background:#4a4a4a}
-.back-home:hover{background:#5a5a5a}
-.locale-control{display:flex;align-items:center;gap:6px;font-size:11px}
-.locale-control select{font-size:11px;padding:2px 6px;border:1px solid #777;border-radius:2px;background:#fff;color:#111}
-
-#loadScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px}
+/* Internal viewer UI (post JSON-load) — upload shell uses shared CSS */
 #app{flex:1;display:none;flex-direction:column;overflow:hidden}
 
 .tab-bar{display:flex;background:#d8d8d8;border-bottom:1px solid #b0b0b0;flex-shrink:0;padding:2px 4px 0}
@@ -33,7 +26,6 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size:12px;background:#e
 .btn-grey{background:#717d7e;color:white;border-color:#626a6b}
 .btn-dark{background:#555;color:white;border-color:#444}
 .btn-outline{background:#e8e8e8;border:1px solid #bbb;color:#333}
-.btn-load{background:#2980b9;color:white;border-color:#2471a3;cursor:pointer;padding:3px 10px;font-size:11px;border-radius:2px;line-height:1.4;border:1px solid #2471a3}
 
 #splitView{flex:1;display:flex;overflow:hidden}
 
@@ -118,17 +110,29 @@ input[type=text],select,textarea{font-size:12px;font-family:inherit}
 #statusBar{background:#f0f0f0;border-top:1px solid #ccc;padding:2px 10px;font-size:11px;color:#666;flex-shrink:0}
 </style>
 </head>
-<body>
+<body class="nti-upload-shell">
 
-<div id="topbar">
-  <a id="back-home-link" class="back-home" href="/" data-i18n="nav.backHome">Back to home</a>
-  <h1>NTI for Vault Job Viewer</h1>
-  <span id="versionDisplay" class="version"></span>
-  <label class="locale-control">
-    <span data-i18n="language.label">Language</span>
-    <select id="localeSelect" data-i18n-aria-label="language.label" aria-label="Language"></select>
+<header class="app-topbar" id="topbar">
+  <a id="back-home-link" class="back-link" href="/" data-i18n="nav.backHome">Back to home</a>
+  <span class="app-brand">NTI for Vault Job Viewer</span>
+  <div class="topbar-right">
+    <span id="versionDisplay" class="version-chip"></span>
+    <label class="locale-control">
+      <span data-i18n="language.label">Language</span>
+      <select id="localeSelect" data-i18n-aria-label="language.label" aria-label="Language"></select>
+    </label>
+  </div>
+</header>
+
+<div class="upload-bar">
+  <div class="upload-bar-heading">
+    <h1>NTI for Vault Job Viewer</h1>
+    <p class="upload-bar-intro" data-i18n="vault.uploadIntro">Choose or drag an NTI for Vault Job JSON configuration file.</p>
+  </div>
+  <label class="upload-button">
+    <span id="loadConfigLabel" data-i18n="vault.loadConfig">Load Config</span>
+    <input type="file" id="fileInput" accept=".json">
   </label>
-  <label class="btn-load"><span id="loadConfigLabel" data-i18n="vault.loadConfig">Load Config</span><input type="file" id="fileInput" accept=".json" style="display:none"></label>
 </div>
 
 <div id="loadScreen" class="nti-file-dropzone-host">
@@ -293,8 +297,58 @@ function applyVaultLocaleTexts() {
   updateStatusBar();
 }
 
-function onVaultLocaleChanged() {
+function isReadableI18nFallback(key, value) {
+  const leaf = String(key).split(".").pop() || "";
+  if (!leaf) return false;
+  const expected = leaf
+    .replace(/([A-Z])/g, " $1")
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^./, (match) => match.toUpperCase());
+  return value === expected;
+}
+
+async function syncVaultUploadIntro() {
+  const introEl = document.querySelector(".upload-bar-intro");
+  if (!introEl) return;
+
+  const translated = vt("uploadIntro");
+  if (translated && !isReadableI18nFallback("uploadIntro", translated)) {
+    introEl.textContent = translated;
+    return;
+  }
+
+  const locale = typeof window.getCurrentLocale === "function" ? window.getCurrentLocale() : "en-GB";
+  const fileName = window.NTI_I18N?.SUPPORTED_LOCALES?.[locale]?.file;
+  if (!fileName) {
+    if (isReadableI18nFallback("uploadIntro", introEl.textContent)) {
+      introEl.textContent = "Choose or drag an NTI for Vault Job JSON configuration file.";
+    }
+    return;
+  }
+
+  try {
+    const response = await fetch(`/static/i18n/${fileName}`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Could not reload locale file: ${fileName}`);
+    const payload = await response.json();
+    const intro = payload?.vault?.uploadIntro;
+    if (intro) {
+      introEl.textContent = intro;
+      return;
+    }
+  } catch (_error) {
+    // Keep English HTML fallback instead of the readable key fallback.
+  }
+
+  if (isReadableI18nFallback("uploadIntro", introEl.textContent)) {
+    introEl.textContent = "Choose or drag an NTI for Vault Job JSON configuration file.";
+  }
+}
+
+async function onVaultLocaleChanged() {
   applyVaultLocaleTexts();
+  await syncVaultUploadIntro();
   if (S.cfg) {
     renderLeft();
     renderProc();
@@ -313,6 +367,7 @@ async function bootstrapVaultPage() {
     window.bindLocaleSelect();
   }
   applyVaultLocaleTexts();
+  await syncVaultUploadIntro();
   bindVaultFileUi();
 }
 

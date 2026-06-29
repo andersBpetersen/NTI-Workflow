@@ -222,6 +222,7 @@
     "modalParameters": "Parameters",
     "modalJob": "Job",
     "unknownConfigName": "Unknown configuration",
-    "readonlyViewerTitle": "Viewer is read-only"
+    "readonlyViewerTitle": "Viewer is read-only",
+    "uploadIntro": "Choisissez ou faites glisser un fichier de configuration JSON NTI for Vault Job."
   }
 }

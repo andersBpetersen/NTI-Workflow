@@ -2,8 +2,6 @@
 #workflow-shell.hidden{display:none!important}
 #viewer-root.hidden{display:none!important}
 #empty-state.hidden{display:none!important}
-.upload-bar{padding:14px 32px;background:#fff;border-bottom:1px solid #ddd;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-.upload-bar h1{margin:0;font-size:20px;flex:1}
 #empty-state{padding:0;color:var(--muted)}
 header.viewer-header{padding:24px 32px;background:#fff;border-bottom:1px solid #ddd}
 main.viewer-main{padding:24px 32px 44px}

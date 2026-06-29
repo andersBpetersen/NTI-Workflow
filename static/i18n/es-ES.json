@@ -222,6 +222,7 @@
     "errorMissingContainers": "Se pudo leer el JSON, pero no contiene JobProcessor.JobProcessorContainers.",
     "errorParsePrefix": "No se pudo analizar el JSON:\n",
     "unknownConfigName": "Configuración desconocida",
-    "readonlyViewerTitle": "El visor es de solo lectura"
+    "readonlyViewerTitle": "El visor es de solo lectura",
+    "uploadIntro": "Elija o arrastre un archivo de configuración JSON de NTI for Vault Job."
   }
 }

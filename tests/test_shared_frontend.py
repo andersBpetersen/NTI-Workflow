@@ -61,8 +61,9 @@ def test_homepage_loads_shared_assets(client: TestClient) -> None:
 
 def test_workflow_page_loads_shared_assets(client: TestClient) -> None:
     html = client.get("/workflow/").text
-    for relative_path in SHARED_CSS + SHARED_JS + [DROPZONE_CSS]:
+    for relative_path in SHARED_CSS + SHARED_JS + [DROPZONE_CSS, "shared/ui/upload-shell.css"]:
         assert f"/static/{relative_path}" in html
+    assert 'class="nti-upload-shell"' in html or "nti-upload-shell" in html
 
 
 def test_vault_config_page_loads_shared_assets(client: TestClient) -> None:
@@ -70,6 +71,8 @@ def test_vault_config_page_loads_shared_assets(client: TestClient) -> None:
     assert "/static/shared/utils/html.js" in html
     assert "/static/shared/utils/files.js" in html
     assert f"/static/{DROPZONE_CSS}" in html
+    assert "/static/shared/ui/upload-shell.css" in html
+    assert "nti-upload-shell" in html
     assert "window.NTIShared.files.bindDropZone" in html
 
 

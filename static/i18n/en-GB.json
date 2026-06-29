@@ -222,6 +222,7 @@
     "errorMissingContainers": "The JSON could be read, but does not contain JobProcessor.JobProcessorContainers.",
     "errorParsePrefix": "Could not parse JSON:\n",
     "unknownConfigName": "Unknown configuration",
-    "readonlyViewerTitle": "Viewer is read-only"
+    "readonlyViewerTitle": "Viewer is read-only",
+    "uploadIntro": "Choose or drag an NTI for Vault Job JSON configuration file."
   }
 }

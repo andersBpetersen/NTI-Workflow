@@ -47,11 +47,18 @@ VAULT_UPLOAD_KEYS = {
     "nav.backHome",
     "language.label",
     "vault.loadConfig",
+    "vault.uploadIntro",
     "vault.dropTitle",
     "vault.dropSubtitle",
     "vault.supportedTypes",
     "vault.ariaLabel",
 }
+
+DROPZONE_TEXT_CLASSES = (
+    "nti-file-dropzone-title",
+    "nti-file-dropzone-description",
+    "nti-file-dropzone-meta",
+)
 
 CORRUPTION_PATTERNS = (
     re.compile(r"\?bn"),
@@ -67,17 +74,20 @@ LOCALE_EXPECTATIONS = {
         "language.label": "Lingua",
         "upload.chooseFile": "Scegli file Excel",
         "vault.loadConfig": "Carica configurazione",
+        "vault.uploadIntro": "Scegli o trascina un file di configurazione JSON NTI for Vault Job.",
         "vault.dropTitle": "Trascina qui un file JSON NTI for Vault Job",
     },
     "da-DK.json": {
         "nav.backHome": "Tilbage til forsiden",
         "language.label": "Sprog",
         "vault.loadConfig": "Indlæs konfiguration",
+        "vault.uploadIntro": "Vælg eller træk en NTI for Vault Job JSON-konfigurationsfil.",
     },
     "pl-PL.json": {
         "nav.backHome": "Wróć do strony głównej",
         "language.label": "Język",
         "vault.loadConfig": "Wczytaj konfigurację",
+        "vault.uploadIntro": "Wybierz lub przeciągnij plik konfiguracyjny JSON NTI for Vault Job.",
         "upload.chooseFile": "Wybierz plik Excel",
     },
 }
@@ -142,11 +152,83 @@ def test_workflow_html_has_no_hardcoded_language_label() -> None:
     assert 'data-i18n-aria-label="language.label"' in html
 
 
+def test_vault_html_has_no_upload_intro_literal() -> None:
+    html = VAULT_HTML.read_text(encoding="utf-8")
+    match = re.search(
+        r'<p class="upload-bar-intro"[^>]*>(.*?)</p>',
+        html,
+        re.S,
+    )
+    assert match
+    assert "Upload Intro" not in match.group(1)
+
+
+def test_vault_upload_intro_key_in_en_gb() -> None:
+    en = json.loads((I18N_DIR / "en-GB.json").read_text(encoding="utf-8"))
+    assert _nested_get(en, "vault.uploadIntro") == (
+        "Choose or drag an NTI for Vault Job JSON configuration file."
+    )
+
+
+def test_vault_upload_intro_key_in_it_it() -> None:
+    it = json.loads((I18N_DIR / "it-IT.json").read_text(encoding="utf-8"))
+    assert _nested_get(it, "vault.uploadIntro") == (
+        "Scegli o trascina un file di configurazione JSON NTI for Vault Job."
+    )
+
+
+def test_vault_upload_intro_key_in_da_dk() -> None:
+    da = json.loads((I18N_DIR / "da-DK.json").read_text(encoding="utf-8"))
+    assert _nested_get(da, "vault.uploadIntro") == (
+        "Vælg eller træk en NTI for Vault Job JSON-konfigurationsfil."
+    )
+
+
+def test_vault_html_has_upload_intro_i18n() -> None:
+    html = VAULT_HTML.read_text(encoding="utf-8")
+    assert 'data-i18n="vault.uploadIntro"' in html
+    assert 'class="upload-bar-intro"' in html
+    assert 'class="upload-bar-heading"' in html
+
+
+def test_workflow_and_vault_share_dropzone_text_classes() -> None:
+    workflow = WORKFLOW_HTML.read_text(encoding="utf-8")
+    vault = VAULT_HTML.read_text(encoding="utf-8")
+    for class_name in DROPZONE_TEXT_CLASSES:
+        assert class_name in workflow
+        assert class_name in vault
+
+
+def test_dropzone_css_uses_shared_muted_text_colors() -> None:
+    css = (STATIC / "shared" / "ui" / "file-dropzone.css").read_text(encoding="utf-8")
+    shell = (STATIC / "shared" / "ui" / "upload-shell.css").read_text(encoding="utf-8")
+    assert ".nti-file-dropzone-description,\n.nti-file-dropzone-meta" in css
+    assert "color: var(--nti-color-muted)" in css
+    assert ".nti-file-dropzone-title" in css
+    title_block = css.split(".nti-file-dropzone-title", 1)[1].split("}", 1)[0]
+    assert "color: var(--nti-color-muted)" in title_block
+    assert "color: inherit" not in css
+    assert "color: var(--nti-color-text)" not in title_block
+    assert "body.nti-upload-shell .nti-file-dropzone .nti-file-dropzone-title" in shell
+    assert "color: var(--nti-color-muted)" in shell
+
+
+def test_vault_html_has_no_dropzone_title_color_override() -> None:
+    html = VAULT_HTML.read_text(encoding="utf-8")
+    assert ".nti-file-dropzone-title" not in html
+    assert re.search(
+        r"\.nti-file-dropzone[^{]*\{[^}]*color\s*:",
+        html,
+    ) is None
+
+
 def test_vault_html_has_no_hardcoded_upload_ui_strings() -> None:
     html = VAULT_HTML.read_text(encoding="utf-8")
     assert 'data-i18n="language.label"' in html
     assert 'data-i18n="vault.loadConfig"' in html
     assert 'data-i18n="vault.dropTitle"' in html
+    assert 'class="app-topbar"' in html
+    assert 'class="upload-bar"' in html
     assert html.count("Language") == 2
     assert "Load Config" in html
     assert 'data-i18n="vault.loadConfig"' in html
@@ -169,6 +251,19 @@ def test_workflow_and_vault_use_shared_back_home_key() -> None:
     vault = VAULT_HTML.read_text(encoding="utf-8")
     assert 'data-i18n="nav.backHome"' in workflow
     assert 'data-i18n="nav.backHome"' in vault
+    assert 'class="app-topbar"' in workflow
+    assert 'class="app-topbar"' in vault
+    assert 'class="upload-bar"' in workflow
+    assert 'class="upload-bar"' in vault
+
+
+def test_workflow_and_vault_share_upload_bar_heading_structure() -> None:
+    workflow = WORKFLOW_HTML.read_text(encoding="utf-8")
+    vault = VAULT_HTML.read_text(encoding="utf-8")
+    assert "upload-bar-heading" in workflow
+    assert "upload-bar-heading" in vault
+    assert "upload-bar-intro" in workflow
+    assert "upload-bar-intro" in vault
 
 
 @pytest.mark.parametrize("locale_file", AUTHORITATIVE)

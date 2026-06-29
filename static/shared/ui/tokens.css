@@ -1,22 +1,34 @@
 :root {
-  --nti-font-family: Arial, sans-serif;
-  --nti-color-text: #111827;
-  --nti-color-muted: #6b7280;
-  --nti-color-border: #d1d5db;
-  --nti-color-border-soft: #ddd;
+  --nti-font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  --nti-color-text: #1a1a1a;
+  --nti-color-muted: #64748b;
+  --nti-color-border: #cbd5e1;
+  --nti-color-border-soft: #e2e8f0;
   --nti-color-surface: #ffffff;
-  --nti-color-background: #f5f6f8;
-  --nti-color-primary: #2563eb;
-  --nti-color-primary-hover: #1d4ed8;
+  --nti-color-background: #ececec;
+  --nti-color-primary: #2980b9;
+  --nti-color-primary-hover: #2471a3;
   --nti-color-danger: #b91c1c;
   --nti-color-success: #1b7f4a;
-  --nti-radius-sm: 8px;
+  --nti-topbar-bg: #3c3c3c;
+  --nti-topbar-text: #f0f0f0;
+  --nti-topbar-text-muted: #d1d5db;
+  --nti-topbar-border: #2f2f2f;
+  --nti-topbar-btn-bg: #4a4a4a;
+  --nti-topbar-btn-border: #666666;
+  --nti-topbar-btn-hover: #5a5a5a;
+  --nti-radius-sm: 6px;
   --nti-radius-md: 10px;
   --nti-radius-pill: 999px;
   --nti-space-1: 4px;
   --nti-space-2: 8px;
   --nti-space-3: 12px;
   --nti-space-4: 16px;
+  --nti-font-size-sm: 12px;
+  --nti-font-size-md: 14px;
+  --nti-font-size-lg: 18px;
+  --nti-font-size-xl: 24px;
+  --nti-line-height: 1.5;
 
   /* Legacy aliases used by workflow styles */
   --ink: var(--nti-color-text);

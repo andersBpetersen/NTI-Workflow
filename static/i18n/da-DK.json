@@ -222,6 +222,7 @@
     "errorMissingContainers": "JSON-filen kunne læses, men indeholder ikke JobProcessor.JobProcessorContainers.",
     "errorParsePrefix": "JSON-filen kunne ikke læses:\n",
     "unknownConfigName": "Ukendt konfiguration",
-    "readonlyViewerTitle": "Viewer er skrivebeskyttet"
+    "readonlyViewerTitle": "Viewer er skrivebeskyttet",
+    "uploadIntro": "Vælg eller træk en NTI for Vault Job JSON-konfigurationsfil."
   }
 }
