@@ -281,6 +281,63 @@
       "itemsCount": "Kohteet",
       "tabsCount": "Välilehdet",
       "entityClassesCount": "Entiteettiluokat"
+    },
+    "jobQueuer": {
+      "title": "JobQueuer",
+      "helpText": "Näyttää määritetyt JobQueuerit, määritetyt työt ja tekniset asetukset Client JSON -tiedostosta.",
+      "readonlyTooltip": "Vain luku -näkymä",
+      "view": "Näytä",
+      "emptyValue": "—",
+      "yes": "Kyllä",
+      "no": "Ei",
+      "emptyQueuers": "JobQueuereita ei löytynyt",
+      "toolbar": {
+        "add": "Lisää",
+        "remove": "Poista",
+        "moveUp": "Siirrä ylös",
+        "moveDown": "Siirrä alas",
+        "exportList": "Vie luettelo",
+        "importList": "Tuo luettelo"
+      },
+      "list": {
+        "title": "Job queuers"
+      },
+      "columns": {
+        "active": "Aktiivinen",
+        "name": "Nimi",
+        "description": "Kuvaus",
+        "edit": "Muokkaa",
+        "priority": "Prioriteetti",
+        "value": "Arvo"
+      },
+      "detail": {
+        "title": "JobQueuerin tiedot",
+        "name": "Nimi",
+        "description": "Kuvaus",
+        "active": "Aktiivinen",
+        "id": "Id",
+        "isPulldown": "On pulldown",
+        "addToToolbars": "Lisää työkalupalkkeihin",
+        "supportedEntities": "Tuetut entiteetit"
+      },
+      "jobs": {
+        "title": "Jobs",
+        "empty": "Ei jobs"
+      },
+      "userJobParameters": {
+        "title": "User job parameters",
+        "empty": "Ei user job parameters"
+      },
+      "technical": {
+        "show": "Näytä tekniset tiedot",
+        "hide": "Piilota tekniset tiedot",
+        "title": "Tekniset tiedot",
+        "jsonKey": "JSON-avain",
+        "jsonPath": "JSON-polku"
+      },
+      "rawJson": {
+        "title": "Raaka JSON"
+      }
     }
   }
 }

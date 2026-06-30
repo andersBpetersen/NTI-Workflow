@@ -281,6 +281,63 @@
       "itemsCount": "Položky",
       "tabsCount": "Záložky",
       "entityClassesCount": "Třídy entit"
+    },
+    "jobQueuer": {
+      "title": "JobQueuer",
+      "helpText": "Zobrazuje nakonfigurované JobQueuers, přiřazené joby a technická nastavení z Client JSON.",
+      "readonlyTooltip": "Pouze pro čtení",
+      "view": "Zobrazit",
+      "emptyValue": "—",
+      "yes": "Ano",
+      "no": "Ne",
+      "emptyQueuers": "Nebyly nalezeny žádné JobQueuers",
+      "toolbar": {
+        "add": "Přidat",
+        "remove": "Odebrat",
+        "moveUp": "Posunout nahoru",
+        "moveDown": "Posunout dolů",
+        "exportList": "Exportovat seznam",
+        "importList": "Importovat seznam"
+      },
+      "list": {
+        "title": "Job queuers"
+      },
+      "columns": {
+        "active": "Aktivní",
+        "name": "Název",
+        "description": "Popis",
+        "edit": "Upravit",
+        "priority": "Priorita",
+        "value": "Hodnota"
+      },
+      "detail": {
+        "title": "Detaily JobQueueru",
+        "name": "Název",
+        "description": "Popis",
+        "active": "Aktivní",
+        "id": "Id",
+        "isPulldown": "Je pulldown",
+        "addToToolbars": "Přidat do panelů nástrojů",
+        "supportedEntities": "Podporované entity"
+      },
+      "jobs": {
+        "title": "Jobs",
+        "empty": "Žádné jobs"
+      },
+      "userJobParameters": {
+        "title": "User job parameters",
+        "empty": "Žádné user job parameters"
+      },
+      "technical": {
+        "show": "Zobrazit technické info",
+        "hide": "Skrýt technické info",
+        "title": "Technické info",
+        "jsonKey": "Klíč JSON",
+        "jsonPath": "Cesta JSON"
+      },
+      "rawJson": {
+        "title": "Surové JSON"
+      }
     }
   }
 }

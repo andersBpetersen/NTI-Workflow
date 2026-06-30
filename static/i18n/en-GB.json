@@ -281,6 +281,63 @@
       "itemsCount": "Items",
       "tabsCount": "Tabs",
       "entityClassesCount": "Entity classes"
+    },
+    "jobQueuer": {
+      "title": "JobQueuer",
+      "helpText": "Shows configured JobQueuers, assigned jobs, and technical settings from the Client JSON.",
+      "readonlyTooltip": "Read-only viewer",
+      "view": "View",
+      "emptyValue": "—",
+      "yes": "Yes",
+      "no": "No",
+      "emptyQueuers": "No JobQueuers found",
+      "toolbar": {
+        "add": "Add",
+        "remove": "Remove",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "exportList": "Export list",
+        "importList": "Import list"
+      },
+      "list": {
+        "title": "Job queuers"
+      },
+      "columns": {
+        "active": "Active",
+        "name": "Name",
+        "description": "Description",
+        "edit": "Edit",
+        "priority": "Priority",
+        "value": "Value"
+      },
+      "detail": {
+        "title": "JobQueuer details",
+        "name": "Name",
+        "description": "Description",
+        "active": "Active",
+        "id": "Id",
+        "isPulldown": "Is pulldown",
+        "addToToolbars": "Add to toolbars",
+        "supportedEntities": "Supported entities"
+      },
+      "jobs": {
+        "title": "Jobs",
+        "empty": "No jobs"
+      },
+      "userJobParameters": {
+        "title": "User job parameters",
+        "empty": "No user job parameters"
+      },
+      "technical": {
+        "show": "Show technical info",
+        "hide": "Hide technical info",
+        "title": "Technical info",
+        "jsonKey": "JSON key",
+        "jsonPath": "JSON path"
+      },
+      "rawJson": {
+        "title": "Raw JSON"
+      }
     }
   }
 }

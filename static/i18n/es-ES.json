@@ -281,6 +281,63 @@
       "itemsCount": "Elementos",
       "tabsCount": "Pestañas",
       "entityClassesCount": "Clases de entidad"
+    },
+    "jobQueuer": {
+      "title": "JobQueuer",
+      "helpText": "Muestra los JobQueuers configurados, los trabajos asignados y los ajustes técnicos del JSON del cliente.",
+      "readonlyTooltip": "Visor de solo lectura",
+      "view": "Ver",
+      "emptyValue": "—",
+      "yes": "Sí",
+      "no": "No",
+      "emptyQueuers": "No se encontraron JobQueuers",
+      "toolbar": {
+        "add": "Añadir",
+        "remove": "Eliminar",
+        "moveUp": "Subir",
+        "moveDown": "Bajar",
+        "exportList": "Exportar lista",
+        "importList": "Importar lista"
+      },
+      "list": {
+        "title": "Job queuers"
+      },
+      "columns": {
+        "active": "Activo",
+        "name": "Nombre",
+        "description": "Descripción",
+        "edit": "Editar",
+        "priority": "Prioridad",
+        "value": "Valor"
+      },
+      "detail": {
+        "title": "Detalles del JobQueuer",
+        "name": "Nombre",
+        "description": "Descripción",
+        "active": "Activo",
+        "id": "Id",
+        "isPulldown": "Es desplegable",
+        "addToToolbars": "Añadir a barras de herramientas",
+        "supportedEntities": "Entidades compatibles"
+      },
+      "jobs": {
+        "title": "Jobs",
+        "empty": "Sin jobs"
+      },
+      "userJobParameters": {
+        "title": "User job parameters",
+        "empty": "Sin user job parameters"
+      },
+      "technical": {
+        "show": "Mostrar info técnica",
+        "hide": "Ocultar info técnica",
+        "title": "Info técnica",
+        "jsonKey": "Clave JSON",
+        "jsonPath": "Ruta JSON"
+      },
+      "rawJson": {
+        "title": "JSON sin formato"
+      }
     }
   }
 }

@@ -48,6 +48,48 @@ VAULT_CLIENT_DETAIL_KEYS = (
     "vaultClient.detail.entityClassesCount",
 )
 
+VAULT_CLIENT_JOB_QUEUER_KEYS = (
+    "vaultClient.jobQueuer.title",
+    "vaultClient.jobQueuer.helpText",
+    "vaultClient.jobQueuer.readonlyTooltip",
+    "vaultClient.jobQueuer.view",
+    "vaultClient.jobQueuer.emptyValue",
+    "vaultClient.jobQueuer.yes",
+    "vaultClient.jobQueuer.no",
+    "vaultClient.jobQueuer.emptyQueuers",
+    "vaultClient.jobQueuer.toolbar.add",
+    "vaultClient.jobQueuer.toolbar.remove",
+    "vaultClient.jobQueuer.toolbar.moveUp",
+    "vaultClient.jobQueuer.toolbar.moveDown",
+    "vaultClient.jobQueuer.toolbar.exportList",
+    "vaultClient.jobQueuer.toolbar.importList",
+    "vaultClient.jobQueuer.list.title",
+    "vaultClient.jobQueuer.columns.active",
+    "vaultClient.jobQueuer.columns.name",
+    "vaultClient.jobQueuer.columns.description",
+    "vaultClient.jobQueuer.columns.edit",
+    "vaultClient.jobQueuer.columns.priority",
+    "vaultClient.jobQueuer.columns.value",
+    "vaultClient.jobQueuer.detail.title",
+    "vaultClient.jobQueuer.detail.name",
+    "vaultClient.jobQueuer.detail.description",
+    "vaultClient.jobQueuer.detail.active",
+    "vaultClient.jobQueuer.detail.id",
+    "vaultClient.jobQueuer.detail.isPulldown",
+    "vaultClient.jobQueuer.detail.addToToolbars",
+    "vaultClient.jobQueuer.detail.supportedEntities",
+    "vaultClient.jobQueuer.jobs.title",
+    "vaultClient.jobQueuer.jobs.empty",
+    "vaultClient.jobQueuer.userJobParameters.title",
+    "vaultClient.jobQueuer.userJobParameters.empty",
+    "vaultClient.jobQueuer.technical.show",
+    "vaultClient.jobQueuer.technical.hide",
+    "vaultClient.jobQueuer.technical.title",
+    "vaultClient.jobQueuer.technical.jsonKey",
+    "vaultClient.jobQueuer.technical.jsonPath",
+    "vaultClient.jobQueuer.rawJson.title",
+)
+
 VAULT_CLIENT_KEYS = (
     "vaultClient.title",
     "vaultClient.open",
@@ -82,6 +124,7 @@ VAULT_CLIENT_KEYS = (
     "home.vaultClientViewer.title",
     "home.vaultClientViewer.description",
     "home.vaultClientViewer.open",
+    *VAULT_CLIENT_JOB_QUEUER_KEYS,
 )
 
 
@@ -166,3 +209,33 @@ def test_da_dk_has_danish_yes_no_and_restrictions() -> None:
 def test_en_gb_has_english_restrictions() -> None:
     en = json.loads((I18N_DIR / "en-GB.json").read_text(encoding="utf-8"))
     assert _nested_get(en, "vaultClient.detail.restrictions") == "Restrictions"
+
+
+def test_all_locales_have_job_queuer_keys() -> None:
+    for locale_file in AUTHORITATIVE:
+        payload = json.loads((I18N_DIR / locale_file).read_text(encoding="utf-8"))
+        for key in VAULT_CLIENT_JOB_QUEUER_KEYS:
+            value = _nested_get(payload, key)
+            assert value and value.strip(), f"{locale_file}: {key}"
+
+
+def test_da_dk_job_queuer_danish_labels() -> None:
+    da = json.loads((I18N_DIR / "da-DK.json").read_text(encoding="utf-8"))
+    assert _nested_get(da, "vaultClient.jobQueuer.toolbar.add") == "Tilføj"
+    assert _nested_get(da, "vaultClient.jobQueuer.toolbar.remove") == "Fjern"
+    assert _nested_get(da, "vaultClient.jobQueuer.toolbar.moveUp") == "Flyt op"
+    assert _nested_get(da, "vaultClient.jobQueuer.technical.show") == "Vis teknisk info"
+    assert _nested_get(da, "vaultClient.jobQueuer.rawJson.title") == "Rå JSON"
+    assert _nested_get(da, "vaultClient.jobQueuer.yes") == "Ja"
+    assert _nested_get(da, "vaultClient.jobQueuer.no") == "Nej"
+
+
+def test_en_gb_job_queuer_english_labels() -> None:
+    en = json.loads((I18N_DIR / "en-GB.json").read_text(encoding="utf-8"))
+    assert _nested_get(en, "vaultClient.jobQueuer.toolbar.add") == "Add"
+    assert _nested_get(en, "vaultClient.jobQueuer.toolbar.remove") == "Remove"
+    assert _nested_get(en, "vaultClient.jobQueuer.toolbar.moveUp") == "Move up"
+    assert _nested_get(en, "vaultClient.jobQueuer.technical.show") == "Show technical info"
+    assert _nested_get(en, "vaultClient.jobQueuer.rawJson.title") == "Raw JSON"
+    assert _nested_get(en, "vaultClient.jobQueuer.yes") == "Yes"
+    assert _nested_get(en, "vaultClient.jobQueuer.no") == "No"

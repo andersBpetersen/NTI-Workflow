@@ -369,6 +369,223 @@
   margin-top: 4px;
 }
 
+/* --- JobQueuer reference rendering ----------------------------------------- */
+
+.vault-client-jobqueuer {
+  min-width: 0;
+}
+
+.vault-client-jobqueuer-header {
+  margin-bottom: 12px;
+}
+
+.vault-client-jobqueuer-header h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.vault-client-jobqueuer-header p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--nti-color-muted, #64748b);
+}
+
+.vault-client-dialog-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.vault-client-dialog-button {
+  padding: 3px 10px;
+  border: 1px solid #999;
+  border-radius: 2px;
+  background: #e8e8e8;
+  color: #333;
+  font-size: 11px;
+  line-height: 1.4;
+  font-family: var(--nti-font-family);
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.vault-client-dialog-button--add {
+  background: #e3f3e3;
+  border-color: #7fae7f;
+  color: #245224;
+}
+
+.vault-client-dialog-button--remove {
+  background: #f8e3e3;
+  border-color: #c88;
+  color: #6e2222;
+}
+
+.vault-client-dialog-button.is-readonly,
+.vault-client-readonly-button.is-readonly {
+  pointer-events: none;
+}
+
+.vault-client-readonly-button {
+  padding: 2px 9px;
+  border: 1px solid #999;
+  border-radius: 2px;
+  background: #e8e8e8;
+  color: #333;
+  font-size: 11px;
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.vault-client-dialog-table {
+  margin-top: 4px;
+}
+
+.vault-client-dialog-table tbody tr.vault-client-dialog-row {
+  cursor: pointer;
+}
+
+.vault-client-dialog-table tbody tr.vault-client-dialog-row:hover {
+  background: #f0f5ff;
+}
+
+.vault-client-dialog-table tbody tr.vault-client-dialog-row.is-selected,
+.vault-client-dialog-table tbody tr.vault-client-dialog-row.is-selected:hover {
+  background: #b8d4f0;
+}
+
+.vault-client-dialog-table tbody tr.vault-client-dialog-row:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
+.vault-client-dialog-detail-grid {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 6px 12px;
+  margin: 12px 0 10px;
+  padding: 10px;
+  border: 1px solid #d0d0d0;
+  background: #fafafa;
+  font-size: 12px;
+}
+
+.vault-client-dialog-detail-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.vault-client-dialog-detail-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.vault-client-dialog-subtabs {
+  display: flex;
+  gap: 2px;
+  margin: 8px 0 0;
+  border-bottom: 1px solid #b0b0b0;
+}
+
+.vault-client-dialog-subtab {
+  padding: 4px 12px;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  background: #d8d8d8;
+  color: #333;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.vault-client-dialog-subtab.is-active {
+  background: #fff;
+  border-color: #b0b0b0;
+  border-bottom-color: #fff;
+  margin-bottom: -1px;
+  font-weight: 600;
+}
+
+.vault-client-dialog-subtab:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
+.vault-client-dialog-subpanel {
+  padding-top: 8px;
+}
+
+.vault-client-technical {
+  margin-top: 12px;
+}
+
+.vault-client-technical-toggle {
+  padding: 3px 10px;
+  border: 1px solid #bbb;
+  border-radius: 2px;
+  background: #f0f0f0;
+  color: #333;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: var(--nti-font-family);
+}
+
+.vault-client-technical-toggle:hover {
+  background: #e6e6e6;
+}
+
+.vault-client-technical-toggle:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+.vault-client-technical-panel {
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  background: #f8f8f8;
+}
+
+.vault-client-technical-title {
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+}
+
+.vault-client-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.vault-client-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid #c0c0c0;
+  border-radius: 10px;
+  background: #f3f3f3;
+  font-size: 11px;
+}
+
+.vault-client-empty-inline {
+  color: var(--nti-color-muted, #64748b);
+}
+
+.vault-client-empty-state {
+  margin: 0 0 8px;
+  padding: 12px;
+  background: #fafafa;
+  border: 1px dashed #d0d0d0;
+  color: var(--nti-color-muted, #64748b);
+  font-size: 12px;
+  font-style: italic;
+  text-align: center;
+}
+
 @media (max-width: 900px) {
   .vault-client-layout {
     grid-template-columns: 1fr;
@@ -381,6 +598,10 @@
   }
 
   .vault-client-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vault-client-dialog-detail-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -20,6 +20,7 @@
     General: renderGeneralModule,
     NumberReserve: renderNumberReserveModule,
     CommandsConfiguration: renderCommandsConfigurationModule,
+    JobQueuer: renderJobQueuerModule,
   };
 
   const state = {
@@ -28,6 +29,9 @@
     selectedModule: null,
     fileName: "",
     filter: "",
+    jobQueuerSelectedIndex: 0,
+    jobQueuerSubTab: "jobs",
+    jobQueuerShowTechnical: false,
   };
 
   function tvc(key, params = {}) {
@@ -36,6 +40,10 @@
 
   function td(key) {
     return tvc(`detail.${key}`);
+  }
+
+  function tjq(key) {
+    return tvc(`jobQueuer.${key}`);
   }
 
   function escapeHtml(value) {
@@ -474,6 +482,309 @@
     return sections.join("");
   }
 
+  // --- JobQueuer reference renderer (mapping-based) ---------------------------
+
+  function jqBool(value) {
+    return value ? tjq("yes") : tjq("no");
+  }
+
+  function jqBoolCell(value) {
+    return `<span class="vault-client-bool">${escapeHtml(jqBool(Boolean(value)))}</span>`;
+  }
+
+  function jqEmpty() {
+    return tjq("emptyValue");
+  }
+
+  function jqText(value) {
+    if (value === null || value === undefined || value === "") {
+      return escapeHtml(jqEmpty());
+    }
+    return escapeHtml(String(value));
+  }
+
+  function jqChips(values) {
+    if (!Array.isArray(values) || values.length === 0) {
+      return `<span class="vault-client-empty-inline">${escapeHtml(jqEmpty())}</span>`;
+    }
+    return `<span class="vault-client-chip-list">${values
+      .map((label) => `<span class="vault-client-chip">${escapeHtml(String(label))}</span>`)
+      .join("")}</span>`;
+  }
+
+  function collectJobQueuers(moduleValue) {
+    const items = [];
+    const containers = Array.isArray(moduleValue?.JobQueuerMenuContainers)
+      ? moduleValue.JobQueuerMenuContainers
+      : null;
+
+    if (containers) {
+      containers.forEach((container, containerIndex) => {
+        const queuers = Array.isArray(container?.JobQueuers) ? container.JobQueuers : [];
+        if (queuers.length === 0) {
+          items.push({ container, queuer: container, containerIndex, queuerIndex: 0 });
+          return;
+        }
+        queuers.forEach((queuer, queuerIndex) => {
+          items.push({ container, queuer, containerIndex, queuerIndex });
+        });
+      });
+      return items;
+    }
+
+    // Defensive fallback for a flat JobQueuers[] shape.
+    const flat = Array.isArray(moduleValue?.JobQueuers) ? moduleValue.JobQueuers : [];
+    flat.forEach((queuer, queuerIndex) => {
+      items.push({ container: queuer, queuer, containerIndex: 0, queuerIndex });
+    });
+    return items;
+  }
+
+  function renderJobQueuerToolbar() {
+    const tooltip = escapeHtml(tjq("readonlyTooltip"));
+    const buttons = [
+      ["add", tjq("toolbar.add")],
+      ["remove", tjq("toolbar.remove")],
+      ["neutral", tjq("toolbar.moveUp")],
+      ["neutral", tjq("toolbar.moveDown")],
+      ["neutral", tjq("toolbar.exportList")],
+      ["neutral", tjq("toolbar.importList")],
+    ];
+    const html = buttons
+      .map(
+        ([variant, label]) =>
+          `<button type="button" class="vault-client-dialog-button vault-client-dialog-button--${variant} is-readonly" disabled aria-disabled="true" title="${tooltip}">${escapeHtml(label)}</button>`,
+      )
+      .join("");
+    return `<div class="vault-client-dialog-toolbar" role="toolbar" aria-label="${tooltip}">${html}</div>`;
+  }
+
+  function renderJobQueuerList(items, selectedIndex) {
+    const tooltip = escapeHtml(tjq("readonlyTooltip"));
+    const head = [tjq("columns.active"), tjq("columns.name"), tjq("columns.description"), tjq("columns.edit")]
+      .map((label) => `<th>${escapeHtml(label)}</th>`)
+      .join("");
+
+    const rows = items
+      .map((item, index) => {
+        const queuer = item.queuer || {};
+        const name = queuer.DisplayName || queuer.Name;
+        const selectedClass = index === selectedIndex ? " is-selected" : "";
+        return `<tr class="vault-client-dialog-row${selectedClass}" data-jq-index="${index}" tabindex="0" role="button" aria-selected="${index === selectedIndex}">
+<td class="vault-client-value-cell">${jqBoolCell(queuer.IsActive)}</td>
+<td class="vault-client-value-cell">${jqText(name)}</td>
+<td class="vault-client-value-cell">${jqText(queuer.Description)}</td>
+<td class="vault-client-value-cell"><button type="button" class="vault-client-readonly-button is-readonly" disabled aria-disabled="true" title="${tooltip}">${escapeHtml(tjq("view"))}</button></td>
+</tr>`;
+      })
+      .join("");
+
+    return `<table class="vault-client-table vault-client-dialog-table"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function renderJobQueuerDetail(item) {
+    const queuer = item.queuer || {};
+    const container = item.container || {};
+    const entityChips = jqChips(
+      (Array.isArray(container.EntityClasses) ? container.EntityClasses : [])
+        .map((entry) => entry?.ClassId)
+        .filter((value) => value !== null && value !== undefined && value !== ""),
+    );
+    const toolbarChips = jqChips(
+      (Array.isArray(container.Toolbars) ? container.Toolbars : [])
+        .map((entry) => entry?.DisplayName || entry?.Name)
+        .filter((value) => value !== null && value !== undefined && value !== ""),
+    );
+
+    const rows = [
+      [tjq("detail.name"), jqText(queuer.DisplayName || queuer.Name)],
+      [tjq("detail.description"), jqText(queuer.Description)],
+      [tjq("detail.active"), jqBoolCell(queuer.IsActive)],
+      [tjq("detail.id"), jqText(queuer.Id)],
+      [tjq("detail.isPulldown"), jqBoolCell(container.DeployAsPulldownMenu)],
+      [tjq("detail.addToToolbars"), toolbarChips],
+      [tjq("detail.supportedEntities"), entityChips],
+    ];
+
+    const grid = rows
+      .map(
+        ([label, valueHtml]) =>
+          `<div class="vault-client-dialog-detail-label">${escapeHtml(label)}</div><div class="vault-client-dialog-detail-value">${valueHtml}</div>`,
+      )
+      .join("");
+
+    return `<div class="vault-client-dialog-detail-grid">${grid}</div>`;
+  }
+
+  function renderJobQueuerSubtabs(activeTab) {
+    const tabs = [
+      ["jobs", tjq("jobs.title")],
+      ["userJobParameters", tjq("userJobParameters.title")],
+    ];
+    return `<div class="vault-client-dialog-subtabs" role="tablist">${tabs
+      .map(([key, label]) => {
+        const activeClass = key === activeTab ? " is-active" : "";
+        return `<button type="button" class="vault-client-dialog-subtab${activeClass}" data-jq-subtab="${key}" role="tab" aria-selected="${key === activeTab}">${escapeHtml(label)}</button>`;
+      })
+      .join("")}</div>`;
+  }
+
+  function renderJobQueuerJobs(jobs) {
+    const tooltip = escapeHtml(tjq("readonlyTooltip"));
+    const head = [
+      tjq("columns.active"),
+      tjq("columns.name"),
+      tjq("columns.description"),
+      tjq("columns.priority"),
+      tjq("view"),
+    ]
+      .map((label) => `<th>${escapeHtml(label)}</th>`)
+      .join("");
+
+    if (!Array.isArray(jobs) || jobs.length === 0) {
+      return `<p class="vault-client-empty-state">${escapeHtml(tjq("jobs.empty"))}</p>
+<table class="vault-client-table vault-client-dialog-table"><thead><tr>${head}</tr></thead><tbody></tbody></table>`;
+    }
+
+    const rows = jobs
+      .map((job) => {
+        const name = job?.DisplayName || job?.Name;
+        return `<tr>
+<td class="vault-client-value-cell">${jqBoolCell(job?.IsActive)}</td>
+<td class="vault-client-value-cell">${jqText(name)}</td>
+<td class="vault-client-value-cell">${jqText(job?.Description)}</td>
+<td class="vault-client-value-cell"><code>${jqText(job?.Priority)}</code></td>
+<td class="vault-client-value-cell"><button type="button" class="vault-client-readonly-button is-readonly" disabled aria-disabled="true" title="${tooltip}">${escapeHtml(tjq("view"))}</button></td>
+</tr>`;
+      })
+      .join("");
+
+    return `<table class="vault-client-table vault-client-dialog-table"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function renderJobQueuerUserParameters(parameters) {
+    const head = [tjq("columns.name"), tjq("columns.description"), tjq("columns.value")]
+      .map((label) => `<th>${escapeHtml(label)}</th>`)
+      .join("");
+
+    if (!Array.isArray(parameters) || parameters.length === 0) {
+      return `<p class="vault-client-empty-state">${escapeHtml(tjq("userJobParameters.empty"))}</p>
+<table class="vault-client-table vault-client-dialog-table"><thead><tr>${head}</tr></thead><tbody></tbody></table>`;
+    }
+
+    const rows = parameters
+      .map((param) => {
+        const name = param?.DisplayName || param?.Name;
+        const value = param?.Value ?? param?.DefaultValue;
+        return `<tr>
+<td class="vault-client-value-cell">${jqText(name)}</td>
+<td class="vault-client-value-cell">${jqText(param?.Description)}</td>
+<td class="vault-client-value-cell">${jqText(value)}</td>
+</tr>`;
+      })
+      .join("");
+
+    return `<table class="vault-client-table vault-client-dialog-table"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function renderJobQueuerTechnical(item) {
+    const buttonLabel = state.jobQueuerShowTechnical ? tjq("technical.hide") : tjq("technical.show");
+    let panel = "";
+    if (state.jobQueuerShowTechnical) {
+      const queuer = item.queuer || {};
+      const container = item.container || {};
+      const classIds = (Array.isArray(container.EntityClasses) ? container.EntityClasses : [])
+        .map((entry) => entry?.ClassId)
+        .filter((value) => value !== null && value !== undefined && value !== "")
+        .join(", ");
+      const rows = [
+        [tjq("technical.jsonKey"), "JobQueuer"],
+        [
+          tjq("technical.jsonPath"),
+          `JobQueuer.JobQueuerMenuContainers[${item.containerIndex}].JobQueuers[${item.queuerIndex}]`,
+        ],
+        ["Id", queuer.Id],
+        ["DeployAsPulldownMenu", container.DeployAsPulldownMenu],
+        ["EntityClasses[].ClassId", classIds || jqEmpty()],
+      ];
+      const body = rows
+        .map(([key, value]) => `<tr><th>${escapeHtml(key)}</th><td class="vault-client-value-cell">${renderCellValue(value)}</td></tr>`)
+        .join("");
+      panel = `<div class="vault-client-technical-panel"><div class="vault-client-technical-title">${escapeHtml(tjq("technical.title"))}</div><table class="vault-client-table"><tbody>${body}</tbody></table></div>`;
+    }
+    return `<div class="vault-client-technical"><button type="button" class="vault-client-technical-toggle" data-jq-technical-toggle aria-expanded="${state.jobQueuerShowTechnical}">${escapeHtml(buttonLabel)}</button>${panel}</div>`;
+  }
+
+  function renderJobQueuerModule(value) {
+    const items = collectJobQueuers(value);
+    if (state.jobQueuerSelectedIndex >= items.length) {
+      state.jobQueuerSelectedIndex = 0;
+    }
+    const selected = items[state.jobQueuerSelectedIndex] || null;
+
+    const header = `<div class="vault-client-jobqueuer-header"><h3>${escapeHtml(tjq("title"))}</h3><p>${escapeHtml(tjq("helpText"))}</p></div>`;
+
+    const listBody =
+      renderJobQueuerToolbar() +
+      (items.length > 0
+        ? renderJobQueuerList(items, state.jobQueuerSelectedIndex)
+        : `<p class="vault-client-empty-state">${escapeHtml(tjq("emptyQueuers"))}</p>`);
+    const listSection = renderSection(tjq("list.title"), listBody);
+
+    let detailSection = "";
+    if (selected) {
+      const subPanel =
+        state.jobQueuerSubTab === "userJobParameters"
+          ? renderJobQueuerUserParameters(selected.queuer?.UserJobParameters)
+          : renderJobQueuerJobs(selected.queuer?.Jobs);
+      const detailBody =
+        renderJobQueuerDetail(selected) +
+        renderJobQueuerSubtabs(state.jobQueuerSubTab) +
+        `<div class="vault-client-dialog-subpanel">${subPanel}</div>` +
+        renderJobQueuerTechnical(selected);
+      detailSection = renderSection(tjq("detail.title"), detailBody);
+    }
+
+    return `<div class="vault-client-jobqueuer">${header}${listSection}${detailSection}${renderRawJsonDetails(value)}</div>`;
+  }
+
+  function bindJobQueuerInteractions(body) {
+    if (!body || state.selectedModule !== "JobQueuer") return;
+
+    body.querySelectorAll("[data-jq-index]").forEach((row) => {
+      const select = () => {
+        const index = Number.parseInt(row.getAttribute("data-jq-index") || "0", 10);
+        if (Number.isNaN(index) || index === state.jobQueuerSelectedIndex) return;
+        state.jobQueuerSelectedIndex = index;
+        renderDetail();
+      };
+      row.addEventListener("click", select);
+      row.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          select();
+        }
+      });
+    });
+
+    body.querySelectorAll("[data-jq-subtab]").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const next = tab.getAttribute("data-jq-subtab");
+        if (!next || next === state.jobQueuerSubTab) return;
+        state.jobQueuerSubTab = next;
+        renderDetail();
+      });
+    });
+
+    const technicalToggle = body.querySelector("[data-jq-technical-toggle]");
+    if (technicalToggle) {
+      technicalToggle.addEventListener("click", () => {
+        state.jobQueuerShowTechnical = !state.jobQueuerShowTechnical;
+        renderDetail();
+      });
+    }
+  }
+
   function renderGenericModule(value) {
     if (Array.isArray(value)) {
       const sections = [
@@ -525,19 +836,14 @@
     const title = document.getElementById("vc-detail-title");
     const subtitle = document.getElementById("vc-detail-subtitle");
     const body = document.getElementById("vc-detail-body");
-    const empty = document.getElementById("vc-detail-empty");
-    if (!body || !header || !title || !subtitle || !empty) return;
+    if (!body || !header || !title || !subtitle) return;
 
     if (!state.selectedModule || !state.root) {
       header.classList.add("is-hidden");
-      body.innerHTML = "";
-      body.appendChild(empty);
-      empty.hidden = false;
-      empty.textContent = tvc("emptyModule");
+      body.innerHTML = `<p id="vc-detail-empty" class="vault-client-detail-empty">${escapeHtml(tvc("emptyModule"))}</p>`;
       return;
     }
 
-    empty.hidden = true;
     const moduleValue = state.root[state.selectedModule];
     header.classList.remove("is-hidden");
     title.textContent = state.selectedModule;
@@ -553,6 +859,7 @@
 
     const renderer = MODULE_RENDERERS[state.selectedModule];
     body.innerHTML = renderer ? renderer(moduleValue) : renderGenericModule(moduleValue);
+    bindJobQueuerInteractions(body);
   }
 
   function isModuleValue(value) {
@@ -609,6 +916,9 @@
     list.querySelectorAll("button[data-module]").forEach((button) => {
       button.addEventListener("click", () => {
         state.selectedModule = button.dataset.module || null;
+        state.jobQueuerSelectedIndex = 0;
+        state.jobQueuerSubTab = "jobs";
+        state.jobQueuerShowTechnical = false;
         renderModuleList();
         renderDetail();
       });
@@ -653,6 +963,9 @@
     state.modules = extractModules(root);
     state.selectedModule = state.modules[0] || null;
     state.filter = "";
+    state.jobQueuerSelectedIndex = 0;
+    state.jobQueuerSubTab = "jobs";
+    state.jobQueuerShowTechnical = false;
     const filterInput = document.getElementById("vc-filter-input");
     if (filterInput) filterInput.value = "";
     clearError();

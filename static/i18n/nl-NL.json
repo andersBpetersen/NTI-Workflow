@@ -281,6 +281,63 @@
       "itemsCount": "Items",
       "tabsCount": "Tabbladen",
       "entityClassesCount": "Entiteitsklassen"
+    },
+    "jobQueuer": {
+      "title": "JobQueuer",
+      "helpText": "Toont geconfigureerde JobQueuers, toegewezen jobs en technische instellingen uit de Client JSON.",
+      "readonlyTooltip": "Alleen-lezen weergave",
+      "view": "Bekijken",
+      "emptyValue": "—",
+      "yes": "Ja",
+      "no": "Nee",
+      "emptyQueuers": "Geen JobQueuers gevonden",
+      "toolbar": {
+        "add": "Toevoegen",
+        "remove": "Verwijderen",
+        "moveUp": "Omhoog",
+        "moveDown": "Omlaag",
+        "exportList": "Lijst exporteren",
+        "importList": "Lijst importeren"
+      },
+      "list": {
+        "title": "Job queuers"
+      },
+      "columns": {
+        "active": "Actief",
+        "name": "Naam",
+        "description": "Beschrijving",
+        "edit": "Bewerken",
+        "priority": "Prioriteit",
+        "value": "Waarde"
+      },
+      "detail": {
+        "title": "JobQueuer-details",
+        "name": "Naam",
+        "description": "Beschrijving",
+        "active": "Actief",
+        "id": "Id",
+        "isPulldown": "Is pulldown",
+        "addToToolbars": "Toevoegen aan werkbalken",
+        "supportedEntities": "Ondersteunde entiteiten"
+      },
+      "jobs": {
+        "title": "Jobs",
+        "empty": "Geen jobs"
+      },
+      "userJobParameters": {
+        "title": "User job parameters",
+        "empty": "Geen user job parameters"
+      },
+      "technical": {
+        "show": "Technische info tonen",
+        "hide": "Technische info verbergen",
+        "title": "Technische info",
+        "jsonKey": "JSON-sleutel",
+        "jsonPath": "JSON-pad"
+      },
+      "rawJson": {
+        "title": "Ruwe JSON"
+      }
     }
   }
 }

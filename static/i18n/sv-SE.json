@@ -281,6 +281,63 @@
       "itemsCount": "Objekt",
       "tabsCount": "Flikar",
       "entityClassesCount": "Entitetsklasser"
+    },
+    "jobQueuer": {
+      "title": "JobQueuer",
+      "helpText": "Visar konfigurerade JobQueuers, tilldelade jobb och tekniska inställningar från Client JSON.",
+      "readonlyTooltip": "Skrivskyddad visning",
+      "view": "Visa",
+      "emptyValue": "—",
+      "yes": "Ja",
+      "no": "Nej",
+      "emptyQueuers": "Inga JobQueuers hittades",
+      "toolbar": {
+        "add": "Lägg till",
+        "remove": "Ta bort",
+        "moveUp": "Flytta upp",
+        "moveDown": "Flytta ned",
+        "exportList": "Exportera lista",
+        "importList": "Importera lista"
+      },
+      "list": {
+        "title": "Job queuers"
+      },
+      "columns": {
+        "active": "Aktiv",
+        "name": "Namn",
+        "description": "Beskrivning",
+        "edit": "Redigera",
+        "priority": "Prioritet",
+        "value": "Värde"
+      },
+      "detail": {
+        "title": "JobQueuer-detaljer",
+        "name": "Namn",
+        "description": "Beskrivning",
+        "active": "Aktiv",
+        "id": "Id",
+        "isPulldown": "Är pulldown",
+        "addToToolbars": "Lägg till i verktygsfält",
+        "supportedEntities": "Entiteter som stöds"
+      },
+      "jobs": {
+        "title": "Jobs",
+        "empty": "Inga jobs"
+      },
+      "userJobParameters": {
+        "title": "User job parameters",
+        "empty": "Inga user job parameters"
+      },
+      "technical": {
+        "show": "Visa teknisk info",
+        "hide": "Dölj teknisk info",
+        "title": "Teknisk info",
+        "jsonKey": "JSON-nyckel",
+        "jsonPath": "JSON-sökväg"
+      },
+      "rawJson": {
+        "title": "Rå JSON"
+      }
     }
   }
 }

@@ -281,6 +281,63 @@
       "itemsCount": "Elementer",
       "tabsCount": "Faner",
       "entityClassesCount": "Entitetsklasser"
+    },
+    "jobQueuer": {
+      "title": "JobQueuer",
+      "helpText": "Viser konfigurerte JobQueuers, tilknyttede jobber og tekniske innstillinger fra Client JSON.",
+      "readonlyTooltip": "Skrivebeskyttet visning",
+      "view": "Vis",
+      "emptyValue": "—",
+      "yes": "Ja",
+      "no": "Nei",
+      "emptyQueuers": "Ingen JobQueuers funnet",
+      "toolbar": {
+        "add": "Legg til",
+        "remove": "Fjern",
+        "moveUp": "Flytt opp",
+        "moveDown": "Flytt ned",
+        "exportList": "Eksporter liste",
+        "importList": "Importer liste"
+      },
+      "list": {
+        "title": "Job queuers"
+      },
+      "columns": {
+        "active": "Aktiv",
+        "name": "Navn",
+        "description": "Beskrivelse",
+        "edit": "Rediger",
+        "priority": "Prioritet",
+        "value": "Verdi"
+      },
+      "detail": {
+        "title": "JobQueuer-detaljer",
+        "name": "Navn",
+        "description": "Beskrivelse",
+        "active": "Aktiv",
+        "id": "Id",
+        "isPulldown": "Er pulldown",
+        "addToToolbars": "Legg til i verktøylinjer",
+        "supportedEntities": "Støttede entiteter"
+      },
+      "jobs": {
+        "title": "Jobs",
+        "empty": "Ingen jobs"
+      },
+      "userJobParameters": {
+        "title": "User job parameters",
+        "empty": "Ingen user job parameters"
+      },
+      "technical": {
+        "show": "Vis teknisk info",
+        "hide": "Skjul teknisk info",
+        "title": "Teknisk info",
+        "jsonKey": "JSON-nøkkel",
+        "jsonPath": "JSON-sti"
+      },
+      "rawJson": {
+        "title": "Rå JSON"
+      }
     }
   }
 }

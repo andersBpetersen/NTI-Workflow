@@ -119,3 +119,35 @@ Se `git status --short` efter implementering.
 - `QuickProject`, `QuickNew`, `General`, `NumberReserve` og `CommandsConfiguration` har settings-overblik med tabeller hvor muligt.
 - Rå JSON er flyttet til sekundær `<details>`-visning nederst i modulpanelet.
 - JSON keys og data oversættes ikke.
+
+## JobQueuer reference rendering
+
+`JobQueuer` er implementeret som en dialog-inspireret, read-only referencevisning, der er tænkt som mønster for fremtidige moduludvidelser.
+
+Principper:
+
+- Modul-header med titel og hjælpetekst (i18n `vaultClient.jobQueuer.title` / `helpText`).
+- Read-only værktøjslinje (Tilføj, Fjern, Flyt op/ned, Eksportér/Importér liste). Alle knapper er `disabled` med tooltip (`vaultClient.jobQueuer.readonlyTooltip`); de ændrer ikke data.
+- Liste over job queuers med kolonnerne Aktiv, Navn, Beskrivelse og en read-only "Vis"-knap. Rækker kan vælges for at se detaljer.
+- Detalje-panel for valgt job queuer: Navn, Beskrivelse, Aktiv, Id, Er pulldown, Tilføj til toolbars (chips) og Understøttede entities (chips).
+- Sub-tabs: "Jobs" (Aktiv, Navn, Beskrivelse, Prioritet) og "User job parameters" (Navn, Beskrivelse, Værdi).
+- "Vis/Skjul teknisk info"-toggle med JSON-nøgle, JSON-sti, Id, `DeployAsPulldownMenu` og `EntityClasses[].ClassId`.
+- Rå JSON ligger altid kollapset i `<details>` nederst.
+- Booleans vises som Ja/Nej (da-DK) og Yes/No (en-GB). UI-labels oversættes; JSON-nøgler og data oversættes ikke.
+
+JSON-stier brugt i visningen:
+
+| UI-felt | JSON-sti |
+| --- | --- |
+| Job queuers | `JobQueuer.JobQueuerMenuContainers[].JobQueuers[]` |
+| Navn | `...JobQueuers[].DisplayName` |
+| Beskrivelse | `...JobQueuers[].Description` |
+| Aktiv | `...JobQueuers[].IsActive` |
+| Id | `...JobQueuers[].Id` |
+| Er pulldown | `...JobQueuers[].DeployAsPulldownMenu` |
+| Tilføj til toolbars | `...JobQueuers[].Toolbars[].DisplayName` |
+| Understøttede entities | `...JobQueuers[].EntityClasses[].ClassId` (fallback: container-niveau) |
+| Jobs | `...JobQueuers[].Jobs[]` (DisplayName, Description, IsActive, Priority) |
+| User job parameters | `...JobQueuers[].UserJobParameters[]` (DisplayName, Description, Value) |
+
+Bemærkning: Under arbejdet blev en eksisterende fejl i `renderDetail` rettet — `#vc-detail-empty` lå inde i `#vc-detail-body` og blev slettet ved første modul-render, hvorefter en tidlig `return` blokerede modulskift. Tom-tilstanden genskabes nu via `innerHTML`, og guarden afhænger ikke længere af elementet.

@@ -281,6 +281,63 @@
       "itemsCount": "Elemente",
       "tabsCount": "Tabs",
       "entityClassesCount": "Entity-Klassen"
+    },
+    "jobQueuer": {
+      "title": "JobQueuer",
+      "helpText": "Zeigt konfigurierte JobQueuers, zugewiesene Jobs und technische Einstellungen aus dem Client-JSON.",
+      "readonlyTooltip": "Schreibgeschützte Ansicht",
+      "view": "Anzeigen",
+      "emptyValue": "—",
+      "yes": "Ja",
+      "no": "Nein",
+      "emptyQueuers": "Keine JobQueuers gefunden",
+      "toolbar": {
+        "add": "Hinzufügen",
+        "remove": "Entfernen",
+        "moveUp": "Nach oben",
+        "moveDown": "Nach unten",
+        "exportList": "Liste exportieren",
+        "importList": "Liste importieren"
+      },
+      "list": {
+        "title": "Job queuers"
+      },
+      "columns": {
+        "active": "Aktiv",
+        "name": "Name",
+        "description": "Beschreibung",
+        "edit": "Bearbeiten",
+        "priority": "Priorität",
+        "value": "Wert"
+      },
+      "detail": {
+        "title": "JobQueuer-Details",
+        "name": "Name",
+        "description": "Beschreibung",
+        "active": "Aktiv",
+        "id": "Id",
+        "isPulldown": "Ist Pulldown",
+        "addToToolbars": "Zu Symbolleisten hinzufügen",
+        "supportedEntities": "Unterstützte Entitäten"
+      },
+      "jobs": {
+        "title": "Jobs",
+        "empty": "Keine Jobs"
+      },
+      "userJobParameters": {
+        "title": "User job parameters",
+        "empty": "Keine User-Job-Parameter"
+      },
+      "technical": {
+        "show": "Technische Info anzeigen",
+        "hide": "Technische Info ausblenden",
+        "title": "Technische Info",
+        "jsonKey": "JSON-Schlüssel",
+        "jsonPath": "JSON-Pfad"
+      },
+      "rawJson": {
+        "title": "Rohes JSON"
+      }
     }
   }
 }

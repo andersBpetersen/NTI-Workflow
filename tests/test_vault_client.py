@@ -215,3 +215,89 @@ def test_vault_client_js_has_filter_logic() -> None:
     js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
     assert "vc-filter-input" in js
     assert 'td("noFilterResults")' in js
+
+
+def test_vault_client_js_has_job_queuer_renderer() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    assert "renderJobQueuerModule" in js
+
+
+def test_vault_client_js_job_queuer_routes_to_special_renderer() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    assert "JobQueuer: renderJobQueuerModule" in js
+
+
+def test_vault_client_js_job_queuer_toolbar_labels() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    for key in (
+        "toolbar.add",
+        "toolbar.remove",
+        "toolbar.moveUp",
+        "toolbar.moveDown",
+        "toolbar.exportList",
+        "toolbar.importList",
+    ):
+        assert key in js
+
+
+def test_vault_client_js_job_queuer_toolbar_is_readonly() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    assert "vault-client-dialog-button" in js
+    assert "is-readonly" in js
+    assert "disabled" in js
+    assert "readonlyTooltip" in js
+
+
+def test_vault_client_js_job_queuer_list_columns() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    for key in ("columns.active", "columns.name", "columns.description", "columns.edit"):
+        assert key in js
+    assert 'tjq("view")' in js
+
+
+def test_vault_client_js_job_queuer_detail_fields() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    for key in ("detail.isPulldown", "detail.addToToolbars", "detail.supportedEntities"):
+        assert key in js
+
+
+def test_vault_client_js_job_queuer_jobs_section() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    assert "renderJobQueuerJobs" in js
+    assert "jobs.title" in js
+    assert "jobs.empty" in js
+
+
+def test_vault_client_js_job_queuer_user_job_parameters_section() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    assert "renderJobQueuerUserParameters" in js
+    assert "userJobParameters.title" in js
+    assert "userJobParameters.empty" in js
+
+
+def test_vault_client_js_job_queuer_technical_toggle() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    assert "technical.show" in js
+    assert "technical.hide" in js
+    assert "jobQueuerShowTechnical" in js
+
+
+def test_vault_client_js_job_queuer_uses_boolean_formatter() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    assert "formatBoolean" in js
+    assert "jqBool" in js
+
+
+def test_vault_client_js_job_queuer_raw_json_in_details() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    assert "renderJobQueuerModule" in js
+    assert "renderRawJsonDetails" in js
+    assert "<details>" in js
+
+
+def test_vault_client_js_job_queuer_no_data_mutation() -> None:
+    js = VAULT_CLIENT_JS.read_text(encoding="utf-8")
+    # Read-only viewer: no write-back of JSON edits.
+    assert "/api/upload" not in js.lower()
+    # Toolbar/edit buttons must be disabled and not mutate data.
+    assert "data-jq-technical-toggle" in js
