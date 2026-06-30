@@ -11,12 +11,12 @@ Repository: [tickjf/nti-workflow](https://hub.docker.com/r/tickjf/nti-workflow/)
 | Registry | Docker Hub (`docker.io`) |
 | Namespace | `tickjf` |
 | Image | `nti-workflow` |
-| Version | `0.7.2` |
+| Version | `0.7.3` |
 
 Fuld image-reference:
 
 ```text
-tickjf/nti-workflow:0.7.2
+tickjf/nti-workflow:0.7.3
 ```
 
 Valgfrit seneste-tag:
@@ -51,15 +51,15 @@ Brug Docker Hub-brugernavn og password/access token. Gem **ikke** credentials i 
 ```powershell
 cd "C:\sti\til\NTI Workflow"
 
-docker build -t tickjf/nti-workflow:0.7.2 .
+docker build -t tickjf/nti-workflow:0.7.3 .
 
-docker push tickjf/nti-workflow:0.7.2
+docker push tickjf/nti-workflow:0.7.3
 ```
 
 Valgfrit — push også `latest`:
 
 ```powershell
-docker tag tickjf/nti-workflow:0.7.2 tickjf/nti-workflow:latest
+docker tag tickjf/nti-workflow:0.7.3 tickjf/nti-workflow:latest
 docker push tickjf/nti-workflow:latest
 ```
 
@@ -73,7 +73,7 @@ cd "C:\sti\til\NTI Workflow"
 .\scripts\publish-docker.ps1 `
   -Namespace "tickjf" `
   -ImageName "nti-workflow" `
-  -Version "0.7.2" `
+  -Version "0.7.3" `
   -AlsoLatest
 ```
 
@@ -86,11 +86,11 @@ Udelad `-RegistryHost` for Docker Hub. Scriptet kører **ikke** `docker login` a
   -RegistryHost "registry.example.com" `
   -Namespace "nti" `
   -ImageName "nti-workflow" `
-  -Version "0.7.2" `
+  -Version "0.7.3" `
   -AlsoLatest
 ```
 
-Giver: `registry.example.com/nti/nti-workflow:0.7.2`
+Giver: `registry.example.com/nti/nti-workflow:0.7.3`
 
 ---
 
@@ -117,8 +117,8 @@ curl http://localhost:8000/health
 ### Manuel metode (docker run)
 
 ```powershell
-docker pull tickjf/nti-workflow:0.7.2
-docker run -d --restart unless-stopped -p 8000:8000 --name nti-workflow tickjf/nti-workflow:0.7.2
+docker pull tickjf/nti-workflow:0.7.3
+docker run -d --restart unless-stopped -p 8000:8000 --name nti-workflow tickjf/nti-workflow:0.7.3
 ```
 
 ---
@@ -132,7 +132,7 @@ docker compose -f docker-compose.prod.yml pull
 docker compose -f docker-compose.prod.yml up -d
 ```
 
-Erstat `0.7.2` med den nye version ved næste release.
+Erstat `0.7.3` med den nye version ved næste release.
 
 Se **[DEPLOY.md](DEPLOY.md)** for firewall, logs og fejlfinding.
 
@@ -142,7 +142,7 @@ Se **[DEPLOY.md](DEPLOY.md)** for firewall, logs og fejlfinding.
 
 - Ingen tokens eller passwords i git
 - Brug `docker login` og credential helper lokalt
-- Brug versions-tags (`0.7.2`) som primær reference i drift
+- Brug versions-tags (`0.7.3`) som primær reference i drift
 - `latest` kan bruges som supplement
 - Rotér Docker Hub access tokens efter IT-politik
 

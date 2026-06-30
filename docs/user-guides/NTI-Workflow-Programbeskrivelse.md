@@ -1,6 +1,6 @@
 # NTI Workflow — Programbeskrivelse og teknisk overblik
 
-**Version:** 0.7.2
+**Version:** 0.7.3
 **Genereret:** 2026-06-25  
 **Branch:** refactor/app-shell-workflow-split  
 **Release-tag:** v0.7.1  
@@ -266,7 +266,7 @@ Tests køres med **pytest** (`requirements-dev.txt`).
 
 | Felt | Værdi |
 |------|-------|
-| Aktuel version | 0.7.2 |
+| Aktuel version | 0.7.3 |
 | Git branch | refactor/app-shell-workflow-split |
 | Seneste release-tag | v0.7.1 |
 | Seneste commit | 9e48efb |

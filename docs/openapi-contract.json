@@ -3,7 +3,7 @@
   "info": {
     "title": "NTI Workflow",
     "description": "Visualiser Vault lifecycle transitions fra Excel-eksport.",
-    "version": "0.7.2"
+    "version": "0.7.3"
   },
   "paths": {
     "/": {

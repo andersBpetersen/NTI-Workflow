@@ -1,6 +1,6 @@
 # NTI Workflow — Gendannelse og download fra GitHub
 
-**Version:** 0.7.2
+**Version:** 0.7.3
 **Genereret:** 2026-06-25  
 **Repository:** https://github.com/andersBpetersen/NTI-Workflow.git
 
@@ -358,7 +358,7 @@ uvicorn app.main:app
 
 | Felt | Værdi |
 |------|-------|
-| Aktuel version | 0.7.2 |
+| Aktuel version | 0.7.3 |
 | Seneste release-tag | v0.7.1 |
 | Remote URL | https://github.com/andersBpetersen/NTI-Workflow.git |
 | Dokument genereret | 2026-06-25 |

@@ -2,6 +2,15 @@
 
 Alle bemærkelsesværdige ændringer i dette projekt dokumenteres i denne fil.
 
+## [0.7.3] - 2026-06-30
+
+### Added
+- Dialog-inspireret, read-only JobQueuer-referencevisning i NTI for Vault Client Viewer (toolbar, liste, detaljepanel, Jobs/User job parameters, teknisk info og kollapset rå JSON).
+- i18n-keys `vaultClient.jobQueuer.*` i alle 13 locale-filer.
+
+### Fixed
+- Rettet modulskift i Vault Client Viewer: `#vc-detail-empty` blev slettet ved første render og blokerede efterfølgende `renderDetail`.
+
 ## [0.7.2] - 2026-06-29
 
 ### Fixed
